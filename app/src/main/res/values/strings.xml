@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Sneakers Checker</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="copyright">2019 - @copyright</string>
+
+    <string name="strButton_CreateNew">Create New Wallet</string>
+    <string name="strButton_Restore">Restore Wallet</string>
+    <string name="strButton_Next">Next</string>
+    <string name="strButton_Print_Phrase">Print The Phrase</string>
+
+    //Create New Screen
+    <string name="user_name">User Name</string>
+    <string name="pin">Your PIN (6 digit)</string>
+    <string name="pin_reenter">Your PIN (re-enter)</string>
+
+    //Create Phrase Screen
+    <string name="tuto_print">You need to write down or print down this passpharse in case you lose your phone or some incident like that</string>
+    <string name="your_languages">Your Languages</string>
+    <string name="your_phrase">Your Phrase</string>
+
+
+</resources>
