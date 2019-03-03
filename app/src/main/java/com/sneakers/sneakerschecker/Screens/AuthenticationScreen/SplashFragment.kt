@@ -10,9 +10,6 @@ import com.sneakers.sneakerschecker.R
 import android.os.Handler
 
 
-
-
-
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -37,7 +34,7 @@ class SplashFragment : Fragment() {
 
         Handler().postDelayed({
             val transaction = activity!!.supportFragmentManager.beginTransaction();
-            transaction.replace(R.id.authentication_layout, CreatePhraseFragment())
+            transaction.replace(R.id.authentication_layout, ConfirmPhraseFragment())
                 .commit()
         }, SPLASH_DISPLAY_LENGTH)
 

@@ -13,14 +13,22 @@
     <string name="strButton_Print_Phrase">Print The Phrase</string>
 
     //Create New Screen
-    <string name="user_name">User Name</string>
+    <string name="user_name">Username</string>
     <string name="pin">Your PIN (6 digit)</string>
     <string name="pin_reenter">Your PIN (re-enter)</string>
 
     //Create Phrase Screen
-    <string name="tuto_print">You need to write down or print down this passpharse in case you lose your phone or some incident like that</string>
+    <string name="tuto_print">You need to write down or print down this passpharse in case you lose your phone or some
+        incident like that
+    </string>
     <string name="your_languages">Your Languages</string>
     <string name="your_phrase">Your Phrase</string>
+
+    //Restore Screen
+    <string name="tuto_signin">Enter your username and code here</string>
+
+    //Input Phrase Screen
+    <string name="tuto_intput_phrase">Please input your recovery phrase here</string>
 
 
 </resources>
