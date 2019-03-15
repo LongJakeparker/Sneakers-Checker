@@ -10,4 +10,12 @@
     <color name="colorTanHide">#F09A58</color>
     <color name="colorOrgangeWhite">#FBFCED</color>
     <color name="colorPaleSlate">#BFBCBB</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorShadow">#40000000</color>
+    <color name="colorMain">#AB2126</color>
+    <color name="colorBubble">#99000000</color>
+
+
 </resources>

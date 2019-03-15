@@ -11,7 +11,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <activity android:name=".Screens.Activity.AuthenticationActivity">
+        <activity android:name=".screens.activity.AuthenticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -30,5 +30,8 @@
     //Input Phrase Screen
     <string name="tuto_intput_phrase">Please input your recovery phrase here</string>
 
+    //Confirm Phrase Screen
+    <string name="tuto_confirm_phrase">Select the 9th word of your recovery phrase</string>
+
 
 </resources>

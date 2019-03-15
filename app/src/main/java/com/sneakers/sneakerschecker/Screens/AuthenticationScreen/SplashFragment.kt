@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.Screens.AuthenticationScreen
+package com.sneakers.sneakerschecker.screens.authenticationScreen
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -34,7 +34,7 @@ class SplashFragment : Fragment() {
 
         Handler().postDelayed({
             val transaction = activity!!.supportFragmentManager.beginTransaction();
-            transaction.replace(R.id.authentication_layout, ConfirmPhraseFragment())
+            transaction.replace(R.id.authentication_layout, CreatePhraseFragment())
                 .commit()
         }, SPLASH_DISPLAY_LENGTH)
 

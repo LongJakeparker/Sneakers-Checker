@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.Screens.AuthenticationScreen
+package com.sneakers.sneakerschecker.screens.authenticationScreen
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

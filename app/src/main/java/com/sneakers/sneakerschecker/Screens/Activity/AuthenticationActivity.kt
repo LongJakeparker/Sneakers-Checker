@@ -1,9 +1,9 @@
-package com.sneakers.sneakerschecker.Screens.Activity
+package com.sneakers.sneakerschecker.screens.activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.sneakers.sneakerschecker.R
-import com.sneakers.sneakerschecker.Screens.AuthenticationScreen.SplashFragment
+import com.sneakers.sneakerschecker.screens.authenticationScreen.SplashFragment
 
 class AuthenticationActivity : AppCompatActivity() {
 

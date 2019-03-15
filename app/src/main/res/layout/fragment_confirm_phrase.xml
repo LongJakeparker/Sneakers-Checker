@@ -1,14 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".Screens.AuthenticationScreen.ConfirmPhraseFragment">
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@mipmap/test_background"
+        tools:context=".screens.authenticationScreen.ConfirmPhraseFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+            android:text="@string/copyright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/textView3"
+            android:textSize="@dimen/copyright_text_size"
+            android:layout_marginBottom="@dimen/copyright_margin_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    <ImageView
+            android:src="@mipmap/logo"
+            android:layout_width="@dimen/logo_width"
+            android:layout_height="@dimen/logo_heigh"
+            android:id="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/cardView"/>
 
-</FrameLayout>
+
+    <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            card_view:cardElevation="4dp"
+            card_view:cardCornerRadius="10dp"
+            card_view:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="20dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/cardView"
+            card_view:cardBackgroundColor="@android:color/transparent"
+            tools:layout_editor_absoluteX="40dp">
+
+
+
+        <android.support.constraint.ConstraintLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="20dp"
+                android:background="@drawable/bubble_background">
+
+
+            <TextView
+                    android:text="@string/tuto_confirm_phrase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView6"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:layout_marginTop="20dp"
+                    card_view:layout_constraintTop_toTopOf="parent"/>
+            <FrameLayout
+                    android:layout_width="@dimen/tutoline_width"
+                    android:layout_height="@dimen/tutoline_height"
+                    android:layout_marginTop="@dimen/tutoline_margin_top"
+                    android:background="@color/colorWhite"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6"
+                    android:id="@+id/frameLayout">
+            </FrameLayout>
+
+            <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="70dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+                <TableRow
+                        android:layout_marginBottom="@dimen/table_row_margin_bottom_confirm"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                </TableRow>
+
+                <TableRow
+                        android:layout_marginBottom="@dimen/table_row_margin_bottom_confirm"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                </TableRow>
+
+                <TableRow
+                        android:layout_marginBottom="@dimen/table_row_margin_bottom_confirm"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textAlignment="center"
+                            android:text="creek"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                </TableRow>
+            </TableLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

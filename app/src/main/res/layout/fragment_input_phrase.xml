@@ -3,9 +3,9 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@drawable/background"
+             android:background="@mipmap/background"
              xmlns:app="http://schemas.android.com/apk/res-auto"
-             tools:context=".Screens.AuthenticationScreen.InputPhraseFragment">
+             tools:context=".screens.authenticationScreen.InputPhraseFragment">
 
     <Button
             android:text="@string/strButton_Next"
