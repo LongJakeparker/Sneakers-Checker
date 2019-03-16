@@ -26,7 +26,7 @@
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/main_button"
                 android:textSize="@dimen/button_text_size"
-                android:id="@+id/btnNewWalletAuthen"/>
+                android:id="@+id/btnNewWalletCreate"/>
     </LinearLayout>
     <TextView
             android:text="@string/copyright"

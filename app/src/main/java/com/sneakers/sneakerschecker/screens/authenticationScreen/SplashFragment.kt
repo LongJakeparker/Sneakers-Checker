@@ -34,7 +34,7 @@ class SplashFragment : Fragment() {
 
         Handler().postDelayed({
             val transaction = activity!!.supportFragmentManager.beginTransaction();
-            transaction.replace(R.id.authentication_layout, CreatePhraseFragment())
+            transaction.replace(R.id.authentication_layout, CreateNewFragment())
                 .commit()
         }, SPLASH_DISPLAY_LENGTH)
 
