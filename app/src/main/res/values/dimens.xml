@@ -10,6 +10,8 @@
     <dimen name="logo_splash_heigh">98dp</dimen>
     <dimen name="logo_margin_top">80dp</dimen>
 
+    <dimen name="layout_padding_Horizontal">30dp</dimen>
+
 
     <dimen name="logo_width">179dp</dimen>
     <dimen name="logo_heigh">74dp</dimen>
@@ -40,6 +42,6 @@
 
     //Confirm Phrase Screen
     <dimen name="button_word_margin_right">15dp</dimen>
-    <dimen name="table_row_margin_bottom_confirm">30dp</dimen>
+    <dimen name="table_row_margin_bottom_confirm">40dp</dimen>
 
 </resources>
