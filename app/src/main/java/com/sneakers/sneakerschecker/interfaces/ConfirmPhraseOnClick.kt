@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.screens.interfaces
+package com.sneakers.sneakerschecker.interfaces
 
 interface ConfirmPhraseOnClick {
     fun onClick(position: Int)

@@ -13,6 +13,8 @@
             android:textAlignment="center"
             android:text="creek"
             android:textColor="@color/colorWhite"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

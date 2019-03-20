@@ -12,8 +12,12 @@ import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ConfirmPhraseAdapter
 import com.sneakers.sneakerschecker.adapter.PhraseAdapter
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.interfaces.ConfirmPhraseCallBack
 import com.sneakers.sneakerschecker.model.SharedPref
 import java.util.*
+import android.content.Intent
+import com.sneakers.sneakerschecker.MainActivity
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,10 +28,12 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ConfirmPhraseFragment : Fragment() {
+class ConfirmPhraseFragment : Fragment(), ConfirmPhraseCallBack {
 
     private var fragmentView: View? = null
     private lateinit var recyclerPhrase: RecyclerView
+    private lateinit var seed: List<String>
+    private lateinit var shuffedSeed: List<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,15 +46,27 @@ class ConfirmPhraseFragment : Fragment() {
 
         val sharedPref = SharedPref(this.context!!)
         val mnemonic = sharedPref.getString(Constant.WALLET_MNEMONIC)
-        val seed = mnemonic.split(" ")
+        seed = mnemonic.split(" ")
 
-        val shuffedSeed = seed
+        shuffedSeed = mnemonic.split(" ")
 
         Collections.shuffle(shuffedSeed)
 
         recyclerPhrase!!.layoutManager = GridLayoutManager(context, Constant.GRID_COLUMN)
-        recyclerPhrase!!.adapter = ConfirmPhraseAdapter(shuffedSeed, context!!)
+        recyclerPhrase!!.adapter = ConfirmPhraseAdapter(shuffedSeed, context!!, this)
 
         return fragmentView
+    }
+
+    override fun ClickCallBack(word: String) {
+        if (word == seed[8]) {
+            val intent = Intent(activity, MainActivity::class.java)
+            startActivity(intent)
+            activity!!.finish()
+        }
+        else {
+            Collections.shuffle(shuffedSeed)
+            recyclerPhrase!!.adapter!!.notifyDataSetChanged()
+        }
     }
 }

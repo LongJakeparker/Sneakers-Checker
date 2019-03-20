@@ -1,38 +1,15 @@
 package com.sneakers.sneakerschecker.screens.authenticationScreen
 
-import android.Manifest
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import org.web3j.crypto.CipherException
-import org.web3j.crypto.WalletUtils
-import java.nio.file.Files.exists
-import android.os.Environment.DIRECTORY_DOWNLOADS
-import android.os.Environment.getExternalStoragePublicDirectory
-import android.os.Environment
 import com.sneakers.sneakerschecker.R
-import kotlinx.android.synthetic.main.fragment_create_new.*
-import org.web3j.protocol.Web3j
-import org.web3j.protocol.core.methods.response.Web3ClientVersion
-import org.web3j.protocol.http.HttpService
-import java.io.File
-import java.io.IOException
-import android.util.Log
 import android.widget.Button
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import java.security.Security.insertProviderAt
-import java.security.Security.removeProvider
-import android.Manifest.permission
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.model.SharedPref
-import org.web3j.crypto.Credentials
-import java.security.*
-
-
+import android.widget.EditText
+import android.widget.Toast
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -49,6 +26,9 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     private var fragmentView: View? = null
 
     private var btnNewWallet: Button? = null
+    private lateinit var etUserName: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var etConfirmPassword: EditText
 
 
     override fun onCreateView(
@@ -58,7 +38,10 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_create_new, container, false)
 
-        btnNewWallet = fragmentView!!.findViewById(R.id.btnNewWalletCreate)
+        btnNewWallet = fragmentView!!.findViewById(R.id.btnNextCreate)
+        etUserName = fragmentView!!.findViewById(R.id.etUserNameCreate)
+        etPassword = fragmentView!!.findViewById(R.id.etPasswordCreate)
+        etConfirmPassword = fragmentView!!.findViewById(R.id.etConfirmPasswordCreate)
 
         btnNewWallet!!.setOnClickListener(this)
 
@@ -66,8 +49,32 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val transaction = activity!!.supportFragmentManager.beginTransaction();
-        transaction.replace(R.id.authentication_layout, CreatePhraseFragment())
-            .commit()
+        when (v!!.id) {
+            R.id.btnNextCreate -> nextRegister()
+        }
+    }
+
+    fun nextRegister() {
+        if (etUserName.text.isEmpty() || etUserName.text.isEmpty() || etUserName.text.isEmpty()) {
+            Toast.makeText(context, "All fields need to be filled", Toast.LENGTH_LONG).show()
+        }
+        else {
+            if (etPassword.text.toString() == etConfirmPassword.text.toString()) {
+                val bundle = Bundle()
+                bundle.putString("username", etUserName.text.toString())
+                bundle.putString("password", etPassword.text.toString())
+
+                val registerUserInfoFragment = RegisterUserInfoFragment()
+                registerUserInfoFragment.arguments = bundle
+
+                val transaction = activity!!.supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.authentication_layout, registerUserInfoFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            else {
+                Toast.makeText(context, "Confirm password not match", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

@@ -13,9 +13,12 @@
     <string name="strButton_Print_Phrase">Print The Phrase</string>
 
     //Create New Screen
-    <string name="user_name">Username</string>
-    <string name="pin">Your PIN (6 digit)</string>
-    <string name="pin_reenter">Your PIN (re-enter)</string>
+    <string name="user_name">Email</string>
+    <string name="pin">Password</string>
+    <string name="pin_reenter">Your Password (re-enter)</string>
+
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
 
     //Create Phrase Screen
     <string name="tuto_print">You need to write down or print down this passpharse in case you lose your phone or some

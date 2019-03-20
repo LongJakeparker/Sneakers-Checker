@@ -42,6 +42,6 @@
 
     //Confirm Phrase Screen
     <dimen name="button_word_margin_right">15dp</dimen>
-    <dimen name="table_row_margin_bottom_confirm">40dp</dimen>
+    <dimen name="table_row_margin_bottom_confirm">20dp</dimen>
 
 </resources>

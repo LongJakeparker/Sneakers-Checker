@@ -47,16 +47,7 @@ class CreatePhraseFragment : Fragment(), View.OnClickListener {
     private lateinit var recyclerPhrase: RecyclerView
     private lateinit var btnNext: Button
 
-    private var web3: Web3j? = null
-    private var credentials: Credentials? = null
     private lateinit var mnemonic: String
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setupBouncyCastle()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,86 +59,15 @@ class CreatePhraseFragment : Fragment(), View.OnClickListener {
         recyclerPhrase = fragmentView!!.findViewById(R.id.layout_list_phrase)
         btnNext = fragmentView!!.findViewById(R.id.btnNextCreatePhrase)
 
-        val permissions = arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        requestPermissions(permissions, 1)
+        val sharedPref = SharedPref(this.context!!)
+        val seed = sharedPref.getString(Constant.WALLET_MNEMONIC).split(" ")
 
-        // FIXME: Add your own API key here
-        web3 = Web3j.build( HttpService("https://rinkeby.infura.io/v3/e85cba30a04e48548170fdb23f9d5fc9"))
-        try {
-            var clientVersion: Web3ClientVersion = web3!!.web3ClientVersion().sendAsync().get()
-            if(!clientVersion.hasError()){
-                //Connected
-                generateWallet("123456")
-
-                val seed = mnemonic.split(" ")
-
-                recyclerPhrase!!.layoutManager = GridLayoutManager(context, Constant.GRID_COLUMN)
-                recyclerPhrase!!.adapter = PhraseAdapter(seed, context!!)
-            }
-            else {
-                //Show Error
-            }
-        }
-        catch (e: Exception) {
-            //Show Error
-            Log.e("TAG", e.toString())
-        }
+        recyclerPhrase!!.layoutManager = GridLayoutManager(context, Constant.GRID_COLUMN)
+        recyclerPhrase!!.adapter = PhraseAdapter(seed, context!!)
 
         btnNext.setOnClickListener(this)
 
         return fragmentView
-    }
-
-    private fun setupBouncyCastle() {
-        val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)
-            ?: // Web3j will set up the provider lazily when it's first used.
-            return
-        if (provider::class.equals(BouncyCastleProvider::class.java)) {
-            // BC with same package name, shouldn't happen in real life.
-            return
-        }
-        // Android registers its own BC provider. As it might be outdated and might not include
-        // all needed ciphers, we substitute it with a known BC bundled in the app.
-        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
-        // of that it's possible to have another BC implementation loaded in VM.
-        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
-        Security.insertProviderAt(BouncyCastleProvider(), 1)
-    }
-
-    fun generateWallet(password: String) {
-        try {
-            val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            if (!path.exists()) {
-                path.mkdir()
-            }
-            var wallet = WalletUtils.generateBip39Wallet(password, File(path.toString()))
-            val keystoreFileName = wallet.filename
-            Log.e("TAG", "generateWallet: $keystoreFileName")
-
-            // my mnemonic
-            mnemonic = wallet.mnemonic
-            Log.e("TAG", "generateWallet: $mnemonic")
-
-            credentials = WalletUtils.loadBip39Credentials(password, mnemonic)
-
-            val sharedPref = SharedPref(this.context!!)
-            sharedPref.setString(credentials!!.address, Constant.WALLET_ADDRESS)
-            sharedPref.setString(credentials!!.ecKeyPair.publicKey.toString(), Constant.WALLET_PUBLIC_KEY)
-            sharedPref.setString(credentials!!.ecKeyPair.privateKey.toString(), Constant.WALLET_PRIVATE_KEY)
-            sharedPref.setString(mnemonic, Constant.WALLET_MNEMONIC)
-
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        } catch (e: NoSuchProviderException) {
-            e.printStackTrace()
-        } catch (e: InvalidAlgorithmParameterException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: CipherException) {
-            e.printStackTrace()
-        }
-
     }
 
     override fun onClick(v: View?) {
