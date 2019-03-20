@@ -59,10 +59,10 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             Toast.makeText(context, "All fields need to be filled", Toast.LENGTH_LONG).show()
         }
         else {
-            if (etPassword.text.toString() == etConfirmPassword.text.toString()) {
+            if (etPassword.text.toString().trim() == etConfirmPassword.text.toString().trim()) {
                 val bundle = Bundle()
-                bundle.putString("username", etUserName.text.toString())
-                bundle.putString("password", etPassword.text.toString())
+                bundle.putString("username", etUserName.text.toString().trim())
+                bundle.putString("password", etPassword.text.toString().trim())
 
                 val registerUserInfoFragment = RegisterUserInfoFragment()
                 registerUserInfoFragment.arguments = bundle

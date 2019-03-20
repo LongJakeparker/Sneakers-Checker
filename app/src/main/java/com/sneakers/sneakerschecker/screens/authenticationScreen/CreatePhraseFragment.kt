@@ -46,8 +46,7 @@ class CreatePhraseFragment : Fragment(), View.OnClickListener {
     private var fragmentView: View? = null
     private lateinit var recyclerPhrase: RecyclerView
     private lateinit var btnNext: Button
-
-    private lateinit var mnemonic: String
+    private lateinit var btnPrintPhrase: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +57,7 @@ class CreatePhraseFragment : Fragment(), View.OnClickListener {
 
         recyclerPhrase = fragmentView!!.findViewById(R.id.layout_list_phrase)
         btnNext = fragmentView!!.findViewById(R.id.btnNextCreatePhrase)
+        btnPrintPhrase = fragmentView!!.findViewById(R.id.btnPrintPhraseCreate)
 
         val sharedPref = SharedPref(this.context!!)
         val seed = sharedPref.getString(Constant.WALLET_MNEMONIC).split(" ")
@@ -66,15 +66,22 @@ class CreatePhraseFragment : Fragment(), View.OnClickListener {
         recyclerPhrase!!.adapter = PhraseAdapter(seed, context!!)
 
         btnNext.setOnClickListener(this)
+        btnPrintPhrase.setOnClickListener(this)
 
         return fragmentView
     }
 
     override fun onClick(v: View?) {
+        val transaction = activity!!.supportFragmentManager.beginTransaction()
         when (v!!.id) {
             R.id.btnNextCreatePhrase -> {
-                val transaction = activity!!.supportFragmentManager.beginTransaction();
                 transaction.replace(R.id.authentication_layout, ConfirmPhraseFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+            R.id.btnPrintPhraseCreate -> {
+                transaction.replace(R.id.authentication_layout, PrintPhraseFragment())
                     .addToBackStack(null)
                     .commit()
             }

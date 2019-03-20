@@ -205,19 +205,19 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
             var data = HashMap<String, String>()
             data.put("email", bundle.getString("username"))
             data.put("password", bundle.getString("password"))
-            data.put("firstName", etFirstName.text.toString())
-            data.put("lastName", etLastName.text.toString())
+            data.put("firstName", etFirstName.text.toString().trim())
+            data.put("lastName", etLastName.text.toString().trim())
 
             /*Create handle for the RetrofitInstance interface*/
             val call = service.create(AuthenticationApi::class.java!!).signUpApi(data)
             call.enqueue(object : Callback<ResponseBody> {
 
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    dialog.dismiss()
                     if (response.code() == 201) {
                         RequestLogIn()
                     }
                     else if (response.code() == 400) {
+                        dialog.dismiss()
                         Toast.makeText(context, "Email has used", Toast.LENGTH_SHORT).show()
                     }
                     else {
@@ -234,7 +234,6 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
     }
 
     private fun RequestLogIn() {
-        dialog.show()
 
         val authToken = Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
         val call = service.create(AuthenticationApi::class.java!!)

@@ -7,7 +7,7 @@
         android:background="@mipmap/test_background"
         android:paddingHorizontal="@dimen/layout_padding_Horizontal"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".screens.authenticationScreen.CreatePhraseFragment">
+        tools:context=".screens.authenticationScreen.PrintPhraseFragment">
 
     <Button
             android:text="@string/strButton_Next"
@@ -19,13 +19,13 @@
             android:textColor="@color/colorWhite"
             android:background="@drawable/main_button"
             android:textSize="@dimen/button_text_size"
-            android:id="@+id/btnNextCreatePhrase"
+            android:id="@+id/btnNextPrint"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="25dp"
             app:layout_constraintTop_toBottomOf="@+id/cardView"/>
 
     <Button
-            android:id="@+id/btnPrintPhraseCreate"
+            android:id="@+id/btnPrintPhrasePrint"
             android:text="@string/strButton_Print_Phrase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,17 +39,15 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView"/>
 
     <android.support.v7.widget.CardView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardElevation="4dp"
-            card_view:cardCornerRadius="10dp"
-            card_view:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="20dp"
-            card_view:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/cardView"
-            card_view:cardBackgroundColor="@android:color/transparent">
+            app:cardBackgroundColor="@android:color/transparent">
 
 
         <android.support.constraint.ConstraintLayout
@@ -60,7 +58,7 @@
                 android:paddingHorizontal="20dp">
 
             <TextView
-                    android:text="@string/tuto_print"
+                    android:text="@string/tuto_connect_print"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView6"
@@ -71,7 +69,18 @@
                     android:textStyle="bold"
                     android:textSize="18dp"
                     android:layout_marginTop="20dp"
-                    card_view:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                    android:layout_width="@dimen/qr_code_size_print"
+                    android:layout_height="@dimen/qr_code_size_print"
+                    tools:src="@drawable/chart"
+                    android:id="@+id/ivQrCodePrint"
+                    android:scaleType="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_list_phrase_print"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
             <FrameLayout
                     android:layout_width="@dimen/tutoline_width"
                     android:layout_height="@dimen/tutoline_height"
@@ -84,14 +93,14 @@
             </FrameLayout>
 
             <android.support.v7.widget.RecyclerView
-                    android:id="@+id/layout_list_phrase"
+                    android:id="@+id/layout_list_phrase_print"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="30dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/frameLayout"/>
+                    app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+            </android.support.v7.widget.RecyclerView>
 
 
         </android.support.constraint.ConstraintLayout>
