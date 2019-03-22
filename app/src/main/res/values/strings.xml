@@ -39,4 +39,7 @@
     //Print Phrase Screen
     <string name="tuto_connect_print">Please connect to printer before print</string>
 
+    //Main Screen
+    <string name="your_address">Your Address</string>
+
 </resources>

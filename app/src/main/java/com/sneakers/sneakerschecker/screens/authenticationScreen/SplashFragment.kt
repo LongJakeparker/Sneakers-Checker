@@ -1,5 +1,6 @@
 package com.sneakers.sneakerschecker.screens.authenticationScreen
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,9 @@ import android.view.ViewGroup
 
 import com.sneakers.sneakerschecker.R
 import android.os.Handler
+import com.sneakers.sneakerschecker.MainActivity
+import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.SharedPref
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -33,9 +37,17 @@ class SplashFragment : Fragment() {
         fragmentView = inflater.inflate(R.layout.fragment_splash, container, false)
 
         Handler().postDelayed({
-            val transaction = activity!!.supportFragmentManager.beginTransaction();
-            transaction.replace(R.id.authentication_layout, CreateNewFragment())
-                .commit()
+            val sharedPref = SharedPref(this.context!!)
+            if (sharedPref.getString(Constant.WALLET_ADDRESS) != "") {
+                val intent = Intent(activity, MainActivity::class.java)
+                startActivity(intent)
+                activity!!.finish()
+            }
+            else {
+                val transaction = activity!!.supportFragmentManager.beginTransaction();
+                transaction.replace(R.id.authentication_layout, CreateNewFragment())
+                    .commit()
+            }
         }, SPLASH_DISPLAY_LENGTH)
 
         return fragmentView

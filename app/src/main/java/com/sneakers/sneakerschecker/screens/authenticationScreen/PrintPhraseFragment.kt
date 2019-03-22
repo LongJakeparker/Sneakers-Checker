@@ -1,8 +1,5 @@
 package com.sneakers.sneakerschecker.screens.authenticationScreen
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -11,26 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
-import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.PhraseAdapter
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
-import com.squareup.picasso.Picasso
-import android.R.attr.y
-import android.R.attr.x
 import android.graphics.Point
-import android.view.Display
-
-
-
+import com.sneakers.sneakerschecker.model.GenerateQrCode
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,9 +39,6 @@ class PrintPhraseFragment : Fragment() {
     private lateinit var btnPrintPhrase: Button
     private lateinit var ivQrCode: ImageView
 
-
-    private lateinit var urlQrCode: String
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,23 +53,10 @@ class PrintPhraseFragment : Fragment() {
 
         val sharedPref = SharedPref(this.context!!)
 
-        val walletAddress = sharedPref.getString(Constant.WALLET_ADDRESS)
-//        urlQrCode = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=$walletAddress&choe=UTF-8"
-//        Picasso.get().load(urlQrCode).into(ivQrCode)
+        val qrCode = GenerateQrCode.WalletAddress(activity!!, 0.45)
 
-        val display = activity!!.windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val width = size.x
-
-        val multiFormatWriter = MultiFormatWriter()
-        try {
-            val bitMatrix = multiFormatWriter.encode(walletAddress, BarcodeFormat.QR_CODE, (width*0.4).toInt() , (width*0.4).toInt())
-            val barcodeEncoder = BarcodeEncoder()
-            val bitmap = barcodeEncoder.createBitmap(bitMatrix)
-            ivQrCode.setImageBitmap(bitmap)
-        } catch (e: WriterException) {
-            e.printStackTrace()
+        if (qrCode != null) {
+            ivQrCode.setImageBitmap(qrCode)
         }
 
         val seed = sharedPref.getString(Constant.WALLET_MNEMONIC).split(" ")

@@ -16,20 +16,6 @@ import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.PhraseAdapter
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
-import kotlinx.android.synthetic.main.fragment_create_phrase.*
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.web3j.crypto.CipherException
-import org.web3j.crypto.Credentials
-import org.web3j.crypto.WalletUtils
-import org.web3j.protocol.Web3j
-import org.web3j.protocol.core.methods.response.Web3ClientVersion
-import org.web3j.protocol.http.HttpService
-import java.io.File
-import java.io.IOException
-import java.security.InvalidAlgorithmParameterException
-import java.security.NoSuchAlgorithmException
-import java.security.NoSuchProviderException
-import java.security.Security
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
