@@ -51,4 +51,8 @@
     //Main Screen
     <dimen name="qr_code_size_main">160dp</dimen>
 
+    //Drawer Menu
+    <dimen name="drawer_button_height">40dp</dimen>
+    <dimen name="drawer_padding_left">30dp</dimen>
+
 </resources>

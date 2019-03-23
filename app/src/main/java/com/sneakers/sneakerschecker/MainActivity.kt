@@ -2,12 +2,15 @@ package com.sneakers.sneakerschecker
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.view.GravityCompat
+import android.view.Gravity
+import android.view.View
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.GenerateQrCode
 import com.sneakers.sneakerschecker.model.SharedPref
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPref
 
@@ -23,6 +26,14 @@ class MainActivity : AppCompatActivity() {
 
         if (qrCode != null) {
             ivQrCodeMain.setImageBitmap(qrCode)
+        }
+
+        btnMenuMain.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.btnMenuMain -> drawer_layout.openDrawer(GravityCompat.START)
         }
     }
 }
