@@ -53,6 +53,7 @@
     </LinearLayout>
 
     <Button
+            android:id="@+id/btnUnlinkWalletMain"
             android:text="Unlink Your Wallet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

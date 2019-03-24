@@ -32,6 +32,16 @@ class SharedPref {
         editor.apply()
     }
 
+    fun getBool(fieldName: String): Boolean {
+        return prefs!!.getBoolean(fieldName, false)
+    }
+
+    fun setBool(value: Boolean, fieldName: String) {
+        val editor = prefs!!.edit()
+        editor.putBoolean(fieldName, value)
+        editor.apply()
+    }
+
     fun setUser(value: SignIn, fieldName: String) {
         val gson = Gson()
         val user = gson.toJson(value)
@@ -45,5 +55,9 @@ class SharedPref {
         val gson = Gson()
 
         return gson.fromJson(prefs!!.getString(fieldName, ""), SignIn::class.java)
+    }
+
+    fun clearPref() {
+        prefs!!.edit().clear().commit()
     }
 }

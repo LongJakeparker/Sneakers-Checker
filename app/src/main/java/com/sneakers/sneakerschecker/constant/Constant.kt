@@ -5,6 +5,7 @@ object Constant {
     const val WALLET_PUBLIC_KEY= "wallet public key"
     const val WALLET_PRIVATE_KEY= "wallet private key"
     const val WALLET_MNEMONIC= "wallet mnemonic"
+    const val WALLET_UNLINK= "wallet unlink"
 
     const val WALLET_USER= "wallet user"
 

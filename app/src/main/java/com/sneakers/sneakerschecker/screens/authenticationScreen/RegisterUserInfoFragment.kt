@@ -36,6 +36,7 @@ import com.google.gson.Gson
 import android.util.Log
 import android.widget.EditText
 import com.sneakers.sneakerschecker.adapter.PhraseAdapter
+import com.sneakers.sneakerschecker.model.SignUp
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.web3j.crypto.CipherException
 import org.web3j.crypto.WalletUtils
@@ -76,6 +77,8 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
     private lateinit var mnemonic: String
 
     private lateinit var bundle: Bundle
+
+    private lateinit var sharedPref: SharedPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,25 +141,6 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    fun connectEthereumNode() {
-        web3 = Web3j.build( HttpService(Constant.ETHEREUM_API_KEY))
-//        try {
-//            var clientVersion = web3!!.web3ClientVersion().sendAsync().get()
-//            if(!clientVersion.hasError()){
-//                //Connected
-//
-//            }
-//            else {
-//                //Show Error
-//            }
-//        }
-//        catch (e: Exception) {
-//            //Show Error
-//            Log.e("TAG", e.toString())
-//        }
-        generateWallet(bundle.getString("password"))
-    }
-
     fun generateWallet(password: String) {
         try {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -173,7 +157,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
 
             credentials = WalletUtils.loadBip39Credentials(password, mnemonic)
 
-            val sharedPref = SharedPref(this.context!!)
+            sharedPref = SharedPref(this.context!!)
             sharedPref.setString(credentials!!.address, Constant.WALLET_ADDRESS)
             sharedPref.setString(credentials!!.ecKeyPair.publicKey.toString(), Constant.WALLET_PUBLIC_KEY)
             sharedPref.setString(credentials!!.ecKeyPair.privateKey.toString(), Constant.WALLET_PRIVATE_KEY)
@@ -200,8 +184,6 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
         else {
             dialog.show()
 
-            connectEthereumNode()
-
             var data = HashMap<String, String>()
             data.put("email", bundle.getString("username"))
             data.put("password", bundle.getString("password"))
@@ -210,10 +192,11 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
 
             /*Create handle for the RetrofitInstance interface*/
             val call = service.create(AuthenticationApi::class.java!!).signUpApi(data)
-            call.enqueue(object : Callback<ResponseBody> {
+            call.enqueue(object : Callback<SignUp> {
 
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
                     if (response.code() == 201) {
+                        generateWallet(response.body()!!.passwordHash)
                         RequestLogIn()
                     }
                     else if (response.code() == 400) {
@@ -225,7 +208,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
                     }
                 }
 
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                override fun onFailure(call: Call<SignUp>, t: Throwable) {
                     dialog.dismiss()
                     Toast.makeText(context, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show()
                 }
@@ -244,6 +227,8 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
                 dialog.dismiss()
 
                 if (response.code() == 200) {
+                    sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
+
                     activity!!.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
                     val transaction = activity!!.supportFragmentManager.beginTransaction()

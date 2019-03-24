@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.sneakers.sneakerschecker.R
+import kotlinx.android.synthetic.main.fragment_authentication.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,7 +18,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class AuthenticationFragment : Fragment() {
+class AuthenticationFragment : Fragment(), View.OnClickListener {
 
     private var fragmentView: View? = null
 
@@ -26,7 +27,26 @@ class AuthenticationFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_authentication, container, false)
 
+        fragmentView!!.btnNewWalletAuthen.setOnClickListener(this)
+        fragmentView!!.btnRestoreWalletAuthen.setOnClickListener(this)
 
         return fragmentView
+    }
+
+    override fun onClick(v: View?) {
+        val transaction = activity!!.supportFragmentManager.beginTransaction()
+        when (v?.id) {
+            R.id.btnNewWalletAuthen -> {
+                transaction.add(R.id.authentication_layout, CreateNewFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+            R.id.btnRestoreWalletAuthen -> {
+                transaction.add(R.id.authentication_layout, RestoreFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 }
