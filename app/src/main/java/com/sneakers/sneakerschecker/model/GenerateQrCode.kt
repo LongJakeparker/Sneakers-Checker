@@ -33,5 +33,24 @@ class GenerateQrCode {
             }
             return null
         }
+
+        fun WalletMnemonic(activity: Activity, widthPer: Double, mnemonic: String): Bitmap? {
+            val display = activity.windowManager.defaultDisplay
+            val size = Point()
+            display.getSize(size)
+            val width = size.x
+
+            val multiFormatWriter = MultiFormatWriter()
+            try {
+                val bitMatrix = multiFormatWriter.encode(mnemonic, BarcodeFormat.QR_CODE,
+                    (width * widthPer).toInt() ,
+                    (width * widthPer).toInt())
+                val barcodeEncoder = BarcodeEncoder()
+                return barcodeEncoder.createBitmap(bitMatrix)
+            } catch (e: WriterException) {
+                e.printStackTrace()
+            }
+            return null
+        }
     }
 }

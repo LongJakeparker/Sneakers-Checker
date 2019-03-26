@@ -6,6 +6,7 @@ object Constant {
     const val WALLET_PRIVATE_KEY= "wallet private key"
     const val WALLET_MNEMONIC= "wallet mnemonic"
     const val WALLET_UNLINK= "wallet unlink"
+    const val WALLET_PASSPHRASE= "wallet passphrase"
 
     const val WALLET_USER= "wallet user"
 
@@ -15,7 +16,7 @@ object Constant {
     const val AUTH_TOKEN_USERNAME= "truegrailmobile"
     const val AUTH_TOKEN_PASSWORD= "secret"
 
-    const val ETHEREUM_API_KEY= "https://rinkeby.infura.io/v3/e85cba30a04e48548170fdb23f9d5fc9"
+    const val ETHEREUM_API_KEY= "http://128.199.134.167:81/"
 
     const val GRID_COLUMN= 4
 }

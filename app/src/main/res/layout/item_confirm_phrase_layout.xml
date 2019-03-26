@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/table_row_margin_bottom_confirm"
-        android:background="#000">
+        android:background="@android:color/transparent">
 
     <TextView
             android:id="@+id/txtPassPhraseConfirm"

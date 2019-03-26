@@ -14,7 +14,7 @@
 
     //Create New Screen
     <string name="user_name">Email</string>
-    <string name="pin">Password</string>
+    <string name="pin">Password (6 characters)</string>
     <string name="pin_reenter">Your Password (re-enter)</string>
 
     <string name="first_name">First name</string>

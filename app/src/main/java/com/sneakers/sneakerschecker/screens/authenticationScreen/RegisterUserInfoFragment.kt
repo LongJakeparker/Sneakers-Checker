@@ -72,7 +72,6 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
     private lateinit var dialog: AlertDialog
     private lateinit var service: Retrofit
 
-    private var web3: Web3j? = null
     private var credentials: org.web3j.crypto.Credentials? = null
     private lateinit var mnemonic: String
 
@@ -197,6 +196,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
                 override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
                     if (response.code() == 201) {
                         generateWallet(response.body()!!.passwordHash)
+                        sharedPref.setString(response.body()!!.passwordHash, Constant.WALLET_PASSPHRASE)
                         RequestLogIn()
                     }
                     else if (response.code() == 400) {

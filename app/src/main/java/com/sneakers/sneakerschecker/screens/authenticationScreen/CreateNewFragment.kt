@@ -10,6 +10,7 @@ import com.sneakers.sneakerschecker.R
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.sneakers.sneakerschecker.model.Validation
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -54,26 +55,48 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private fun callValidatePassword() {
+        val password = etPassword.text.toString()
+
+        if (!Validation.validatePassword(password)!!) {
+            etPassword.error = "Password need to be included [@#$%^&*][0-9][a-z][A-Z]"
+        }
+    }
+
+    private fun callValidateEmail() {
+        val email = etUserName.text.toString()
+
+        if (!Validation.validateEmail(email)!!) {
+            etUserName.error = "Please enter a valid email address"
+        }
+    }
+
     fun nextRegister() {
-        if (etUserName.text.isEmpty() || etUserName.text.isEmpty() || etUserName.text.isEmpty()) {
+        if (etUserName.text.isEmpty() || etPassword.text.isEmpty() || etConfirmPassword.text.isEmpty()) {
             Toast.makeText(context, "All fields need to be filled", Toast.LENGTH_LONG).show()
         }
         else {
-            if (etPassword.text.toString().trim() == etConfirmPassword.text.toString().trim()) {
-                val bundle = Bundle()
-                bundle.putString("username", etUserName.text.toString().trim())
-                bundle.putString("password", etPassword.text.toString().trim())
+            callValidateEmail()
+            callValidatePassword()
+            if (Validation.validateEmail(etUserName.text.toString())!! && Validation.validatePassword(etPassword.text.toString())!!) {
+                if (etPassword.text.toString().trim() == etConfirmPassword.text.toString().trim()) {
+                    val bundle = Bundle()
+                    bundle.putString("username", etUserName.text.toString().trim())
+                    bundle.putString("password", etPassword.text.toString().trim())
 
-                val registerUserInfoFragment = RegisterUserInfoFragment()
-                registerUserInfoFragment.arguments = bundle
+                    val registerUserInfoFragment = RegisterUserInfoFragment()
+                    registerUserInfoFragment.arguments = bundle
 
-                val transaction = activity!!.supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.authentication_layout, registerUserInfoFragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-            else {
-                Toast.makeText(context, "Confirm password not match", Toast.LENGTH_LONG).show()
+                    val transaction = activity!!.supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.authentication_layout, registerUserInfoFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+                else {
+                    etConfirmPassword.error = "Confirm password not match"
+                    etPassword.error = null
+                    etUserName.error = null
+                }
             }
         }
     }

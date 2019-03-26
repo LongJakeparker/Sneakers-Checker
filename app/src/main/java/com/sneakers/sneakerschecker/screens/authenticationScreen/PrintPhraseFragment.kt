@@ -53,7 +53,7 @@ class PrintPhraseFragment : Fragment() {
 
         val sharedPref = SharedPref(this.context!!)
 
-        val qrCode = GenerateQrCode.WalletAddress(activity!!, 0.45)
+        val qrCode = GenerateQrCode.WalletMnemonic(activity!!, 0.45, sharedPref.getString(Constant.WALLET_MNEMONIC))
 
         if (qrCode != null) {
             ivQrCode.setImageBitmap(qrCode)
