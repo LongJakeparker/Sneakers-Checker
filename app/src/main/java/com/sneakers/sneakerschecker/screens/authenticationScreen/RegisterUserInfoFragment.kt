@@ -173,7 +173,6 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
         } catch (e: CipherException) {
             e.printStackTrace()
         }
-
     }
 
     private fun UserRegister() {

@@ -132,7 +132,7 @@
                 <ImageView
                         android:layout_width="@dimen/qr_code_size_main"
                         android:layout_height="@dimen/qr_code_size_main"
-                        tools:src="@drawable/chart"
+                        android:background="@color/colorPaleSlate"
                         android:id="@+id/ivQrCodeMain"
                         android:scaleType="center"
                         android:layout_marginTop="40dp"

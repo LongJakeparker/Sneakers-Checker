@@ -5,11 +5,14 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -36,32 +39,30 @@ import org.web3j.tx.gas.ContractGasProvider;
  * <p>Generated with web3j version 4.2.0.
  */
 public class TrueGrailToken extends Contract {
-    private static final String BINARY = "608060405234801561001057600080fd5b50604051610ba0380380610ba08339810180604052604081101561003357600080fd5b81019080805164010000000081111561004b57600080fd5b8201602081018481111561005e57600080fd5b815164010000000081118282018710171561007857600080fd5b5050929190602001805164010000000081111561009457600080fd5b820160208101848111156100a757600080fd5b81516401000000008111828201871017156100c157600080fd5b5050600280546001600160a01b0319163317905584519093506100ed9250600091506020850190610109565b508051610101906001906020840190610109565b5050506101a4565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061014a57805160ff1916838001178555610177565b82800160010185558215610177579182015b8281111561017757825182559160200191906001019061015c565b50610183929150610187565b5090565b6101a191905b80821115610183576000815560010161018d565b90565b6109ed806101b36000396000f3fe608060405234801561001057600080fd5b50600436106100a95760003560e01c80636352211e116100715780636352211e14610202578063672383c41461021f5780636914db601461023c5780636c89d6f4146102ce5780639c4f24c3146102eb578063a9059cbb1461030e576100a9565b8063095ea7b3146100ae5780631371a5b3146100dc57806318160ddd1461018957806329ce1ec5146101a35780633acefa20146101c9575b600080fd5b6100da600480360360408110156100c457600080fd5b506001600160a01b03813516906020013561033a565b005b6100da600480360360408110156100f257600080fd5b8135919081019060408101602082013564010000000081111561011457600080fd5b82018360208201111561012657600080fd5b8035906020019184600183028401116401000000008311171561014857600080fd5b91908080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152509295506103e8945050505050565b610191610579565b60408051918252519081900360200190f35b6100da600480360360208110156101b957600080fd5b50356001600160a01b031661057f565b6101e6600480360360208110156101df57600080fd5b5035610635565b604080516001600160a01b039092168252519081900360200190f35b6101e66004803603602081101561021857600080fd5b5035610650565b6101e66004803603602081101561023557600080fd5b503561066b565b6102596004803603602081101561025257600080fd5b5035610692565b6040805160208082528351818301528351919283929083019185019080838360005b8381101561029357818101518382015260200161027b565b50505050905090810190601f1680156102c05780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b610259600480360360208110156102e457600080fd5b5035610733565b6101e66004803603604081101561030157600080fd5b50803590602001356107ce565b6100da6004803603604081101561032457600080fd5b506001600160a01b038135169060200135610803565b6000818152600460205260409020546001600160a01b03163381146103a95760408051600160e51b62461bcd02815260206004820152601860248201527f53656e646572206973206e6f7420617574686f72697a65640000000000000000604482015290519081900360640190fd5b5060009081526005602090815260408220805460018101825590835291200180546001600160a01b0319166001600160a01b0392909216919091179055565b60076000805b825481101561042c5782818154811061040357fe5b6000918252602090912001546001600160a01b031633141561042457600191505b6001016103ee565b508061046c57604051600160e51b62461bcd02815260040180806020018281038252602c815260200180610996602c913960400191505060405180910390fd5b6000848152600660209081526040909120845161048b928601906108fa565b5060008481526004602090815260408083208054336001600160a01b03199182168117909255600584528285208054600181018255908652848620018054909116821790558151888152808401838152885193820193909352875191947f9a27b65b834a85153a0161940629613dcded325ecd78845ba99e2ec15d53b77b948a948a9490926060850192860191908190849084905b83811015610538578181015183820152602001610520565b50505050905090810190601f1680156105655780820380516001836020036101000a031916815260200191505b50935050505060405180910390a250505050565b60035481565b6002546001600160a01b03163381146105e25760408051600160e51b62461bcd02815260206004820152601860248201527f53656e646572206973206e6f7420617574686f72697a65640000000000000000604482015290519081900360640190fd5b50600780546001810182556000919091527fa66cc928b5edb82af9bd49922954155ab7b0942694bea4ce44661d9a8736c6880180546001600160a01b0319166001600160a01b0392909216919091179055565b6004602052600090815260409020546001600160a01b031681565b6000908152600460205260409020546001600160a01b031690565b6007818154811061067857fe5b6000918252602090912001546001600160a01b0316905081565b60008181526006602090815260409182902080548351601f60026000196101006001861615020190931692909204918201849004840281018401909452808452606093928301828280156107275780601f106106fc57610100808354040283529160200191610727565b820191906000526020600020905b81548152906001019060200180831161070a57829003601f168201915b50505050509050919050565b60066020908152600091825260409182902080548351601f6002600019610100600186161502019093169290920491820184900484028101840190945280845290918301828280156107c65780601f1061079b576101008083540402835291602001916107c6565b820191906000526020600020905b8154815290600101906020018083116107a957829003601f168201915b505050505081565b600560205281600052604060002081815481106107e757fe5b6000918252602090912001546001600160a01b03169150829050565b600081815260056020526040812090805b82548110156108525782818154811061082957fe5b6000918252602090912001546001600160a01b031633141561084a57600191505b600101610814565b508061089257604051600160e51b62461bcd02815260040180806020018281038252602c815260200180610996602c913960400191505060405180910390fd5b60008381526004602090815260409182902080546001600160a01b0319166001600160a01b03881690811790915582518681529251909233927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef92918290030190a350505050565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061093b57805160ff1916838001178555610968565b82800160010185558215610968579182015b8281111561096857825182559160200191906001019061094d565b50610974929150610978565b5090565b61099291905b80821115610974576000815560010161097e565b9056fe53656e646572206973206e6f7420616c6c6f77656420746f20646f2074686973207472616e73616374696f6ea165627a7a72305820334d286fdaeb2c20644afa514f7a1605d91dcf9d1372107941168f5a4e54bb660029";
-
-    public static final String FUNC_APPROVE = "approve";
-
-    public static final String FUNC_ISSUETOKEN = "issueToken";
+    private static final String BINARY = "0x60806040523480156200001157600080fd5b506040516200104838038062001048833981018060405260408110156200003757600080fd5b8101908080516401000000008111156200005057600080fd5b828101905060208101848111156200006757600080fd5b81518560018202830111640100000000821117156200008557600080fd5b50509291906020018051640100000000811115620000a257600080fd5b82810190506020810184811115620000b957600080fd5b8151856001820283011164010000000082111715620000d757600080fd5b505092919050505033600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508160009080519060200190620001389291906200015a565b508060019080519060200190620001519291906200015a565b50505062000209565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106200019d57805160ff1916838001178555620001ce565b82800160010185558215620001ce579182015b82811115620001cd578251825591602001919060010190620001b0565b5b509050620001dd9190620001e1565b5090565b6200020691905b8082111562000202576000816000905550600101620001e8565b5090565b90565b610e2f80620002196000396000f3fe6080604052600436106100a4576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680631371a5b3146100a957806318160ddd1461017b57806329ce1ec5146101a65780633acefa20146101f75780636352211e14610272578063672383c4146102ed5780636914db60146103685780636c89d6f41461041c5780637e6cbb6a146104d0578063a9059cbb1461053c575b600080fd5b3480156100b557600080fd5b50610179600480360360408110156100cc57600080fd5b8101908080359060200190929190803590602001906401000000008111156100f357600080fd5b82018360208201111561010557600080fd5b8035906020019184600183028401116401000000008311171561012757600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610597565b005b34801561018757600080fd5b506101906107fe565b6040518082815260200191505060405180910390f35b3480156101b257600080fd5b506101f5600480360360208110156101c957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610804565b005b34801561020357600080fd5b506102306004803603602081101561021a57600080fd5b8101908080359060200190929190505050610934565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561027e57600080fd5b506102ab6004803603602081101561029557600080fd5b8101908080359060200190929190505050610967565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156102f957600080fd5b506103266004803603602081101561031057600080fd5b81019080803590602001909291905050506109a4565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561037457600080fd5b506103a16004803603602081101561038b57600080fd5b81019080803590602001909291905050506109e2565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156103e15780820151818401526020810190506103c6565b50505050905090810190601f16801561040e5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561042857600080fd5b506104556004803603602081101561043f57600080fd5b8101908080359060200190929190505050610a97565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561049557808201518184015260208101905061047a565b50505050905090810190601f1680156104c25780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b3480156104dc57600080fd5b506104e5610b47565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b8381101561052857808201518184015260208101905061050d565b505050509050019250505060405180910390f35b34801561054857600080fd5b506105956004803603604081101561055f57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190505050610bd5565b005b6006600080905060008090505b828054905081101561062e5782818154811015156105be57fe5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561062157600191505b80806001019150506105a4565b508015156106ca576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602c8152602001807f53656e646572206973206e6f7420616c6c6f77656420746f20646f207468697381526020017f207472616e73616374696f6e000000000000000000000000000000000000000081525060400191505060405180910390fd5b826005600086815260200190815260200160002090805190602001906106f1929190610d5e565b50336004600086815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550833373ffffffffffffffffffffffffffffffffffffffff167f9a27b65b834a85153a0161940629613dcded325ecd78845ba99e2ec15d53b77b856040518080602001828103825283818151815260200191508051906020019080838360005b838110156107be5780820151818401526020810190506107a3565b50505050905090810190601f1680156107eb5780820380516001836020036101000a031916815260200191505b509250505060405180910390a350505050565b60035481565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156108ca576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260188152602001807f53656e646572206973206e6f7420617574686f72697a6564000000000000000081525060200191505060405180910390fd5b60068290806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505050565b60046020528060005260406000206000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60006004600083815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050919050565b6006818154811015156109b357fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6060600560008381526020019081526020016000208054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610a8b5780601f10610a6057610100808354040283529160200191610a8b565b820191906000526020600020905b815481529060010190602001808311610a6e57829003601f168201915b50505050509050919050565b60056020528060005260406000206000915090508054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610b3f5780601f10610b1457610100808354040283529160200191610b3f565b820191906000526020600020905b815481529060010190602001808311610b2257829003601f168201915b505050505081565b60606006805480602002602001604051908101604052809291908181526020018280548015610bcb57602002820191906000526020600020905b8160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019060010190808311610b81575b5050505050905090565b6004600082815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141515610cac576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260188152602001807f53656e646572206973206e6f7420617574686f72697a6564000000000000000081525060200191505060405180910390fd5b826004600084815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550818373ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef60405160405180910390a4505050565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f10610d9f57805160ff1916838001178555610dcd565b82800160010185558215610dcd579182015b82811115610dcc578251825591602001919060010190610db1565b5b509050610dda9190610dde565b5090565b610e0091905b80821115610dfc576000816000905550600101610de4565b5090565b9056fea165627a7a72305820172eb470efccd7e0948af8ff64ad413f70b3938ff1e0ce57fe8b8dd4df269d970029";
 
     public static final String FUNC_TOTALSUPPLY = "totalSupply";
 
-    public static final String FUNC_ADDFACTORY = "addFactory";
-
     public static final String FUNC_OWNERSHIPS = "ownerships";
-
-    public static final String FUNC_OWNEROF = "ownerOf";
 
     public static final String FUNC_FACTORIES = "factories";
 
-    public static final String FUNC_TOKENMETADATA = "tokenMetadata";
-
     public static final String FUNC_TOKENHASHINFO = "tokenHashInfo";
 
-    public static final String FUNC_ALLOWEDS = "alloweds";
+    public static final String FUNC_GETFACTORIES = "getFactories";
+
+    public static final String FUNC_ADDFACTORY = "addFactory";
+
+    public static final String FUNC_ISSUETOKEN = "issueToken";
+
+    public static final String FUNC_OWNEROF = "ownerOf";
 
     public static final String FUNC_TRANSFER = "transfer";
 
+    public static final String FUNC_TOKENMETADATA = "tokenMetadata";
+
     public static final Event TRANSFER_EVENT = new Event("Transfer", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<Uint256>() {}));
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<Uint256>(true) {}));
     ;
 
     public static final Event APPROVAL_EVENT = new Event("Approval", 
@@ -69,8 +70,15 @@ public class TrueGrailToken extends Contract {
     ;
 
     public static final Event ISSUE_EVENT = new Event("Issue", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Uint256>() {}, new TypeReference<Utf8String>() {}));
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Uint256>(true) {}, new TypeReference<Utf8String>() {}));
     ;
+
+    protected static final HashMap<String, String> _addresses;
+
+    static {
+        _addresses = new HashMap<String, String>();
+        _addresses.put("5777", "0x499Dc8c3471e88Ccf64877a840502A41f313EABD");
+    }
 
     @Deprecated
     protected TrueGrailToken(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -90,24 +98,6 @@ public class TrueGrailToken extends Contract {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
-    public RemoteCall<TransactionReceipt> approve(String _to, BigInteger _tokenId) {
-        final Function function = new Function(
-                FUNC_APPROVE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_to), 
-                new org.web3j.abi.datatypes.generated.Uint256(_tokenId)), 
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
-    }
-
-    public RemoteCall<TransactionReceipt> issueToken(BigInteger _tokenId, String _hashInfo) {
-        final Function function = new Function(
-                FUNC_ISSUETOKEN, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(_tokenId), 
-                new org.web3j.abi.datatypes.Utf8String(_hashInfo)), 
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
-    }
-
     public RemoteCall<BigInteger> totalSupply() {
         final Function function = new Function(FUNC_TOTALSUPPLY, 
                 Arrays.<Type>asList(), 
@@ -115,24 +105,9 @@ public class TrueGrailToken extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public RemoteCall<TransactionReceipt> addFactory(String _account) {
-        final Function function = new Function(
-                FUNC_ADDFACTORY, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_account)), 
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
-    }
-
     public RemoteCall<String> ownerships(BigInteger param0) {
         final Function function = new Function(FUNC_OWNERSHIPS, 
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(param0)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
-        return executeRemoteCallSingleValueReturn(function, String.class);
-    }
-
-    public RemoteCall<String> ownerOf(BigInteger _tokenId) {
-        final Function function = new Function(FUNC_OWNEROF, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(_tokenId)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
@@ -144,35 +119,11 @@ public class TrueGrailToken extends Contract {
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
-    public RemoteCall<String> tokenMetadata(BigInteger _tokenId) {
-        final Function function = new Function(FUNC_TOKENMETADATA, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(_tokenId)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
-        return executeRemoteCallSingleValueReturn(function, String.class);
-    }
-
     public RemoteCall<String> tokenHashInfo(BigInteger param0) {
         final Function function = new Function(FUNC_TOKENHASHINFO, 
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(param0)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
-    }
-
-    public RemoteCall<String> alloweds(BigInteger param0, BigInteger param1) {
-        final Function function = new Function(FUNC_ALLOWEDS, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(param0), 
-                new org.web3j.abi.datatypes.generated.Uint256(param1)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
-        return executeRemoteCallSingleValueReturn(function, String.class);
-    }
-
-    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _tokenId) {
-        final Function function = new Function(
-                FUNC_TRANSFER, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_to), 
-                new org.web3j.abi.datatypes.generated.Uint256(_tokenId)), 
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
     }
 
     public List<TransferEventResponse> getTransferEvents(TransactionReceipt transactionReceipt) {
@@ -183,7 +134,7 @@ public class TrueGrailToken extends Contract {
             typedResponse.log = eventValues.getLog();
             typedResponse._from = (String) eventValues.getIndexedValues().get(0).getValue();
             typedResponse._to = (String) eventValues.getIndexedValues().get(1).getValue();
-            typedResponse._tokenId = (BigInteger) eventValues.getNonIndexedValues().get(0).getValue();
+            typedResponse._tokenId = (BigInteger) eventValues.getIndexedValues().get(2).getValue();
             responses.add(typedResponse);
         }
         return responses;
@@ -198,7 +149,7 @@ public class TrueGrailToken extends Contract {
                 typedResponse.log = log;
                 typedResponse._from = (String) eventValues.getIndexedValues().get(0).getValue();
                 typedResponse._to = (String) eventValues.getIndexedValues().get(1).getValue();
-                typedResponse._tokenId = (BigInteger) eventValues.getNonIndexedValues().get(0).getValue();
+                typedResponse._tokenId = (BigInteger) eventValues.getIndexedValues().get(2).getValue();
                 return typedResponse;
             }
         });
@@ -252,8 +203,8 @@ public class TrueGrailToken extends Contract {
             IssueEventResponse typedResponse = new IssueEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse._issuer = (String) eventValues.getIndexedValues().get(0).getValue();
-            typedResponse._tokenId = (BigInteger) eventValues.getNonIndexedValues().get(0).getValue();
-            typedResponse._hashInfo = (String) eventValues.getNonIndexedValues().get(1).getValue();
+            typedResponse._tokenId = (BigInteger) eventValues.getIndexedValues().get(1).getValue();
+            typedResponse._hashInfo = (String) eventValues.getNonIndexedValues().get(0).getValue();
             responses.add(typedResponse);
         }
         return responses;
@@ -267,8 +218,8 @@ public class TrueGrailToken extends Contract {
                 IssueEventResponse typedResponse = new IssueEventResponse();
                 typedResponse.log = log;
                 typedResponse._issuer = (String) eventValues.getIndexedValues().get(0).getValue();
-                typedResponse._tokenId = (BigInteger) eventValues.getNonIndexedValues().get(0).getValue();
-                typedResponse._hashInfo = (String) eventValues.getNonIndexedValues().get(1).getValue();
+                typedResponse._tokenId = (BigInteger) eventValues.getIndexedValues().get(1).getValue();
+                typedResponse._hashInfo = (String) eventValues.getNonIndexedValues().get(0).getValue();
                 return typedResponse;
             }
         });
@@ -278,6 +229,61 @@ public class TrueGrailToken extends Contract {
         EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(ISSUE_EVENT));
         return issueEventFlowable(filter);
+    }
+
+    public RemoteCall<List> getFactories() {
+        final Function function = new Function(FUNC_GETFACTORIES, 
+                Arrays.<Type>asList(), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<Address>>() {}));
+        return new RemoteCall<List>(
+                new Callable<List>() {
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public List call() throws Exception {
+                        List<Type> result = (List<Type>) executeCallSingleValueReturn(function, List.class);
+                        return convertToNative(result);
+                    }
+                });
+    }
+
+    public RemoteCall<TransactionReceipt> addFactory(String _account) {
+        final Function function = new Function(
+                FUNC_ADDFACTORY, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_account)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteCall<TransactionReceipt> issueToken(BigInteger _tokenId, String _hashInfo) {
+        final Function function = new Function(
+                FUNC_ISSUETOKEN, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(_tokenId), 
+                new org.web3j.abi.datatypes.Utf8String(_hashInfo)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteCall<String> ownerOf(BigInteger _tokenId) {
+        final Function function = new Function(FUNC_OWNEROF, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(_tokenId)), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
+    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _tokenId) {
+        final Function function = new Function(
+                FUNC_TRANSFER, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_to), 
+                new org.web3j.abi.datatypes.generated.Uint256(_tokenId)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteCall<String> tokenMetadata(BigInteger _tokenId) {
+        final Function function = new Function(FUNC_TOKENMETADATA, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(_tokenId)), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
     @Deprecated
@@ -322,6 +328,14 @@ public class TrueGrailToken extends Contract {
         String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(_name), 
                 new org.web3j.abi.datatypes.Utf8String(_symbol)));
         return deployRemoteCall(TrueGrailToken.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, encodedConstructor);
+    }
+
+    protected String getStaticDeployedAddress(String networkId) {
+        return _addresses.get(networkId);
+    }
+
+    public static String getPreviouslyDeployedAddress(String networkId) {
+        return _addresses.get(networkId);
     }
 
     public static class TransferEventResponse {

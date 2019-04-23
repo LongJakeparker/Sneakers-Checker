@@ -1,44 +1,35 @@
 package com.sneakers.sneakerschecker
 
-import android.support.v7.app.AppCompatActivity
+import android.content.*
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
+import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.contracts.TrueGrailToken
+import com.sneakers.sneakerschecker.model.Contract
 import com.sneakers.sneakerschecker.model.GenerateQrCode
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.model.Web3Instant
 import com.sneakers.sneakerschecker.screens.activity.AuthenticationActivity
+import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
-import org.web3j.protocol.http.HttpService
-import org.web3j.protocol.Web3j
-import android.util.Log
-import android.support.v7.app.AlertDialog
-import com.sneakers.sneakerschecker.contracts.TrueGrailToken
 import org.web3j.crypto.WalletUtils
-import org.web3j.tx.Contract
-import java.math.BigInteger
-import android.R.attr.label
-import android.content.*
-import android.content.Context.CLIPBOARD_SERVICE
-
-
+import org.web3j.protocol.Web3j
+import org.web3j.protocol.http.HttpService
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private val GAS_PRICE:BigInteger = BigInteger.valueOf(20000000000L)
-    private val GAS_LIMIT:BigInteger = BigInteger.valueOf(6721975L)
-
-    private val CONTRACT_ADDRESS:String = "0x9A8c82A07cB94730BD10074A4C2758c7c28038dc"
-
     private val TYPE_UNLINK: Int = 0
 
     private lateinit var contract: TrueGrailToken
 
     private lateinit var sharedPref: SharedPref
-    private var credentials: org.web3j.crypto.Credentials? = null
+    private lateinit var credentials: org.web3j.crypto.Credentials
 
     private lateinit var builder: AlertDialog.Builder
     private lateinit var dialog: AlertDialog
@@ -65,19 +56,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         Thread {
-            val web3 = Web3j.build(HttpService(Constant.ETHEREUM_API_KEY))
-            val web3ClientVersion = web3.web3ClientVersion().send()
-            val clientVersion = web3ClientVersion.web3ClientVersion
+            try {
+                val web3 = Web3j.build(HttpService(Constant.ETHEREUM_API_KEY))
+                Web3Instant.setInstance(web3)
+                credentials = WalletUtils.loadBip39Credentials(
+                    sharedPref.getString(Constant.WALLET_PASSPHRASE),
+                    sharedPref.getString(Constant.WALLET_MNEMONIC)
+                )
 
-            credentials = WalletUtils.loadBip39Credentials(sharedPref.getString(Constant.WALLET_PASSPHRASE), sharedPref.getString(Constant.WALLET_MNEMONIC))
+                contract = Contract.getInstance(web3, credentials)
 
-            contract = TrueGrailToken.load(
-                CONTRACT_ADDRESS, web3, credentials, GAS_PRICE, GAS_LIMIT
-            )
-
-            dialog.dismiss()
-
-            Log.e("TAG", "Connect: $clientVersion")
+                dialog.dismiss()
+            } catch (e: Exception) {
+                dialog.dismiss()
+                runOnUiThread { Toast.makeText(this, "Connect Blockchain Failed", Toast.LENGTH_LONG).show() }
+            }
         }.start()
 
         btnMenuMain.setOnClickListener(this)
@@ -143,13 +136,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         if (result != null) {
             if (result.contents != null) {
-                var ownerId = contract.ownerOf(BigInteger(result.contents)).sendAsync().get()
-                var productId = contract.tokenMetadata(BigInteger(result.contents)).sendAsync().get()
-                Toast.makeText(this, "$ownerId + $productId", Toast.LENGTH_LONG).show()
-                Log.e("TAG", "ownerId: $ownerId + productId: $productId")
+                SneakerInfoActivity.start(this@MainActivity, result.contents)
             }
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }

@@ -34,6 +34,10 @@ class GenerateQrCode {
             return null
         }
 
+        fun ItemToken(activity: Activity, widthPer: Double, itemToken: String): Bitmap? {
+            return WalletMnemonic(activity, widthPer, itemToken)
+        }
+
         fun WalletMnemonic(activity: Activity, widthPer: Double, mnemonic: String): Bitmap? {
             val display = activity.windowManager.defaultDisplay
             val size = Point()
