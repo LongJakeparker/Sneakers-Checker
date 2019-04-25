@@ -23,6 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/imageView3"
             android:layout_above="@+id/textView3"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="@dimen/copyright_margin_bottom">
 
         <LinearLayout
@@ -37,9 +38,9 @@
                     android:background="@color/colorPaleSlate"
                     android:id="@+id/ivQrCodeValidate"
                     android:scaleType="center"
+                    android:layout_marginTop="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="30dp"
                     app:layout_constraintTop_toTopOf="parent"/>
 
             <android.support.constraint.ConstraintLayout
