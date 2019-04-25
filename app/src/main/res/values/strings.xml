@@ -42,4 +42,8 @@
     //Main Screen
     <string name="your_address">Your Address</string>
 
+    <string name="label_validate_step_1">step 1</string>
+    <string name="label_validate_step_2">step 2</string>
+    <string name="label_validate_step_3">step 3</string>
+
 </resources>
