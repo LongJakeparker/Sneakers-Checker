@@ -50,6 +50,15 @@
                 android:background="@android:color/transparent"
                 android:textColor="@color/colorWhite"
                 android:textAlignment="viewStart"/>
+        <Button
+                android:id="@+id/btnCollection"
+                android:text="Collection"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/drawer_button_height"
+                android:textAllCaps="false"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorWhite"
+                android:textAlignment="viewStart"/>
     </LinearLayout>
 
     <Button

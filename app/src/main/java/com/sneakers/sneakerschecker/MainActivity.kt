@@ -15,6 +15,7 @@ import com.sneakers.sneakerschecker.model.GenerateQrCode
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instant
 import com.sneakers.sneakerschecker.screens.activity.AuthenticationActivity
+import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
 import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         builder = AlertDialog.Builder(this)
         builder.setCancelable(false) // if you want user to wait for some process to finish,
-        builder.setView(R.layout.layout_loading_dialog)
+        //builder.setView(R.layout.layout_loading_dialog)
         dialog = builder.create()
         dialog.show()
 
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnUnlinkWalletMain.setOnClickListener(this)
         ibtnCopyMain.setOnClickListener(this)
         btnScanMain.setOnClickListener(this)
+        btnCollection.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -84,6 +86,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnMenuMain -> drawer_layout.openDrawer(GravityCompat.START)
 
             R.id.ibtnCopyMain -> copyToClipboard(tvAddressMain.text.toString())
+
+            R.id.btnCollection -> {
+                drawer_layout.closeDrawer(GravityCompat.START)
+                CollectionActivity.start(this@MainActivity)
+            }
 
             R.id.btnUnlinkWalletMain -> {
                 popupType = TYPE_UNLINK

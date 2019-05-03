@@ -41,7 +41,7 @@
             android:layout_centerHorizontal="true"
             android:textColor="@android:color/white"
             android:padding="20dp"
-            android:textSize="14dp"
+            android:textSize="16dp"
             android:background="#4B4B4B"
             android:layout_marginTop="60dp"
             android:layout_alignParentTop="true"/>

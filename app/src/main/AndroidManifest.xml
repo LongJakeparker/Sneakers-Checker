@@ -17,6 +17,8 @@
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".screens.activity.CollectionActivity">
+        </activity>
         <activity android:name=".screens.activity.SneakerInfoActivity">
         </activity>
         <activity android:name=".screens.activity.AuthenticationActivity">

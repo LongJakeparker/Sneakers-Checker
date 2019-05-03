@@ -401,9 +401,8 @@
                     android:background="@drawable/main_button"
                     android:textSize="@dimen/button_text_size"
                     android:id="@+id/btnDoneValidate"
-                    android:layout_gravity="end"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginEnd="@dimen/layout_padding_Horizontal"
                     android:visibility="gone"/>
         </LinearLayout>
 
