@@ -16,6 +16,7 @@
     <color name="colorShadow">#40000000</color>
     <color name="colorMain">#AB2126</color>
     <color name="colorBubble">#99000000</color>
+    <color name="colorGreen">#65C87A</color>
 
 
 </resources>

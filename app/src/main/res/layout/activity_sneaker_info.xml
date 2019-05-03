@@ -2,10 +2,10 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/test_background"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".screens.activity.SneakerInfoActivity">
 
     <ImageView
@@ -38,32 +38,302 @@
                     android:background="@color/colorPaleSlate"
                     android:id="@+id/ivQrCodeValidate"
                     android:scaleType="center"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    android:layout_marginTop="20dp"/>
 
-            <android.support.constraint.ConstraintLayout
+            <TextView
+                    android:id="@+id/tvIsValidated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_is_validated"
+                    android:textColor="@color/colorGreen"
+                    android:layout_marginTop="20dp"
+                    android:textStyle="italic|bold"
+                    android:textSize="20dp"
+                    android:visibility="gone"/>
+
+            <LinearLayout
                     android:id="@+id/layoutItemInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginHorizontal="@dimen/layout_padding_Horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Detail"
+                            android:textColor="@android:color/white"
+                            android:textSize="23dp"
+                    />
+
+                    <TextView
+                            android:id="@+id/tvIsLimited"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGreen"
+                            android:textStyle="bold|italic"
+                            android:text="(Limited Edition)"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                            android:layout_gravity="center_vertical"
+                            android:visibility="gone"
+                    />
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Id:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvItemId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Brand:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvItemBrand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Model:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvItemModelName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Colorway:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvItemColorWay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Release date:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvItemReleaseDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Size:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvItemSize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Condition:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvItemCondition"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <TextView
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Owner's address:"
+                        android:textColor="@android:color/white"
+                        android:textSize="17dp"
+                        android:textStyle="bold"
+                />
+
+                <TextView
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/tvItemOwnerAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="17dp"
+                />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:text="Item is validated"
-                    android:textColor="@android:color/white"
-                    android:textSize="20dp"/>
+                        android:text="Owner"
+                        android:textColor="@android:color/white"
+                        android:textSize="23dp"
+                        android:layout_marginTop="5dp"
+                />
 
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            </android.support.constraint.ConstraintLayout>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Brand:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvOwnerBrand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Physical address:"
+                            android:textColor="@android:color/white"
+                            android:textSize="17dp"
+                            android:textStyle="bold"
+                    />
+                    <TextView
+                            android:id="@+id/tvOwnerPhysicalAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="17dp"
+                    />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <android.support.v4.view.ViewPager
                     android:id="@+id/viewPagerValidateProgress"
@@ -78,6 +348,63 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
+            <android.support.constraint.ConstraintLayout
+                    android:id="@+id/layoutButtonOwner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:visibility="gone">
+
+                <Button
+                        android:text="@string/strButton_Back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/button_padding_vertical"
+                        android:paddingHorizontal="38dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite"
+                        android:background="@drawable/main_button"
+                        android:textSize="@dimen/button_text_size"
+                        android:id="@+id/btnBackValidate"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginStart="@dimen/layout_padding_Horizontal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <Button
+                        android:text="@string/strButton_Sell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/button_padding_vertical"
+                        android:paddingHorizontal="38dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite"
+                        android:background="@drawable/main_button"
+                        android:textSize="@dimen/button_text_size"
+                        android:id="@+id/btnSellValidate"
+                        android:layout_marginEnd="@dimen/layout_padding_Horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <Button
+                    android:text="@string/strButton_Done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/button_padding_vertical"
+                    android:paddingHorizontal="38dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/main_button"
+                    android:textSize="@dimen/button_text_size"
+                    android:id="@+id/btnDoneValidate"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="@dimen/layout_padding_Horizontal"
+                    android:visibility="gone"/>
         </LinearLayout>
 
     </ScrollView>
