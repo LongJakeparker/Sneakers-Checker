@@ -17,6 +17,6 @@
     <color name="colorMain">#AB2126</color>
     <color name="colorBubble">#99000000</color>
     <color name="colorGreen">#65C87A</color>
-
+    <color name="colorGreyTitle">#999999</color>
 
 </resources>

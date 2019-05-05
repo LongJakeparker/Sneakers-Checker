@@ -3,11 +3,17 @@ package com.sneakers.sneakerschecker.screens.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.view.View.VISIBLE
+import android.view.animation.Interpolator
 import android.widget.Toast
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ValidatePagerAdapter
+import com.sneakers.sneakerschecker.animations.FixedSpeedScroller
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contracts.TrueGrailToken
@@ -15,25 +21,17 @@ import com.sneakers.sneakerschecker.model.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_sneaker_info.*
-import org.web3j.crypto.WalletUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.math.BigInteger
-import android.os.CountDownTimer
-import android.support.v4.view.ViewPager
-import android.view.View
-import android.view.View.VISIBLE
-import android.view.animation.Interpolator
-import com.sneakers.sneakerschecker.animations.FixedSpeedScroller
 
 
 class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
 
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var contract: TrueGrailToken
-    private lateinit var credentials: org.web3j.crypto.Credentials
     private lateinit var sharedPref: SharedPref
     private lateinit var service: Retrofit
 
@@ -52,7 +50,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.sneakers.sneakerschecker.R.layout.activity_sneaker_info)
+        setContentView(R.layout.activity_sneaker_info)
 
         sharedPref = SharedPref(this)
 
@@ -67,12 +65,8 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
-        val web3 = Web3Instant.getInstance()
-        credentials = WalletUtils.loadBip39Credentials(
-            sharedPref.getString(Constant.WALLET_PASSPHRASE),
-            sharedPref.getString(Constant.WALLET_MNEMONIC)
-        )
-        contract = Contract.getInstance(web3, credentials)
+        val web3 = Web3Instance.getInstance()
+        contract = web3?.let { Contract.getInstance(it, sharedPref.getString(Constant.ACCOUNT_ID)) }!!
 
         createListPager()
         setupValidatePager()
@@ -81,14 +75,22 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
             override fun onTick(millisUntilFinished: Long) {
 
             }
+
             override fun onFinish() {
                 validateSteps[0].isSuccessed = true
                 validatePagerAdapter.notifyDataSetChanged()
                 object : CountDownTimer(500, 500) {
                     override fun onFinish() {
                         movePagerNext()
-                        callApi()
+                        object : CountDownTimer(500, 500) {
+                            override fun onFinish() {
+                                callApi()
+                            }
+
+                            override fun onTick(millisUntilFinished: Long) {}
+                        }.start()
                     }
+
                     override fun onTick(millisUntilFinished: Long) {}
                 }.start()
             }
@@ -156,17 +158,22 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                         object : CountDownTimer(500, 500) {
                             override fun onFinish() {
                                 movePagerNext()
-                                validateItem(responseHash!!)
+                                object : CountDownTimer(500, 500) {
+                                    override fun onFinish() {
+                                        validateItem(responseHash!!)
+                                    }
+
+                                    override fun onTick(millisUntilFinished: Long) {}
+                                }.start()
                             }
+
                             override fun onTick(millisUntilFinished: Long) {}
                         }.start()
-                    }
-                    else {
+                    } else {
                         validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
                         setTextValidateFail()
                     }
-                }
-                else {
+                } else {
                     validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
                     setTextValidateFail()
                 }
@@ -187,11 +194,10 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     setTextValidateFail()
                 },
                 {
-                    if  (blockchainHash.isNullOrEmpty()) {
+                    if (blockchainHash.isNullOrEmpty()) {
                         validatePagerAdapter.updatePager(this, 2, false)
                         setTextValidateFail()
-                    }
-                    else {
+                    } else {
                         if (responseHash.equals(blockchainHash)) {
                             validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, true)
                             loadItemInfo()
@@ -225,16 +231,16 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     tvItemCondition.text = validatedItem.detail.condition
                     tvItemOwnerAddress.text = validatedItem.detail.ownerAddress
 
-                    tvOwnerBrand.text = validatedItem.owner.brand
-                    tvOwnerPhysicalAddress.text = validatedItem.owner.physicalAddress
+                    tvOwnerBrand.text = validatedItem.owner?.brand
+                    tvOwnerPhysicalAddress.text = validatedItem.owner?.physicalAddress
 
-                    if (validatedItem.detail.ownerAddress.equals(sharedPref.getString(Constant.WALLET_ADDRESS))) {
-                        layoutButtonOwner.visibility = VISIBLE
-                    }
-                    else {
+                    if (validatedItem.detail.ownerAddress.equals(sharedPref.getString(Constant.ACCOUNT_ID))) {
+                        btnSellValidate.visibility = VISIBLE
+                    } else {
                         btnDoneValidate.visibility = VISIBLE
                     }
                 }
+
                 override fun onTick(millisUntilFinished: Long) {}
             }.start()
         }
@@ -249,6 +255,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     tvIsValidated.visibility = VISIBLE
                     btnDoneValidate.visibility = VISIBLE
                 }
+
                 override fun onTick(millisUntilFinished: Long) {}
             }.start()
         }
@@ -256,8 +263,8 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnDoneValidate, R.id.btnBackValidate -> finish()
-            R.id.btnSellValidate -> {}
+            R.id.btnDoneValidate, R.id.btnBackValidate -> onBackPressed()
+            R.id.btnSellValidate -> TransferActivity.start(this@SneakerInfoActivity, validatedItem.detail)
         }
     }
 }

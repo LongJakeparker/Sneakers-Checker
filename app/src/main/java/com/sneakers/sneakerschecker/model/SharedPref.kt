@@ -3,6 +3,9 @@ package com.sneakers.sneakerschecker.model
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import javax.net.ssl.SNIHostName
+
 
 class SharedPref {
     private val PREFS_FILENAME = "com.sneakerchecker.storage"
@@ -55,6 +58,20 @@ class SharedPref {
         val gson = Gson()
 
         return gson.fromJson(prefs!!.getString(fieldName, ""), SignIn::class.java)
+    }
+
+    fun setArrayCollection(value: ArrayList<SneakerModel>, fieldName: String) {
+        val gson = Gson()
+        val json = gson.toJson(value)
+        val editor = prefs!!.edit()
+        editor.putString(fieldName, json)
+        editor.apply()
+    }
+
+    fun getArrayCollection(fieldName: String): ArrayList<SneakerModel> {
+        val gson = Gson()
+        val json = prefs?.getString(fieldName, "")
+        return gson.fromJson(json, object : TypeToken<ArrayList<SneakerModel>>() {}.type)
     }
 
     fun clearPref() {

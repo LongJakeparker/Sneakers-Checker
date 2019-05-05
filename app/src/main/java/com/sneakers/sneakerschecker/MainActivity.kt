@@ -10,27 +10,25 @@ import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contracts.TrueGrailToken
-import com.sneakers.sneakerschecker.model.Contract
 import com.sneakers.sneakerschecker.model.GenerateQrCode
 import com.sneakers.sneakerschecker.model.SharedPref
-import com.sneakers.sneakerschecker.model.Web3Instant
+import com.sneakers.sneakerschecker.model.Web3Instance
 import com.sneakers.sneakerschecker.screens.activity.AuthenticationActivity
 import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
 import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
-import org.web3j.crypto.WalletUtils
 import org.web3j.protocol.Web3j
+import org.web3j.protocol.admin.Admin
 import org.web3j.protocol.http.HttpService
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val TYPE_UNLINK: Int = 0
 
-    private lateinit var contract: TrueGrailToken
+    private lateinit var web3: Web3j
 
     private lateinit var sharedPref: SharedPref
-    private lateinit var credentials: org.web3j.crypto.Credentials
 
     private lateinit var builder: AlertDialog.Builder
     private lateinit var dialog: AlertDialog
@@ -48,9 +46,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         sharedPref = SharedPref(this)
 
-        tvAddressMain.text = sharedPref.getString(Constant.WALLET_ADDRESS)
+        tvAddressMain.text = sharedPref.getString(Constant.ACCOUNT_ID)
 
-        val qrCode = GenerateQrCode.WalletAddress(this, 0.55)
+        val qrCode = GenerateQrCode.accountId(this, 0.55)
 
         if (qrCode != null) {
             ivQrCodeMain.setImageBitmap(qrCode)
@@ -58,14 +56,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         Thread {
             try {
-                val web3 = Web3j.build(HttpService(Constant.ETHEREUM_API_KEY))
-                Web3Instant.setInstance(web3)
-                credentials = WalletUtils.loadBip39Credentials(
-                    sharedPref.getString(Constant.WALLET_PASSPHRASE),
-                    sharedPref.getString(Constant.WALLET_MNEMONIC)
-                )
-
-                contract = Contract.getInstance(web3, credentials)
+                web3 = Web3j.build(HttpService(Constant.ETHEREUM_API_URL))
+                Web3Instance.setInstance(web3)
+//                if (Web3Instance.getInstance() == null) {
+//                    web3 = Admin.build(HttpService(Constant.ETHEREUM_API_URL))
+//                    Web3Instance.setInstance(web3)
+//                }
+//                else {
+//                    web3 = Web3Instance.getInstance() as Admin
+//                }
 
                 dialog.dismiss()
             } catch (e: Exception) {
@@ -132,10 +131,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun UnlinkWallet() {
         sharedPref.clearPref()
-        sharedPref.setBool(true, Constant.WALLET_UNLINK)
+        sharedPref.setBool(true, Constant.ACCOUNT_UNLINK)
         val intent = Intent(this, AuthenticationActivity::class.java)
         startActivity(intent)
-        this.finish()
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

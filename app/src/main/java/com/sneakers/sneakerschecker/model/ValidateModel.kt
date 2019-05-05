@@ -22,7 +22,7 @@ class ValidateModel() : Parcelable {
     @SerializedName("hash")
     lateinit var hash: String
     @SerializedName("owner")
-    lateinit var owner: OwnerModel
+    var owner: OwnerModel? = null
 
     constructor(parcel: Parcel) : this() {
         detail = parcel.readParcelable(SneakerModel::class.java.classLoader)

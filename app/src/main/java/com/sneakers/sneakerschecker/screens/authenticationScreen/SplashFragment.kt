@@ -38,7 +38,7 @@ class SplashFragment : Fragment() {
 
         Handler().postDelayed({
             val sharedPref = SharedPref(this.context!!)
-            if (sharedPref.getString(Constant.WALLET_ADDRESS) != "") {
+            if (sharedPref.getString(Constant.ACCOUNT_ID) != "") {
                 val intent = Intent(activity, MainActivity::class.java)
                 startActivity(intent)
                 activity!!.finish()

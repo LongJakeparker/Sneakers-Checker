@@ -18,8 +18,8 @@ class AuthenticationActivity : AppCompatActivity() {
             val transaction = supportFragmentManager.beginTransaction()
             val sharedPref = SharedPref(this)
 
-            if (sharedPref.getBool(Constant.WALLET_UNLINK)) {
-                sharedPref.setBool(false, Constant.WALLET_UNLINK)
+            if (sharedPref.getBool(Constant.ACCOUNT_UNLINK)) {
+                sharedPref.setBool(false, Constant.ACCOUNT_UNLINK)
                 transaction.add(R.id.authentication_layout, AuthenticationFragment())
                     .commit()
             }

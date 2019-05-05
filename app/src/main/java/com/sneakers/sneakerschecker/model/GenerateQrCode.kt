@@ -11,7 +11,7 @@ import com.sneakers.sneakerschecker.constant.Constant
 
 class GenerateQrCode {
     companion object {
-        fun WalletAddress(activity: Activity, widthPer: Double): Bitmap? {
+        fun accountId(activity: Activity, widthPer: Double): Bitmap? {
             val display = activity.windowManager.defaultDisplay
             val size = Point()
             display.getSize(size)
@@ -19,7 +19,7 @@ class GenerateQrCode {
 
             val sharedPref = SharedPref(activity)
 
-            val walletAddress = sharedPref.getString(Constant.WALLET_ADDRESS)
+            val walletAddress = sharedPref.getString(Constant.ACCOUNT_ID)
 
             val multiFormatWriter = MultiFormatWriter()
             try {
@@ -35,10 +35,6 @@ class GenerateQrCode {
         }
 
         fun ItemToken(activity: Activity, widthPer: Double, itemToken: String): Bitmap? {
-            return WalletMnemonic(activity, widthPer, itemToken)
-        }
-
-        fun WalletMnemonic(activity: Activity, widthPer: Double, mnemonic: String): Bitmap? {
             val display = activity.windowManager.defaultDisplay
             val size = Point()
             display.getSize(size)
@@ -46,7 +42,7 @@ class GenerateQrCode {
 
             val multiFormatWriter = MultiFormatWriter()
             try {
-                val bitMatrix = multiFormatWriter.encode(mnemonic, BarcodeFormat.QR_CODE,
+                val bitMatrix = multiFormatWriter.encode(itemToken, BarcodeFormat.QR_CODE,
                     (width * widthPer).toInt() ,
                     (width * widthPer).toInt())
                 val barcodeEncoder = BarcodeEncoder()
