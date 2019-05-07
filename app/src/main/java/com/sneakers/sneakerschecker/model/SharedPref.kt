@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.web3j.crypto.Credentials
 import javax.net.ssl.SNIHostName
 
 
@@ -58,6 +59,21 @@ class SharedPref {
         val gson = Gson()
 
         return gson.fromJson(prefs!!.getString(fieldName, ""), SignIn::class.java)
+    }
+
+    fun setCredentials(value: Credentials, fieldName: String) {
+        val gson = Gson()
+        val credentials = gson.toJson(value)
+
+        val editor = prefs!!.edit()
+        editor.putString(fieldName, credentials)
+        editor.apply()
+    }
+
+    fun getCredentials(fieldName: String): Credentials {
+        val gson = Gson()
+
+        return gson.fromJson(prefs!!.getString(fieldName, ""), Credentials::class.java)
     }
 
     fun setArrayCollection(value: ArrayList<SneakerModel>, fieldName: String) {

@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         sharedPref = SharedPref(this)
 
-        tvAddressMain.text = sharedPref.getString(Constant.ACCOUNT_ID)
+        tvAddressMain.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
 
         val qrCode = GenerateQrCode.accountId(this, 0.55)
 

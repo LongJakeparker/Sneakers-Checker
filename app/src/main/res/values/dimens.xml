@@ -20,6 +20,8 @@
     <dimen name="tutoline_height">1dp</dimen>
     <dimen name="tutoline_margin_top">10dp</dimen>
 
+    <dimen name="edittext_height">30dp</dimen>
+
 
     //Authen Screen
     <dimen name="button_width">220dp</dimen>

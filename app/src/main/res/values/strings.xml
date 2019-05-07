@@ -19,6 +19,7 @@
     <string name="user_name">Email</string>
     <string name="pin">Password (6 characters)</string>
     <string name="pin_reenter">Your Password (re-enter)</string>
+    <string name="label_private_key">Your Private Key</string>
 
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>

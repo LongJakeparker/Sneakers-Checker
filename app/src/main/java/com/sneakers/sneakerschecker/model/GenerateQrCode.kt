@@ -19,7 +19,7 @@ class GenerateQrCode {
 
             val sharedPref = SharedPref(activity)
 
-            val walletAddress = sharedPref.getString(Constant.ACCOUNT_ID)
+            val walletAddress = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
 
             val multiFormatWriter = MultiFormatWriter()
             try {

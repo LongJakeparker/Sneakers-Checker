@@ -48,7 +48,7 @@ class CollectionActivity : AppCompatActivity() {
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
         val web3 = Web3Instance.getInstance()
-        contract = web3?.let { Contract.getInstance(it, sharedPref.getString(Constant.ACCOUNT_ID)) }!!
+        contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
 
         listCollection = sharedPref.getArrayCollection(Constant.USER_COLLECTION)
 

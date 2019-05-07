@@ -66,7 +66,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
         val web3 = Web3Instance.getInstance()
-        contract = web3?.let { Contract.getInstance(it, sharedPref.getString(Constant.ACCOUNT_ID)) }!!
+        contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
 
         createListPager()
         setupValidatePager()
@@ -234,7 +234,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     tvOwnerBrand.text = validatedItem.owner?.brand
                     tvOwnerPhysicalAddress.text = validatedItem.owner?.physicalAddress
 
-                    if (validatedItem.detail.ownerAddress.equals(sharedPref.getString(Constant.ACCOUNT_ID))) {
+                    if (validatedItem.detail.ownerAddress == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
                         btnSellValidate.visibility = VISIBLE
                     } else {
                         btnDoneValidate.visibility = VISIBLE

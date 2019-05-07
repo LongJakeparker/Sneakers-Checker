@@ -46,7 +46,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
         sharedPref = SharedPref(this)
 
         val web3 = Web3Instance.getInstance()
-        contract = web3?.let { Contract.getInstance(it, sharedPref.getString(Constant.ACCOUNT_ID)) }!!
+        contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
 
         if (intent.getParcelableExtra<SneakerModel>(Constant.EXTRA_SNEAKER) != null) {
             sellItem = intent.getParcelableExtra(Constant.EXTRA_SNEAKER)
@@ -86,35 +86,28 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     private fun commitItem() {
         sellItem.ownerAddress = etTransferAddress.text.toString()
         val newHash = Hashing.sha1().hashObject(sellItem, { _, _ -> })
-        val admin = Admin.build(HttpService(Constant.ETHEREUM_API_URL))
-        val personalUnlockAccount = admin.personalUnlockAccount(sharedPref.getString(Constant.ACCOUNT_ID), "@Aa1234567")
+
+        val sneakerReceipt = contract.transfer(
+            etTransferAddress.text.toString(),
+            BigInteger(sellItem.id),
+            newHash.toString()
+        )
             .flowable()
             .subscribeOn(Schedulers.io())
             .subscribe({ response ->
-                if (response.accountUnlocked()) {
-                    val sneakerReceipt = contract.transfer(
-                        etTransferAddress.text.toString(),
-                        BigInteger(sellItem.id),
-                        newHash.toString()
-                    )
-                        .flowable()
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({ response -> val transferEvent = response },
-                            { throwable ->
-                                Log.e("TAG", "Throwable " + throwable.message)
-                            },
-                            {
-                                Toast.makeText(this, "Sneaker was transferred", Toast.LENGTH_LONG).show()
-                            })
-
-                    compositeDisposable.add(sneakerReceipt)
-                }
-            },
+                    if (response != null) {
+                        finish()
+                    }
+                },
                 { throwable ->
                     Log.e("TAG", "Throwable " + throwable.message)
+                },
+                {
+                    Toast.makeText(this, "Sneaker was transferred", Toast.LENGTH_LONG).show()
                 })
 
-        compositeDisposable.add(personalUnlockAccount)
+        compositeDisposable.add(sneakerReceipt)
+
     }
 
     private fun goToScan() {

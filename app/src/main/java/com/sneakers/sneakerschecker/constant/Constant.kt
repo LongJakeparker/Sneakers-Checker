@@ -6,6 +6,8 @@ object Constant {
     const val ACCOUNT_ID= "ACCOUNT_ID"
     const val ACCOUNT_UNLINK= "ACCOUNT_UNLINK"
 
+    const val USER_CREDENTIALS= "USER_CREDENTIALS"
+
     const val WALLET_USER= "wallet user"
 
     const val GRANT_TYPE_PASSWORD= "password"
