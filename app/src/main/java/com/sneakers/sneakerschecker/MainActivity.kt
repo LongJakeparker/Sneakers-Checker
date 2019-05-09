@@ -58,13 +58,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             try {
                 web3 = Web3j.build(HttpService(Constant.ETHEREUM_API_URL))
                 Web3Instance.setInstance(web3)
-//                if (Web3Instance.getInstance() == null) {
-//                    web3 = Admin.build(HttpService(Constant.ETHEREUM_API_URL))
-//                    Web3Instance.setInstance(web3)
-//                }
-//                else {
-//                    web3 = Web3Instance.getInstance() as Admin
-//                }
 
                 dialog.dismiss()
             } catch (e: Exception) {
