@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.contracts.TrueGrailToken
 import com.sneakers.sneakerschecker.model.GenerateQrCode
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instance
@@ -19,7 +18,6 @@ import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
 import org.web3j.protocol.Web3j
-import org.web3j.protocol.admin.Admin
 import org.web3j.protocol.http.HttpService
 
 

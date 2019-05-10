@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.common.hash.Hashing
+import com.google.gson.Gson
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
@@ -102,17 +103,9 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
         dialog.show()
         sellItem.ownerAddress = etTransferAddress.text.toString().trim()
 
-        val newHash = Hashing.sha1().hashObject(sellItem) { from, into ->
-            into.putString(from.id, StandardCharsets.UTF_8)
-                .putString(from.brand, StandardCharsets.UTF_8)
-                .putString(from.model, StandardCharsets.UTF_8)
-                .putString(from.colorway, StandardCharsets.UTF_8)
-                .putBoolean(from.limitedEdition)
-                .putString(from.releaseDate, StandardCharsets.UTF_8)
-                .putFloat(from.size)
-                .putString(from.condition, StandardCharsets.UTF_8)
-                .putString(from.ownerAddress, StandardCharsets.UTF_8)
-        }.toString()
+        val gson = Gson()
+        val strSellItem = gson.toJson(sellItem)
+        val newHash = Hashing.sha256().hashString(strSellItem, StandardCharsets.UTF_8).toString()
 
         val sneakerReceipt = contract.transfer(
             etTransferAddress.text.toString().trim(),
