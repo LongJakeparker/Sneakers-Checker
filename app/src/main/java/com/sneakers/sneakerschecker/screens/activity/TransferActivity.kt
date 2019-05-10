@@ -25,6 +25,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.math.BigInteger
+import java.nio.charset.StandardCharsets
 
 
 class TransferActivity : AppCompatActivity(), View.OnClickListener {
@@ -100,12 +101,23 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     private fun commitItem() {
         dialog.show()
         sellItem.ownerAddress = etTransferAddress.text.toString().trim()
-        val newHash = Hashing.sha1().hashObject(sellItem, { _, _ -> })
+
+        val newHash = Hashing.sha1().hashObject(sellItem) { from, into ->
+            into.putString(from.id, StandardCharsets.UTF_8)
+                .putString(from.brand, StandardCharsets.UTF_8)
+                .putString(from.model, StandardCharsets.UTF_8)
+                .putString(from.colorway, StandardCharsets.UTF_8)
+                .putBoolean(from.limitedEdition)
+                .putString(from.releaseDate, StandardCharsets.UTF_8)
+                .putFloat(from.size)
+                .putString(from.condition, StandardCharsets.UTF_8)
+                .putString(from.ownerAddress, StandardCharsets.UTF_8)
+        }.toString()
 
         val sneakerReceipt = contract.transfer(
             etTransferAddress.text.toString().trim(),
             BigInteger(sellItem.id),
-            newHash.toString()
+            newHash
         )
             .flowable()
             .subscribeOn(Schedulers.io())

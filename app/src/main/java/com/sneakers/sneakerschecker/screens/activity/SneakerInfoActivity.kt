@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Parcel
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -12,6 +13,7 @@ import android.view.View.VISIBLE
 import android.view.animation.Interpolator
 import android.widget.Toast
 import com.google.common.hash.Hashing
+import com.google.gson.Gson
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ValidatePagerAdapter
 import com.sneakers.sneakerschecker.animations.FixedSpeedScroller
@@ -22,11 +24,13 @@ import com.sneakers.sneakerschecker.model.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_sneaker_info.*
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.math.BigInteger
+import java.nio.charset.StandardCharsets
 
 
 class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
@@ -155,7 +159,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     if (response.body() != null) {
                         val responseHash = response.body()?.hash
                         validatedItem = response.body()!!
-                        val newHash = Hashing.sha1().hashObject(validatedItem, { _, _ -> })
+
                         validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, true)
                         object : CountDownTimer(500, 500) {
                             override fun onFinish() {
