@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Parcel
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -24,7 +23,6 @@ import com.sneakers.sneakerschecker.model.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_sneaker_info.*
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -157,8 +155,12 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
             override fun onResponse(call: Call<ValidateModel>, response: Response<ValidateModel>) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
-                        val responseHash = response.body()?.hash
                         validatedItem = response.body()!!
+
+                        val gson = Gson()
+                        val strResponseHash = gson.toJson(validatedItem.detail)
+                        val responseHash =
+                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
 
                         validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, true)
                         object : CountDownTimer(500, 500) {
@@ -166,7 +168,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                                 movePagerNext()
                                 object : CountDownTimer(500, 500) {
                                     override fun onFinish() {
-                                        validateItem(responseHash!!)
+                                        validateItem(responseHash)
                                     }
 
                                     override fun onTick(millisUntilFinished: Long) {}
@@ -198,21 +200,21 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     Log.e("TAG", "Throwable " + throwable.message)
                     validatePagerAdapter.updatePager(this, 2, false)
                     setTextValidateFail()
-                },
-                {
-                    if (blockchainHash.isNullOrEmpty()) {
-                        validatePagerAdapter.updatePager(this, 2, false)
-                        setTextValidateFail()
+                }
+            ) {
+                if (blockchainHash.isNullOrEmpty()) {
+                    validatePagerAdapter.updatePager(this, 2, false)
+                    setTextValidateFail()
+                } else {
+                    if (responseHash == blockchainHash) {
+                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, true)
+                        loadItemInfo()
                     } else {
-                        if (responseHash.equals(blockchainHash)) {
-                            validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, true)
-                            loadItemInfo()
-                        } else {
-                            validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, false)
-                            setTextValidateFail()
-                        }
+                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, false)
+                        setTextValidateFail()
                     }
-                })
+                }
+            }
 
         compositeDisposable.add(rxGetSneakerHash)
     }

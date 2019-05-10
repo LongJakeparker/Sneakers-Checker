@@ -5,15 +5,18 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Toast
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.adapter.collectionAdapter
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contracts.TrueGrailToken
 import com.sneakers.sneakerschecker.model.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_collection.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,12 +53,12 @@ class CollectionActivity : AppCompatActivity() {
         val web3 = Web3Instance.getInstance()
         contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
 
-        listCollection = sharedPref.getArrayCollection(Constant.USER_COLLECTION)
-
         builder = AlertDialog.Builder(this)
         builder.setCancelable(false) // if you want user to wait for some process to finish,
         builder.setView(R.layout.layout_loading_dialog)
         dialog = builder.create()
+
+        recyclerCollection.layoutManager = LinearLayoutManager(this)
 
         getCollection()
     }
@@ -63,7 +66,7 @@ class CollectionActivity : AppCompatActivity() {
     private fun getCollection() {
         dialog.show()
         val accessToken = "Bearer " + sharedPref.getUser(Constant.WALLET_USER).accessToken
-        val userAddress = sharedPref.getString(Constant.ACCOUNT_ID)
+        val userAddress = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
         val call = service.create(MainApi::class.java)
             .getCollection(accessToken, userAddress)
         call.enqueue(object : Callback<ArrayList<SneakerModel>> {
@@ -73,24 +76,30 @@ class CollectionActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<ArrayList<SneakerModel>>, response: Response<ArrayList<SneakerModel>>) {
+                dialog.dismiss()
                 if (response.code() == 200) {
                     response.body()?.forEach { item ->
                         val rxCheckOwner = contract.ownerOf(BigInteger(item.id))
                             .flowable()
                             .subscribeOn(Schedulers.io())
                             .subscribe({ response ->
-                                if (response == sharedPref.getString(Constant.ACCOUNT_ID)) {
-
+                                if (response == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
+                                    listCollection.add(item)
                                 }
                             },
                                 { throwable ->
                                     Log.e("TAG", "Throwable " + throwable.message)
                                 })
+                            {
+                                runOnUiThread {
+                                    recyclerCollection.adapter =
+                                        collectionAdapter(listCollection, this@CollectionActivity)
+                                }
+                            }
 
                         compositeDisposable.add(rxCheckOwner)
                     }
                 } else {
-                    dialog.dismiss()
                     Toast.makeText(this@CollectionActivity, response.message(), Toast.LENGTH_SHORT).show()
                 }
             }

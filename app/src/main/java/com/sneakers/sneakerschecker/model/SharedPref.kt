@@ -76,20 +76,6 @@ class SharedPref {
         return gson.fromJson(prefs!!.getString(fieldName, ""), Credentials::class.java)
     }
 
-    fun setArrayCollection(value: ArrayList<SneakerModel>, fieldName: String) {
-        val gson = Gson()
-        val json = gson.toJson(value)
-        val editor = prefs!!.edit()
-        editor.putString(fieldName, json)
-        editor.apply()
-    }
-
-    fun getArrayCollection(fieldName: String): ArrayList<SneakerModel> {
-        val gson = Gson()
-        val json = prefs?.getString(fieldName, "")
-        return gson.fromJson(json, object : TypeToken<ArrayList<SneakerModel>>() {}.type)
-    }
-
     fun clearPref() {
         prefs!!.edit().clear().commit()
     }

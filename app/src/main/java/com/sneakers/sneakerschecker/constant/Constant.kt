@@ -13,8 +13,6 @@ object Constant {
     const val GRANT_TYPE_PASSWORD= "password"
     const val GRANT_TYPE_REFRESH_TOKEN= "refresh_token"
 
-    const val USER_COLLECTION= "USER_COLLECTION"
-
     const val AUTH_TOKEN_USERNAME= "truegrailmobile"
     const val AUTH_TOKEN_PASSWORD= "secret"
 
