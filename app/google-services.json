@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "661773440372",
+    "firebase_url": "https://sneaker-checker.firebaseio.com",
+    "project_id": "sneaker-checker",
+    "storage_bucket": "sneaker-checker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661773440372:android:c35de885ee38ac66",
+        "android_client_info": {
+          "package_name": "com.sneakers.sneakerschecker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661773440372-2b7b1g7c49nb9f0k3rs8qhplma4lf31m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8BWzRmpq5oE5SiW3MqmIr11B6jkfV85c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "661773440372-2b7b1g7c49nb9f0k3rs8qhplma4lf31m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

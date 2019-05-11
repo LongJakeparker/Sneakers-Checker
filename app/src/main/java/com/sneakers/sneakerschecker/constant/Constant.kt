@@ -1,7 +1,7 @@
 package com.sneakers.sneakerschecker.constant
 
 object Constant {
-    const val CONTRACT_ADDRESS = "0x833bbEd979314708B071C672E213484024D11fd8"
+    const val CONTRACT_ADDRESS = "0xc482C0Ab3fAa90821c7a01d6D22df2DBcf82bA83"
 
     const val ACCOUNT_ID= "ACCOUNT_ID"
     const val ACCOUNT_UNLINK= "ACCOUNT_UNLINK"
@@ -22,4 +22,7 @@ object Constant {
 
     const val EXTRA_SNEAKER_TOKEN = "EXTRA_SNEAKER_TOKEN"
     const val EXTRA_SNEAKER = "EXTRA_SNEAKER"
+
+
+    const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"
 }
