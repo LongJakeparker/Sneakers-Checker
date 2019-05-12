@@ -46,7 +46,7 @@ class SplashFragment : Fragment() {
             else {
                 val transaction = activity!!.supportFragmentManager.beginTransaction();
                 transaction.replace(R.id.authentication_layout, AuthenticationFragment())
-                    .commit()
+                    .commitAllowingStateLoss()
             }
         }, SPLASH_DISPLAY_LENGTH)
 

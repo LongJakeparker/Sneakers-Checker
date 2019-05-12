@@ -27,7 +27,7 @@ class collectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
     override fun onBindViewHolder(holder: CollectionViewHolder, position: Int) {
         val item = items[position]
 
-        holder.tvSneakerId.text = item.id
+        holder.tvSneakerId.text = item.id.toString()
         holder.tvSneakerName.text = item.model
         holder.tvSneakerSize.text = item.size.toString() + " US"
         holder.tvSneakerBrand.text = item.brand

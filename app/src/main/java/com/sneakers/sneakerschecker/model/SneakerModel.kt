@@ -3,11 +3,12 @@ package com.sneakers.sneakerschecker.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import java.math.BigInteger
 
 class SneakerModel() : Parcelable {
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         if (dest != null) {
-            dest.writeString(this.id)
+            dest.writeString(this.id.toString())
             dest.writeString(this.brand)
             dest.writeString(this.model)
             dest.writeString(this.colorway)
@@ -20,7 +21,7 @@ class SneakerModel() : Parcelable {
     }
 
     @SerializedName("id")
-    lateinit var id: String
+    lateinit var id: BigInteger
     @SerializedName("brand")
     lateinit var brand: String
     @SerializedName("model")
@@ -39,7 +40,7 @@ class SneakerModel() : Parcelable {
     lateinit var ownerAddress: String
 
     constructor(parcel: Parcel) : this() {
-        id = parcel.readString()
+        id = BigInteger(parcel.readString())
         brand = parcel.readString()
         model = parcel.readString()
         colorway = parcel.readString()

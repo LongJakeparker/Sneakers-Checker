@@ -2,8 +2,8 @@ package com.sneakers.sneakerschecker.constant
 
 object Constant {
     const val CONTRACT_ADDRESS = "0xc482C0Ab3fAa90821c7a01d6D22df2DBcf82bA83"
+    const val ETHEREUM_API_URL= "http://128.199.134.167:8545/"
 
-    const val ACCOUNT_ID= "ACCOUNT_ID"
     const val ACCOUNT_UNLINK= "ACCOUNT_UNLINK"
 
     const val USER_CREDENTIALS= "USER_CREDENTIALS"
@@ -15,8 +15,6 @@ object Constant {
 
     const val AUTH_TOKEN_USERNAME= "truegrailmobile"
     const val AUTH_TOKEN_PASSWORD= "secret"
-
-    const val ETHEREUM_API_URL= "http://128.199.134.167:8546/"
 
     const val GRID_COLUMN= 4
 

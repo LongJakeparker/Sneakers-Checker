@@ -13,6 +13,7 @@ import android.view.animation.Interpolator
 import android.widget.Toast
 import com.google.common.hash.Hashing
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ValidatePagerAdapter
 import com.sneakers.sneakerschecker.animations.FixedSpeedScroller
@@ -157,7 +158,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     if (response.body() != null) {
                         validatedItem = response.body()!!
 
-                        val gson = Gson()
+                        val gson = GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer()).create()
                         val strResponseHash = gson.toJson(validatedItem.detail)
                         val responseHash =
                             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
@@ -230,7 +231,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                         tvIsLimited.visibility = VISIBLE
                     }
 
-                    tvItemId.text = validatedItem.detail.id
+                    tvItemId.text = validatedItem.detail.id.toString()
                     tvItemBrand.text = validatedItem.detail.brand
                     tvItemModelName.text = validatedItem.detail.model
                     tvItemColorWay.text = validatedItem.detail.colorway

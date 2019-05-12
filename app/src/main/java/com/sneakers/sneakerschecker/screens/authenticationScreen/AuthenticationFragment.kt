@@ -37,13 +37,13 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
         val transaction = activity!!.supportFragmentManager.beginTransaction()
         when (v?.id) {
             R.id.btnNewWalletAuthen -> {
-                transaction.add(R.id.authentication_layout, CreateNewFragment())
+                transaction.replace(R.id.authentication_layout, CreateNewFragment())
                     .addToBackStack(null)
                     .commit()
             }
 
             R.id.btnRestoreWalletAuthen -> {
-                transaction.add(R.id.authentication_layout, RestoreFragment())
+                transaction.replace(R.id.authentication_layout, RestoreFragment())
                     .addToBackStack(null)
                     .commit()
             }

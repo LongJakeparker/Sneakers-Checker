@@ -14,6 +14,7 @@
     <string name="strButton_Sell">Sell</string>
     <string name="strButton_Back">Back</string>
     <string name="strButton_Done">Done</string>
+    <string name="strButton_GoToHome">Go To Home</string>
 
     //Create New Screen
     <string name="user_name">Email</string>
@@ -25,7 +26,7 @@
     <string name="last_name">Last name</string>
 
     //Create Phrase Screen
-    <string name="tuto_print">You need to write down or print down this passpharse in case you lose your phone or some
+    <string name="tuto_print">You need to write down or screen shot this private key in case you lose your phone or some
         incident like that
     </string>
     <string name="your_languages">Your Languages</string>

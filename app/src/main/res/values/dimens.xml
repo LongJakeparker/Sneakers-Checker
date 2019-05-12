@@ -8,9 +8,10 @@
 
     <dimen name="logo_splash_width">238dp</dimen>
     <dimen name="logo_splash_heigh">98dp</dimen>
-    <dimen name="logo_margin_top">10dp</dimen>
+    <dimen name="logo_margin_top">30dp</dimen>
 
     <dimen name="layout_padding_Horizontal">30dp</dimen>
+    <dimen name="tuto_padding_vertical">30dp</dimen>
 
 
     <dimen name="logo_width">179dp</dimen>

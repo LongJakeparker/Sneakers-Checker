@@ -79,7 +79,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
             tvIsLimited.visibility = View.VISIBLE
         }
 
-        tvItemId.text = sellItem.id
+        tvItemId.text = sellItem.id.toString()
         tvItemBrand.text = sellItem.brand
         tvItemModelName.text = sellItem.model
         tvItemColorWay.text = sellItem.colorway
@@ -109,7 +109,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
 
         val sneakerReceipt = contract.transfer(
             etTransferAddress.text.toString().trim(),
-            BigInteger(sellItem.id),
+            sellItem.id,
             newHash
         )
             .flowable()
@@ -131,7 +131,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     private fun callApi() {
         val accessToken = "Bearer " + sharedPref.getUser(Constant.WALLET_USER).accessToken
         val call = service.create(MainApi::class.java!!)
-            .changeOwnership(accessToken, sellItem.id, etTransferAddress.text.toString().toLowerCase())
+            .changeOwnership(accessToken, sellItem.id.toString(), etTransferAddress.text.toString().toLowerCase())
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 dialog.dismiss()

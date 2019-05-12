@@ -61,6 +61,8 @@ class CollectionActivity : AppCompatActivity() {
         recyclerCollection.layoutManager = LinearLayoutManager(this)
 
         getCollection()
+
+        btnBackCollection.setOnClickListener { onBackPressed() }
     }
 
     private fun getCollection() {
@@ -79,7 +81,7 @@ class CollectionActivity : AppCompatActivity() {
                 dialog.dismiss()
                 if (response.code() == 200) {
                     response.body()?.forEach { item ->
-                        val rxCheckOwner = contract.ownerOf(BigInteger(item.id))
+                        val rxCheckOwner = contract.ownerOf(item.id)
                             .flowable()
                             .subscribeOn(Schedulers.io())
                             .subscribe({ response ->

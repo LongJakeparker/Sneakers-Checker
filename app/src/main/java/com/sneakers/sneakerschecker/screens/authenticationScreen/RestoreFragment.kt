@@ -26,6 +26,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.math.BigInteger
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -101,12 +102,12 @@ class RestoreFragment : Fragment(), View.OnClickListener {
         call.enqueue(object : Callback<SignIn> {
 
             override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
-
                 if (response.code() == 200) {
                     sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
                     importPrivateKey()
 
                 } else if (response.code() == 400) {
+                    dialog.dismiss()
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }
             }
