@@ -12,30 +12,45 @@
                android:src="@mipmap/test_background" android:scaleType="fitXY"/>
 
     <android.support.constraint.ConstraintLayout
+            android:paddingHorizontal="@dimen/layout_padding_Horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="50dp"
                 app:layout_constraintBottom_toTopOf="@+id/textView3">
             <Button
-                    android:text="@string/strButton_CreateNew"
-                    android:layout_width="@dimen/button_width"
-                    android:layout_height="wrap_content"
+                    android:text="@string/strButton_GoToValidate"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:paddingHorizontal="28dp"
                     android:elevation="100dp"
                     android:textAllCaps="false"
                     android:textColor="@color/colorWhite"
                     android:background="@drawable/main_button"
                     android:textSize="@dimen/button_text_size"
+                    android:id="@+id/btnValidate"/>
+
+            <Button
+                    android:text="@string/strButton_CreateNew"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingHorizontal="28dp"
+                    android:elevation="100dp"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/main_button"
+                    android:textSize="@dimen/button_text_size"
                     android:id="@+id/btnNewWalletAuthen"/>
             <Button
                     android:text="@string/strButton_Restore"
-                    android:layout_width="@dimen/button_width"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:textAllCaps="false"
                     android:textSize="@dimen/button_text_size"
                     android:layout_marginTop="10dp"
@@ -43,7 +58,6 @@
                     android:textColor="@color/colorWhite"
                     android:background="@drawable/main_button"
                     android:layout_marginBottom="10dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/btnRestoreWalletAuthen"/>
         </LinearLayout>
         <TextView

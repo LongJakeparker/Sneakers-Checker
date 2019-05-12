@@ -4,13 +4,12 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.common.hash.Hashing
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
@@ -25,7 +24,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 
 
@@ -101,9 +99,9 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun commitItem() {
         dialog.show()
-        sellItem.ownerAddress = etTransferAddress.text.toString().trim()
+        sellItem.ownerAddress = etTransferAddress.text.toString().trim().toLowerCase()
 
-        val gson = Gson()
+        val gson = GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer()).create()
         val strSellItem = gson.toJson(sellItem)
         val newHash = Hashing.sha256().hashString(strSellItem, StandardCharsets.UTF_8).toString()
 

@@ -64,10 +64,10 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:background="@android:color/transparent"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorYellow"
             android:textAlignment="viewStart"
             android:paddingLeft="@dimen/drawer_padding_left"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

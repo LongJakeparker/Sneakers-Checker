@@ -146,8 +146,8 @@
         </android.support.v7.widget.CardView>
         <Button
                 android:text="Check"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/btnScanMain"
                 android:layout_marginTop="25dp"
                 android:background="@drawable/circle_button"

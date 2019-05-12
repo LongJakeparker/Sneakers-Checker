@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.zxing.integration.android.IntentIntegrator
 
 import com.sneakers.sneakerschecker.R
 import kotlinx.android.synthetic.main.fragment_authentication.view.*
@@ -36,6 +37,10 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         val transaction = activity!!.supportFragmentManager.beginTransaction()
         when (v?.id) {
+            R.id.btnValidate -> {
+                goToScan()
+            }
+
             R.id.btnNewWalletAuthen -> {
                 transaction.replace(R.id.authentication_layout, CreateNewFragment())
                     .addToBackStack(null)
@@ -48,5 +53,11 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
                     .commit()
             }
         }
+    }
+
+    private fun goToScan() {
+        val intentIntegrator = IntentIntegrator(activity)
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+        intentIntegrator.initiateScan()
     }
 }
