@@ -23,4 +23,10 @@ object Constant {
 
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"
+
+    class BusMessage {
+        companion object {
+            val MESS_CLOSE_CHECK_SCREEN = "MESS_CLOSE_CHECK_SCREEN"
+        }
+    }
 }

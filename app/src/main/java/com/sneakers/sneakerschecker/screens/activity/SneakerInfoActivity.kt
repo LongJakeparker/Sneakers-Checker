@@ -24,6 +24,8 @@ import com.sneakers.sneakerschecker.model.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_sneaker_info.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,6 +67,9 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         if (qrCode != null) {
             ivQrCodeValidate.setImageBitmap(qrCode)
         }
+
+        //register BusEvent
+        EventBus.getDefault().register(this)
 
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
@@ -275,5 +280,19 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnDoneValidate, R.id.btnBackValidate -> onBackPressed()
             R.id.btnSellValidate -> TransferActivity.start(this@SneakerInfoActivity, validatedItem.detail)
         }
+    }
+
+    @Subscribe
+    fun getMessage(refreshWorkMessage: BusEventMessage) {
+        if (refreshWorkMessage.message == Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN) {
+            finish()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        //unregister BusEvent
+        EventBus.getDefault().unregister(this)
+
     }
 }

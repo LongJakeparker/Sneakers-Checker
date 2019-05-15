@@ -1,10 +1,12 @@
 package com.sneakers.sneakerschecker.service
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -28,6 +30,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
 
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
+        createNotificationChannel()
+
         val notificationBuilder = NotificationCompat.Builder(this, Constant.CHANNEL_TRANSFER)
             .setSmallIcon(R.drawable.sneaker_image_sample)
             .setContentTitle(title)
@@ -35,6 +39,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             .setAutoCancel(true)
             .setSound(soundUri)
             .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -43,6 +48,21 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         }
 
         notificationManager.notify(NOTIFICATION_ID++, notificationBuilder.build())
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel
+            val name = Constant.CHANNEL_TRANSFER
+            val descriptionText = Constant.CHANNEL_TRANSFER
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val mChannel = NotificationChannel(Constant.CHANNEL_TRANSFER, name, importance)
+            mChannel.description = descriptionText
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+        }
     }
 
     override fun onNewToken(p0: String?) {

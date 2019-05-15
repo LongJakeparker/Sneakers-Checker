@@ -20,6 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_transfer.*
 import okhttp3.ResponseBody
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -143,6 +144,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 dialog.dismiss()
                 if (response.code() == 203) {
+                    EventBus.getDefault().post(BusEventMessage(Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN))
                     finish()
                 } else {
                     Toast.makeText(
