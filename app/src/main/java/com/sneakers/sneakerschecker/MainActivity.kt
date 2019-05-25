@@ -24,8 +24,6 @@ import org.web3j.protocol.http.HttpService
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val TYPE_UNLINK: Int = 0
 
-    private lateinit var web3: Web3j
-
     private lateinit var sharedPref: SharedPref
 
     private lateinit var builder: AlertDialog.Builder
@@ -54,9 +52,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         Thread {
             try {
-                web3 = Web3j.build(HttpService(Constant.ETHEREUM_API_URL))
-                Web3Instance.setInstance(web3)
-
+                Web3Instance.setInstance(Web3j.build(HttpService(Constant.ETHEREUM_API_URL)))
                 dialog.dismiss()
             } catch (e: Exception) {
                 dialog.dismiss()

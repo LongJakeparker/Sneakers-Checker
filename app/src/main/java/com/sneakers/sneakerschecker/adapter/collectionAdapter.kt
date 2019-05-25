@@ -4,8 +4,10 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.model.SneakerModel
 import kotlinx.android.synthetic.main.item_collection.view.*
@@ -48,4 +50,14 @@ class CollectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val tvSneakerCondition = view.tvSneakerCondition
     val tvSneakerReleaseDate = view.tvReleaseDate
     val tvIsLimited = view.tvIsLimited
+
+    init {
+        view.btnReportStolen.setOnClickListener {
+            if  (view.tvReportStolen.visibility == GONE) {
+                view.tvReportStolen.visibility = VISIBLE
+            }
+            else view.tvReportStolen.visibility = GONE
+        }
+        view.tvReportStolen.setOnClickListener { Toast.makeText(view.context, "Report Stolen", Toast.LENGTH_LONG).show() }
+    }
 }

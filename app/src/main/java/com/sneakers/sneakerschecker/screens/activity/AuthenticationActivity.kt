@@ -1,15 +1,12 @@
 package com.sneakers.sneakerschecker.screens.activity
 
-import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.google.zxing.integration.android.IntentIntegrator
+import android.support.v7.app.AppCompatActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.screens.authenticationScreen.AuthenticationFragment
 import com.sneakers.sneakerschecker.screens.authenticationScreen.SplashFragment
-import kotlinx.android.synthetic.main.fragment_restore.*
 
 class AuthenticationActivity : AppCompatActivity() {
 
@@ -25,25 +22,10 @@ class AuthenticationActivity : AppCompatActivity() {
                 sharedPref.setBool(false, Constant.ACCOUNT_UNLINK)
                 transaction.add(R.id.authentication_layout, AuthenticationFragment())
                     .commit()
-            }
-            else {
+            } else {
                 transaction.add(R.id.authentication_layout, SplashFragment())
                     .commit()
             }
-        }
-
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-
-        if (result != null) {
-            if (result.contents != null) {
-                etPrivateKey.setText(result.contents)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

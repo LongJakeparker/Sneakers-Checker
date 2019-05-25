@@ -94,7 +94,10 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.btnScanAddress -> goToScan()
 
-            R.id.btnNextSell -> commitItem()
+            R.id.btnNextSell -> {
+                commitItem()
+                callApi()
+            }
         }
     }
 
@@ -113,11 +116,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
         )
             .flowable()
             .subscribeOn(Schedulers.io())
-            .subscribe({ response ->
-                    if (response != null) {
-                        callApi()
-                    }
-                },
+            .subscribe({ response -> },
                 { throwable ->
                     dialog.dismiss()
                     Log.e("TAG", "Throwable " + throwable.message)

@@ -17,7 +17,7 @@ class Contract private constructor(web3: Web3j, address: String) {
         private var instance : TrueGrailToken? = null
         private var transactionManager : RawTransactionManager? = null
 
-        fun getInstance(web3: Web3j, credentials: Credentials): TrueGrailToken {
+        fun getInstance(web3: Web3j, credentials: Credentials?): TrueGrailToken {
             if (instance == null)  // NOT thread safe!
                 transactionManager = RawTransactionManager(web3, credentials)
                 instance = TrueGrailToken.load(

@@ -12,7 +12,6 @@ import android.view.View.VISIBLE
 import android.view.animation.Interpolator
 import android.widget.Toast
 import com.google.common.hash.Hashing
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ValidatePagerAdapter
@@ -50,6 +49,12 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         fun start(activity: Activity, itemToken: String) {
             val intent = Intent(activity, SneakerInfoActivity::class.java)
             intent.putExtra(Constant.EXTRA_SNEAKER_TOKEN, itemToken)
+
+            if  (activity is AuthenticationActivity) {
+                intent.putExtra(Constant.EXTRA_IS_FROM_AUTHEN, true)
+            }
+            else intent.putExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)
+
             activity.startActivity(intent)
         }
     }
@@ -75,7 +80,13 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
         val web3 = Web3Instance.getInstance()
-        contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
+
+        if (intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
+            contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.APP_CREDENTIALS)) }!!
+        }
+        else {
+            contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
+        }
 
         createListPager()
         setupValidatePager()
@@ -95,11 +106,9 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                             override fun onFinish() {
                                 callApi()
                             }
-
                             override fun onTick(millisUntilFinished: Long) {}
                         }.start()
                     }
-
                     override fun onTick(millisUntilFinished: Long) {}
                 }.start()
             }
@@ -248,9 +257,14 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     tvOwnerBrand.text = validatedItem.owner?.brand
                     tvOwnerPhysicalAddress.text = validatedItem.owner?.physicalAddress
 
-                    if (validatedItem.detail.ownerAddress == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
-                        btnSellValidate.visibility = VISIBLE
-                    } else {
+                    if  (!intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
+                        if (validatedItem.detail.ownerAddress == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
+                            btnSellValidate.visibility = VISIBLE
+                        } else {
+                            btnDoneValidate.visibility = VISIBLE
+                        }
+                    }
+                    else {
                         btnDoneValidate.visibility = VISIBLE
                     }
                 }

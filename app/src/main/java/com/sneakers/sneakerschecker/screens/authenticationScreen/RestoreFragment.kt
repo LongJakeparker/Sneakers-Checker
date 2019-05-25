@@ -8,11 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.MainActivity
-
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
@@ -21,12 +19,10 @@ import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
 import kotlinx.android.synthetic.main.fragment_restore.*
 import org.web3j.crypto.Credentials
-import org.web3j.utils.Numeric
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.math.BigInteger
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,8 +77,9 @@ class RestoreFragment : Fragment(), View.OnClickListener {
 
             R.id.btnNextRestore -> {
                 if (etUserNameRestore.text.toString().isNotEmpty() &&
-                        etPasswordRestore.text.toString().isNotEmpty() &&
-                        etPrivateKey.text.toString().isNotEmpty()) {
+                    etPasswordRestore.text.toString().isNotEmpty() &&
+                    etPrivateKey.text.toString().isNotEmpty()
+                ) {
                     RequestLogIn()
                 }
             }
@@ -132,8 +129,20 @@ class RestoreFragment : Fragment(), View.OnClickListener {
     }
 
     private fun goToScan() {
-        val intentIntegrator = IntentIntegrator(activity)
+        val intentIntegrator = IntentIntegrator.forSupportFragment(this)
         intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
         intentIntegrator.initiateScan()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+        if (result != null) {
+            if (result.contents != null) {
+                etPrivateKey.setText(result.contents)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

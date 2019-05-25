@@ -7,6 +7,7 @@ object Constant {
     const val ACCOUNT_UNLINK= "ACCOUNT_UNLINK"
 
     const val USER_CREDENTIALS= "USER_CREDENTIALS"
+    const val APP_CREDENTIALS= "APP_CREDENTIALS"
 
     const val WALLET_USER= "wallet user"
 
@@ -20,6 +21,7 @@ object Constant {
 
     const val EXTRA_SNEAKER_TOKEN = "EXTRA_SNEAKER_TOKEN"
     const val EXTRA_SNEAKER = "EXTRA_SNEAKER"
+    const val EXTRA_IS_FROM_AUTHEN = "EXTRA_IS_FROM_AUTHEN"
 
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"
