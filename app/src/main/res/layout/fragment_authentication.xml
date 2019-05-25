@@ -48,7 +48,7 @@
                     android:textSize="@dimen/button_text_size"
                     android:id="@+id/btnNewWalletAuthen"/>
             <Button
-                    android:text="@string/strButton_Restore"
+                    android:text="@string/strButton_Import"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:textAllCaps="false"
