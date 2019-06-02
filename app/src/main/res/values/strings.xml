@@ -14,8 +14,13 @@
     <string name="strButton_Sell">Sell</string>
     <string name="strButton_Back">Back</string>
     <string name="strButton_Done">Done</string>
+    <string name="strButton_claim">This item is not claimed, claim now!</string>
     <string name="strButton_GoToHome">Go To Home</string>
     <string name="strButton_GoToValidate">Validate Sneaker</string>
+
+    <string name="scan_tutorial_scan_sneaker_id">Place sneaker QR code inside the scanner view</string>
+    <string name="scan_tutorial_scan_address">Place buyer address QR code inside the scanner view</string>
+    <string name="scan_tutorial_scan_claim_key">Place claiming key QR code inside the scanner view</string>
 
     //Create New Screen
     <string name="user_name">Email</string>

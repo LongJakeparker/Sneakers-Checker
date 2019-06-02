@@ -1,16 +1,19 @@
 package com.sneakers.sneakerschecker.adapter
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import android.widget.Toast
-import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.model.SneakerModel
 import kotlinx.android.synthetic.main.item_collection.view.*
+
 
 class collectionAdapter(val items: ArrayList<SneakerModel>, val context: Context) :
     RecyclerView.Adapter<CollectionViewHolder>() {
@@ -22,7 +25,13 @@ class collectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
 
     // Inflates the item views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionViewHolder {
-        return CollectionViewHolder(LayoutInflater.from(context).inflate(R.layout.item_collection, parent, false))
+        return CollectionViewHolder(
+            LayoutInflater.from(context).inflate(
+                com.sneakers.sneakerschecker.R.layout.item_collection,
+                parent,
+                false
+            )
+        )
     }
 
     // Binds each animal in the ArrayList to a view
@@ -53,11 +62,20 @@ class CollectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     init {
         view.btnReportStolen.setOnClickListener {
-            if  (view.tvReportStolen.visibility == GONE) {
-                view.tvReportStolen.visibility = VISIBLE
+            val layoutTransition = LayoutTransition()
+            layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+            (view.tvReportStolen.parent as FrameLayout).layoutTransition = layoutTransition
+            layoutTransition.setDuration(300) // Change duration
+            if (view.tvReportStolen.width == 0) {
+                view.tvReportStolen.layoutParams.width = WRAP_CONTENT
+                view.tvReportStolen.requestLayout()
+            } else {
+                view.tvReportStolen.layoutParams.width = 0
+                view.tvReportStolen.requestLayout()
             }
-            else view.tvReportStolen.visibility = GONE
         }
-        view.tvReportStolen.setOnClickListener { Toast.makeText(view.context, "Report Stolen", Toast.LENGTH_LONG).show() }
+        view.tvReportStolen.setOnClickListener {
+            Toast.makeText(view.context, "Report Stolen", Toast.LENGTH_LONG).show()
+        }
     }
 }

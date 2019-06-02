@@ -32,4 +32,11 @@ object Constant {
             val MESS_CLOSE_CHECK_SCREEN = "MESS_CLOSE_CHECK_SCREEN"
         }
     }
+
+    class ItemCondition {
+        companion object {
+            val ISSUED = "issued"
+            val STOLEN = "stolen"
+        }
+    }
 }

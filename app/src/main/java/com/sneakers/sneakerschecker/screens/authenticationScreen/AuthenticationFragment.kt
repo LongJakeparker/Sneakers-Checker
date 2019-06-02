@@ -116,6 +116,7 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
     private fun goToScan() {
         val intentIntegrator = IntentIntegrator.forSupportFragment(this)
         intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_sneaker_id))
         intentIntegrator.initiateScan()
     }
 

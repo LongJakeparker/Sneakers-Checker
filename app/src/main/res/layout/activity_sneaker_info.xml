@@ -394,6 +394,21 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
                     android:visibility="gone"/>
+
+            <Button
+                    android:text="@string/strButton_claim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/button_padding_vertical"
+                    android:paddingHorizontal="38dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/main_button"
+                    android:textSize="@dimen/button_text_size"
+                    android:id="@+id/btnClaim"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:visibility="gone"/>
         </LinearLayout>
 
     </ScrollView>
