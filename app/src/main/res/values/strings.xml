@@ -8,7 +8,7 @@
     <string name="copyright">2019 - @copyright</string>
 
     <string name="strButton_CreateNew">Create New Wallet</string>
-    <string name="strButton_Restore">Restore Wallet</string>
+    <string name="strButton_Import">Import</string>
     <string name="strButton_Next">Next</string>
     <string name="strButton_Print_Phrase">Print The Phrase</string>
     <string name="strButton_Sell">Sell</string>

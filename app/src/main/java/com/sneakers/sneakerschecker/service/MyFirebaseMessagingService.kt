@@ -14,9 +14,11 @@ import com.google.firebase.messaging.RemoteMessage
 import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.SharedPref
 
 class MyFirebaseMessagingService: FirebaseMessagingService() {
     private var NOTIFICATION_ID = 1
+    private lateinit var sharedPref: SharedPref
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         generateNotification(remoteMessage.notification?.body, remoteMessage.notification?.title)
@@ -65,8 +67,11 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         }
     }
 
-    override fun onNewToken(p0: String?) {
-        Log.e("FCM-TOKEN", p0)
-        //sendRegistrationToServer()
+    override fun onNewToken(token: String?) {
+        Log.e("FCM-TOKEN", token)
+        sharedPref = SharedPref(this)
+        if (token != null) {
+            sharedPref.setString(token, Constant.FCM_TOKEN)
+        }
     }
 }

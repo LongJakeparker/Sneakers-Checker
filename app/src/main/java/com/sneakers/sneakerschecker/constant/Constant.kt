@@ -8,6 +8,7 @@ object Constant {
 
     const val USER_CREDENTIALS= "USER_CREDENTIALS"
     const val APP_CREDENTIALS= "APP_CREDENTIALS"
+    const val FCM_TOKEN= "FCM_TOKEN"
 
     const val WALLET_USER= "wallet user"
 
