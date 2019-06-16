@@ -118,7 +118,6 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
             .subscribeOn(Schedulers.io())
             .subscribe({ response -> },
                 { throwable ->
-                    dialog.dismiss()
                     Log.e("TAG", "Throwable " + throwable.message)
                 })
 
@@ -135,7 +134,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
                 dialog.dismiss()
                 Toast.makeText(
                     this@TransferActivity,
-                    "Failed to change ownership in database",
+                    t.message,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -160,6 +159,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     private fun goToScan() {
         val intentIntegrator = IntentIntegrator(this)
         intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_address))
         intentIntegrator.initiateScan()
     }
 

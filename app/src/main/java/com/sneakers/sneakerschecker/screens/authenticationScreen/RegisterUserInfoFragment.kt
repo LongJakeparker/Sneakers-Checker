@@ -140,6 +140,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
             data.put("firstName", etFirstName.text.toString().trim())
             data.put("lastName", etLastName.text.toString().trim())
             data.put("networkAddress", credentials.address)
+            data.put("registrationToken", sharedPref.getString(Constant.FCM_TOKEN))
 
             /*Create handle for the RetrofitInstance interface*/
             val call = service.create(AuthenticationApi::class.java!!).signUpApi(data)
@@ -153,6 +154,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
                         dialog.dismiss()
                         Toast.makeText(context, "Email has used", Toast.LENGTH_SHORT).show()
                     } else {
+                        dialog.dismiss()
                         Toast.makeText(context, "Response Code: " + response.code(), Toast.LENGTH_SHORT).show()
                     }
                 }
