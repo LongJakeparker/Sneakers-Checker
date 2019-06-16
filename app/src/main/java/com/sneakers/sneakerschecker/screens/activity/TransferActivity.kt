@@ -135,7 +135,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
                 dialog.dismiss()
                 Toast.makeText(
                     this@TransferActivity,
-                    "Failed to change ownership in database",
+                    t.message,
                     Toast.LENGTH_SHORT
                 ).show()
             }

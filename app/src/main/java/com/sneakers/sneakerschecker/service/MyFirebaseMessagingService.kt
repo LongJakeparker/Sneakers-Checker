@@ -15,6 +15,7 @@ import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
 
 class MyFirebaseMessagingService: FirebaseMessagingService() {
     private var NOTIFICATION_ID = 1
@@ -25,7 +26,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
     }
 
     private fun generateNotification(body: String?, title: String?) {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, CollectionActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)

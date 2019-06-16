@@ -63,6 +63,9 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sneaker_info)
 
+        //register BusEvent
+        EventBus.getDefault().register(this)
+
         sharedPref = SharedPref(this)
 
         itemToken = intent.getStringExtra(Constant.EXTRA_SNEAKER_TOKEN)
@@ -72,9 +75,6 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         if (qrCode != null) {
             ivQrCodeValidate.setImageBitmap(qrCode)
         }
-
-        //register BusEvent
-        EventBus.getDefault().register(this)
 
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
@@ -172,6 +172,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         validatedItem = response.body()!!
+                        validatedItem.detail.ownerAddress = validatedItem.detail.ownerAddress.toLowerCase()
 
                         val gson =
                             GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer())
@@ -333,10 +334,9 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         //unregister BusEvent
         EventBus.getDefault().unregister(this)
-
     }
 }

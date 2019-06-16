@@ -11,11 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.common.hash.Hashing
 import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
 import kotlinx.android.synthetic.main.fragment_confirm_register.*
+import java.nio.charset.StandardCharsets
 
 class ConfirmRegisterFragment: Fragment() {
     private var fragmentView: View? = null
@@ -34,7 +36,7 @@ class ConfirmRegisterFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvUserAddress.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
+        tvUserAddress.text = "0x" + sharedPref.getCredentials(Constant.USER_CREDENTIALS).ecKeyPair.privateKey.toString(16)
 
         btnGoToHome.setOnClickListener {
             val intent = Intent(activity, MainActivity::class.java)
