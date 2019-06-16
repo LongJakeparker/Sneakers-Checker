@@ -13,6 +13,7 @@ import android.view.animation.Interpolator
 import android.widget.Toast
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
+import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ValidatePagerAdapter
 import com.sneakers.sneakerschecker.animations.FixedSpeedScroller
@@ -50,10 +51,9 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
             val intent = Intent(activity, SneakerInfoActivity::class.java)
             intent.putExtra(Constant.EXTRA_SNEAKER_TOKEN, itemToken)
 
-            if  (activity is AuthenticationActivity) {
+            if (activity is AuthenticationActivity) {
                 intent.putExtra(Constant.EXTRA_IS_FROM_AUTHEN, true)
-            }
-            else intent.putExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)
+            } else intent.putExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)
 
             activity.startActivity(intent)
         }
@@ -62,6 +62,9 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sneaker_info)
+
+        //register BusEvent
+        EventBus.getDefault().register(this)
 
         sharedPref = SharedPref(this)
 
@@ -73,9 +76,6 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
             ivQrCodeValidate.setImageBitmap(qrCode)
         }
 
-        //register BusEvent
-        EventBus.getDefault().register(this)
-
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
@@ -83,8 +83,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
 
         if (intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
             contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.APP_CREDENTIALS)) }!!
-        }
-        else {
+        } else {
             contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
         }
 
@@ -106,9 +105,11 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                             override fun onFinish() {
                                 callApi()
                             }
+
                             override fun onTick(millisUntilFinished: Long) {}
                         }.start()
                     }
+
                     override fun onTick(millisUntilFinished: Long) {}
                 }.start()
             }
@@ -171,8 +172,11 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         validatedItem = response.body()!!
+                        validatedItem.detail.ownerAddress = validatedItem.detail.ownerAddress.toLowerCase()
 
-                        val gson = GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer()).create()
+                        val gson =
+                            GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer())
+                                .create()
                         val strResponseHash = gson.toJson(validatedItem.detail)
                         val responseHash =
                             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
@@ -257,14 +261,15 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                     tvOwnerBrand.text = validatedItem.owner?.brand
                     tvOwnerPhysicalAddress.text = validatedItem.owner?.physicalAddress
 
-                    if  (!intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
+                    if (!intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
                         if (validatedItem.detail.ownerAddress == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
                             btnSellValidate.visibility = VISIBLE
+                        } else if (validatedItem.detail.condition == Constant.ItemCondition.ISSUED) {
+                            btnClaim.visibility = VISIBLE
                         } else {
                             btnDoneValidate.visibility = VISIBLE
                         }
-                    }
-                    else {
+                    } else {
                         btnDoneValidate.visibility = VISIBLE
                     }
                 }
@@ -292,8 +297,34 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnDoneValidate, R.id.btnBackValidate -> onBackPressed()
+
             R.id.btnSellValidate -> TransferActivity.start(this@SneakerInfoActivity, validatedItem.detail)
+
+            R.id.btnClaim -> goToScan()
         }
+    }
+
+    private fun goToScan() {
+        val intentIntegrator = IntentIntegrator(this)
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_claim_key))
+        intentIntegrator.initiateScan()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+        if (result != null) {
+            if (result.contents != null) {
+                startClaimSneaker(result.contents)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun startClaimSneaker(claimKey: String) {
+
     }
 
     @Subscribe
@@ -303,10 +334,9 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         //unregister BusEvent
         EventBus.getDefault().unregister(this)
-
     }
 }

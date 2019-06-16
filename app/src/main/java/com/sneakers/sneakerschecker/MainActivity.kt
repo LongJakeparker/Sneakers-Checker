@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.BusEventMessage
 import com.sneakers.sneakerschecker.model.GenerateQrCode
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instance
@@ -19,6 +20,8 @@ import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
 import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 
@@ -35,6 +38,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        EventBus.getDefault().register(this)
 
         builder = AlertDialog.Builder(this)
         builder.setCancelable(false) // if you want user to wait for some process to finish,
@@ -71,6 +76,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
     }
 
+    override fun onStart() {
+        super.onStart()
+
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnMenuMain -> drawer_layout.openDrawer(GravityCompat.START)
@@ -84,7 +94,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.btnUnlinkWalletMain -> {
                 popupType = TYPE_UNLINK
-                builder.setMessage("Do you want to unlink your wallet?").setPositiveButton("Yes", dialogClickListener)
+                builder.setTitle("Log Out")
+                    .setMessage("Do you want to unlink your wallet?")
+                    .setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show()
             }
 
@@ -117,6 +129,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun goToScan() {
         val intentIntegrator = IntentIntegrator(this)
         intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_sneaker_id))
         intentIntegrator.initiateScan()
     }
 
@@ -138,5 +151,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    @Subscribe
+    fun getMessage(refreshWorkMessage: BusEventMessage) {
+        if (refreshWorkMessage.message == Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN) {
+            builder.setTitle("Transfer Status")
+                .setMessage("Your transfer was succeed")
+                .setPositiveButton("OK", dialogClickListener).show()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }
