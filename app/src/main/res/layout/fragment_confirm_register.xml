@@ -67,7 +67,7 @@
                 android:textColor="@android:color/white"
                 android:layout_marginTop="30dp"
                 android:textSize="@dimen/text_title_size"
-                android:text="12312312123123124244332131231343123213ewqee"/>
+                android:text=""/>
 
         <Button
                 android:id="@+id/btnCopyToClipBoard"
@@ -78,6 +78,14 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/colorYellow"
                 android:layout_gravity="end"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="30dp"
+                android:textSize="@dimen/text_title_size"
+                android:text="Note: You needs to wait 10 minutes to receive money to create your first transaction"/>
 
     </LinearLayout>
 

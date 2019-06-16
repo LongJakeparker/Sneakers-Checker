@@ -118,7 +118,6 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
             .subscribeOn(Schedulers.io())
             .subscribe({ response -> },
                 { throwable ->
-                    dialog.dismiss()
                     Log.e("TAG", "Throwable " + throwable.message)
                 })
 
