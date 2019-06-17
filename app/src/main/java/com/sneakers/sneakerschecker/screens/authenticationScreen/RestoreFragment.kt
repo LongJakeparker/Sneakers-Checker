@@ -115,7 +115,9 @@ class RestoreFragment : Fragment(), View.OnClickListener {
                     cartPassword.visibility = VISIBLE
                     btnNextRestore.visibility = VISIBLE
 
-                } else if (response.code() == 400) {
+                } else {
+
+                    Toast.makeText(context, "onResponse - Status : " + response.errorBody()!!.string(), Toast.LENGTH_LONG).show()
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }
             }
