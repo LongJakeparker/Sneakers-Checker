@@ -1,9 +1,8 @@
 <resources>
-    <string name="app_name">Sneakers Checker</string>
+    <string name="app_name">True Grails</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="splash_prevent_text">Your assistants</string>
 
     <string name="copyright">2019 - @copyright</string>
 
@@ -59,5 +58,13 @@
 
     <string name="label_is_validated">Item is validated</string>
     <string name="label_is_not_validated">Item is not validated</string>
+
+    <string name="label_create_account">Create account</string>
+    <string name="text_holder_user_name">Your name</string>
+    <string name="text_holder_user_email">Your email</string>
+    <string name="text_holder_user_password">Your password</string>
+    <string name="label_button_register">Register</string>
+
+    <string name="text_message_input_valid_email">Please enter a valid email address</string>
 
 </resources>

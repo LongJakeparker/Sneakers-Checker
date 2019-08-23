@@ -2,22 +2,34 @@ package com.sneakers.sneakerschecker.screens.authenticationScreen
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.text.Editable
+import android.text.TextWatcher
+import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-
-import com.sneakers.sneakerschecker.R
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import com.sneakers.sneakerschecker.model.Validation
+import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.api.AuthenticationApi
+import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.*
+import kotlinx.android.synthetic.main.fragment_create_new.*
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.web3j.crypto.Credentials
+import org.web3j.crypto.Keys
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import java.security.Security
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -26,11 +38,11 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
     private var fragmentView: View? = null
 
-    private var btnNewWallet: Button? = null
-    private lateinit var etUserName: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var etConfirmPassword: EditText
+    private lateinit var service: Retrofit
+    private lateinit var sharedPref: SharedPref
+    private lateinit var credentials: Credentials
 
+    private var isShowingPassword: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,65 +51,184 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_create_new, container, false)
 
-        btnNewWallet = fragmentView!!.findViewById(R.id.btnNextCreate)
-        etUserName = fragmentView!!.findViewById(R.id.etUserNameCreate)
-        etPassword = fragmentView!!.findViewById(R.id.etPasswordCreate)
-        etConfirmPassword = fragmentView!!.findViewById(R.id.etConfirmPasswordCreate)
+        setupBouncyCastle()
 
-        btnNewWallet!!.setOnClickListener(this)
+        //Get instant retrofit
+        service = RetrofitClientInstance().getRetrofitInstance()!!
 
         return fragmentView
     }
 
-    override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnNextCreate -> nextRegister()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        etUserName.addTextChangedListener(textWatcher)
+        etUserEmail.addTextChangedListener(textWatcher)
+        etUserPassword.addTextChangedListener(textWatcher)
+        btnRegister.setOnClickListener(this)
+        ibBack.setOnClickListener(this)
+        btnShowPassword.setOnClickListener(this)
+    }
+
+    private fun setupBouncyCastle() {
+        val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)
+            ?: // Web3j will set up the provider lazily when it's first used.
+            return
+        if (provider.javaClass == BouncyCastleProvider::class.java) {
+            // BC with same package name, shouldn't happen in real life.
+            return
+        }
+        // Android registers its own BC provider. As it might be outdated and might not include
+        // all needed ciphers, we substitute it with a known BC bundled in the app.
+        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
+        // of that it's possible to have another BC implementation loaded in VM.
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
+        Security.insertProviderAt(BouncyCastleProvider(), 1)
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable) {
+            btnRegister.isEnabled = validateData()
         }
     }
 
-    private fun callValidatePassword() {
-        val password = etPassword.text.toString()
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.btnRegister -> createNewAccount()
 
-        if (!Validation.validatePassword(password)!!) {
-            etPassword.error = "Password need to be included [@#$%^&*][0-9][a-z][A-Z]"
+            R.id.ibBack -> activity?.onBackPressed()
+
+            R.id.btnShowPassword -> showPassword()
+        }
+    }
+
+    private fun showPassword() {
+        val cursorStart = etUserPassword.selectionStart
+        val cursorEnd = etUserPassword.selectionEnd
+        if (!isShowingPassword) {
+            etUserPassword.transformationMethod = null
+            isShowingPassword = true
+            etUserPassword.setSelection(cursorStart, cursorEnd)
+            btnShowPassword.setImageResource(R.drawable.ic_hide_password)
+        }
+        else {
+            etUserPassword.transformationMethod = PasswordTransformationMethod()
+            isShowingPassword = false
+            etUserPassword.setSelection(cursorStart, cursorEnd)
+            btnShowPassword.setImageResource(R.drawable.ic_show_password)
         }
     }
 
     private fun callValidateEmail() {
-        val email = etUserName.text.toString()
+        val email = etUserEmail.text.toString()
 
         if (!Validation.validateEmail(email)!!) {
-            etUserName.error = "Please enter a valid email address"
+            visibleWarning(getString(R.string.text_message_input_valid_email))
+        }
+        else {
+            tvWarning.visibility = GONE
         }
     }
 
-    fun nextRegister() {
-        if (etUserName.text.isEmpty() || etPassword.text.isEmpty() || etConfirmPassword.text.isEmpty()) {
-            Toast.makeText(context, "All fields need to be filled", Toast.LENGTH_LONG).show()
-        }
-        else {
+    fun validateData(): Boolean {
+        return if (etUserName.text.isEmpty() || etUserEmail.text.isEmpty() || etUserPassword.text.isEmpty()) {
+            false
+        } else {
             callValidateEmail()
-            callValidatePassword()
-            if (Validation.validateEmail(etUserName.text.toString())!! && Validation.validatePassword(etPassword.text.toString())!!) {
-                if (etPassword.text.toString().trim() == etConfirmPassword.text.toString().trim()) {
-                    val bundle = Bundle()
-                    bundle.putString("username", etUserName.text.toString().trim())
-                    bundle.putString("password", etPassword.text.toString().trim())
+            Validation.validateEmail(etUserEmail.text.toString())!!
+        }
+    }
 
-                    val registerUserInfoFragment = RegisterUserInfoFragment()
-                    registerUserInfoFragment.arguments = bundle
+    private fun createNewAccount() {
+        try {
+            val keyPair = Keys.createEcKeyPair()
+            credentials = Credentials.create(keyPair)
+            sharedPref.setCredentials(credentials, Constant.USER_CREDENTIALS)
 
-                    val transaction = activity!!.supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.authentication_layout, registerUserInfoFragment)
-                        .addToBackStack(null)
-                        .commit()
-                }
-                else {
-                    etConfirmPassword.error = "Confirm password not match"
-                    etPassword.error = null
-                    etUserName.error = null
+            userRegister()
+        } catch (e: Exception) {
+            Log.e( "Error: " , e.message)
+        }
+    }
+
+    private fun userRegister() {
+        var data = HashMap<String, String>()
+        data[Constant.API_FIELD_USER_NAME] = etUserName.text.toString()
+        data[Constant.API_FIELD_USER_EMAIL] = etUserEmail.text.toString()
+        data[Constant.API_FIELD_USER_PASSWORD] = etUserPassword.text.toString()
+        data[Constant.API_FIELD_NETWORK_ADDRESS] = credentials.address
+        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
+
+        /*Create handle for the RetrofitInstance interface*/
+        val call = service.create(AuthenticationApi::class.java).signUpApi(data)
+        call.enqueue(object : Callback<SignUp> {
+
+            override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
+                if (response.code() == 201) {
+                    //newAccount(response.body()!!.passwordHash)
+                    requestLogIn()
+                } else if (response.code() == 400) {
+//                    dialog.dismiss()
+                    visibleWarning("Email has used")
+                } else {
+//                    dialog.dismiss()
+                    Toast.makeText(context, "Response Code: " + response.code(), Toast.LENGTH_SHORT).show()
                 }
             }
-        }
+
+            override fun onFailure(call: Call<SignUp>, t: Throwable) {
+//                dialog.dismiss()
+                Toast.makeText(context, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun requestLogIn() {
+
+        val authToken = okhttp3.Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
+        val call = service.create(AuthenticationApi::class.java)
+            .signInApi(
+                authToken,
+                Constant.GRANT_TYPE_PASSWORD,
+                etUserEmail.text.toString(),
+                etUserPassword.text.toString()
+            )
+        call.enqueue(object : Callback<SignIn> {
+
+            override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
+//                dialog.dismiss()
+
+                if (response.code() == 200) {
+                    sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
+
+                    activity!!.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                    val transaction = activity!!.supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.authentication_layout, ConfirmRegisterFragment())
+                        .commit()
+                } else if (response.code() == 400) {
+                    Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
+                }
+            }
+
+            override fun onFailure(call: Call<SignIn>, t: Throwable) {
+//                dialog.dismiss()
+                Toast.makeText(context, "Something went wrong when login", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+    }
+
+    fun visibleWarning(message: String) {
+        tvWarning.text = "Oops!\n$message"
+        tvWarning.visibility = VISIBLE
     }
 }

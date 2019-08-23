@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="text_size_xsmall">8sp</dimen>
+    <dimen name="text_size_small">9sp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_default">12sp</dimen>
+    <dimen name="text_size_large">14sp</dimen>
+    <dimen name="text_size_xlarge">16sp</dimen>
+    <dimen name="text_size_xxlarge">18sp</dimen>
+    <dimen name="text_size_xxxlarge">20sp</dimen>
+    <dimen name="text_size_xxxxlarge">24sp</dimen>
+    <dimen name="text_size_big">32sp</dimen>
+
+    <dimen name="activity_margin_5dp">5dp</dimen>
+    <dimen name="activity_margin_8dp">8dp</dimen>
+    <dimen name="activity_margin_10dp">10dp</dimen>
+    <dimen name="activity_margin_12dp">12dp</dimen>
+    <dimen name="activity_margin_15dp">15dp</dimen>
+    <dimen name="activity_margin_16dp">16dp</dimen>
+    <dimen name="activity_margin_18dp">18dp</dimen>
+    <dimen name="activity_margin_20dp">20dp</dimen>
+    <dimen name="activity_margin_24dp">24dp</dimen>
+    <dimen name="activity_margin_28dp">28dp</dimen>
+    <dimen name="activity_margin_32dp">32dp</dimen>
+    <dimen name="activity_margin_36dp">36dp</dimen>
+    <dimen name="activity_margin_48dp">48dp</dimen>
+    <dimen name="activity_margin_56dp">56dp</dimen>
+    <dimen name="activity_margin_64dp">64dp</dimen>
+    <dimen name="activity_margin_128dp">128dp</dimen>
+
     <dimen name="copyright_margin_bottom">5dp</dimen>
     <dimen name="copyright_text_size">10dp</dimen>
 
@@ -57,5 +85,8 @@
     //Drawer Menu
     <dimen name="drawer_button_height">40dp</dimen>
     <dimen name="drawer_padding_left">30dp</dimen>
+
+
+    <dimen name="dimen_radius_button">6dp</dimen>
 
 </resources>

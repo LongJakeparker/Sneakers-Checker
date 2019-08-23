@@ -25,6 +25,14 @@ object Constant {
     const val EXTRA_IS_FROM_AUTHEN = "EXTRA_IS_FROM_AUTHEN"
 
 
+
+    const val API_FIELD_USER_NAME = "username"
+    const val API_FIELD_USER_EMAIL = "email"
+    const val API_FIELD_USER_PASSWORD = "password"
+    const val API_FIELD_NETWORK_ADDRESS = "networkAddress"
+    const val API_FIELD_REGISTRATION_TOKEN = "registrationToken"
+
+
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"
 
     class BusMessage {
