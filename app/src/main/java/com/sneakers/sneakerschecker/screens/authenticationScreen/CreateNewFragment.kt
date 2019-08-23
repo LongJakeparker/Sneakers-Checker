@@ -1,5 +1,6 @@
 package com.sneakers.sneakerschecker.screens.authenticationScreen
 
+import android.Manifest
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -50,6 +51,8 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     ): View? {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_create_new, container, false)
+
+        sharedPref = context?.let { SharedPref(it) }!!
 
         setupBouncyCastle()
 
@@ -151,7 +154,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         try {
             val keyPair = Keys.createEcKeyPair()
             credentials = Credentials.create(keyPair)
-            sharedPref.setCredentials(credentials, Constant.USER_CREDENTIALS)
 
             userRegister()
         } catch (e: Exception) {
@@ -167,6 +169,8 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         data[Constant.API_FIELD_NETWORK_ADDRESS] = credentials.address
         data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
 
+        CommonUtils.toggleLoading(fragmentView, true)
+
         /*Create handle for the RetrofitInstance interface*/
         val call = service.create(AuthenticationApi::class.java).signUpApi(data)
         call.enqueue(object : Callback<SignUp> {
@@ -176,16 +180,16 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                     //newAccount(response.body()!!.passwordHash)
                     requestLogIn()
                 } else if (response.code() == 400) {
-//                    dialog.dismiss()
+                    CommonUtils.toggleLoading(fragmentView, false)
                     visibleWarning("Email has used")
                 } else {
-//                    dialog.dismiss()
+                    CommonUtils.toggleLoading(fragmentView, false)
                     Toast.makeText(context, "Response Code: " + response.code(), Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<SignUp>, t: Throwable) {
-//                dialog.dismiss()
+                CommonUtils.toggleLoading(fragmentView, false)
                 Toast.makeText(context, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show()
             }
         })
@@ -204,10 +208,11 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         call.enqueue(object : Callback<SignIn> {
 
             override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
-//                dialog.dismiss()
+                CommonUtils.toggleLoading(fragmentView, false)
 
                 if (response.code() == 200) {
                     sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
+                    sharedPref.setCredentials(credentials, Constant.USER_CREDENTIALS)
 
                     activity!!.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
@@ -220,7 +225,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             }
 
             override fun onFailure(call: Call<SignIn>, t: Throwable) {
-//                dialog.dismiss()
+                CommonUtils.toggleLoading(fragmentView, false)
                 Toast.makeText(context, "Something went wrong when login", Toast.LENGTH_SHORT).show()
             }
 

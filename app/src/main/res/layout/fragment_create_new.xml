@@ -140,4 +140,13 @@
         android:visibility="gone"
     />
 
+    <include
+        android:id="@+id/pb_loading"
+        layout="@layout/loading_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+
 </android.support.constraint.ConstraintLayout>
