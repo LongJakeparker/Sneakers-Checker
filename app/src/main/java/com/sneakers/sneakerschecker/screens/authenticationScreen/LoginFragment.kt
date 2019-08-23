@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
@@ -19,25 +18,14 @@ import com.sneakers.sneakerschecker.model.CheckPrivateKeyResultModel
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
-import kotlinx.android.synthetic.main.fragment_restore.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import org.web3j.crypto.Credentials
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
-class RestoreFragment : Fragment(), View.OnClickListener {
-    // TODO: Rename and change types of parameters
+class LoginFragment : Fragment(), View.OnClickListener {
 
     private var fragmentView: View? = null
     private lateinit var credentials: Credentials
@@ -53,7 +41,7 @@ class RestoreFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        fragmentView = inflater.inflate(R.layout.fragment_restore, container, false)
+        fragmentView = inflater.inflate(R.layout.fragment_login, container, false)
 
         sharedPref = context?.let { SharedPref(it) }!!
 
@@ -111,9 +99,9 @@ class RestoreFragment : Fragment(), View.OnClickListener {
                 dialog.dismiss()
                 if (response.code() == 200) {
                     etUserNameRestore.setText(response.body()!!.email)
-                    cartEmail.visibility = VISIBLE
-                    cartPassword.visibility = VISIBLE
-                    btnNextRestore.visibility = VISIBLE
+                    cartEmail.visibility = View.VISIBLE
+                    cartPassword.visibility = View.VISIBLE
+                    btnNextRestore.visibility = View.VISIBLE
 
                 } else if (response.code() == 400) {
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())

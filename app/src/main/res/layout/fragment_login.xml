@@ -7,7 +7,7 @@
         android:paddingHorizontal="@dimen/layout_padding_Horizontal"
         android:background="@mipmap/test_background"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".screens.authenticationScreen.RestoreFragment">
+        tools:context=".screens.authenticationScreen.LoginFragment">
 
     <LinearLayout
             android:orientation="vertical"

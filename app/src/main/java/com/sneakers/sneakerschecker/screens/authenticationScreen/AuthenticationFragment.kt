@@ -17,7 +17,7 @@ import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instance
 import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.fragment_authentication.view.*
-import kotlinx.android.synthetic.main.fragment_restore.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.Keys
@@ -106,7 +106,7 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.btnRestoreWalletAuthen -> {
-                transaction.replace(R.id.authentication_layout, RestoreFragment())
+                transaction.replace(R.id.authentication_layout, LoginFragment())
                     .addToBackStack(null)
                     .commit()
             }
