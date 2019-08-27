@@ -89,4 +89,6 @@
 
     <dimen name="dimen_radius_button">6dp</dimen>
 
+    <dimen name="dimen_radius_button_8dp">8dp</dimen>
+
 </resources>

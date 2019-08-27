@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">True Grails</string>
+    <string name="label_app_version">Version 1.0.0</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="splash_prevent_text">Your assistants</string>
@@ -70,6 +71,12 @@
     <string name="label_button_register">Register</string>
     <string name="label_button_login">Login</string>
     <string name="label_button_next">Next</string>
+    <string name="label_button_create_new_account">Create new account</string>
+    <string name="label_button_profile">Profile</string>
+    <string name="label_button_collection">My Grails</string>
+    <string name="label_button_card_manage">Payment cards</string>
+    <string name="label_button_setting">Setting</string>
+    <string name="label_button_logout">Log out</string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>

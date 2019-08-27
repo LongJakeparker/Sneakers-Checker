@@ -26,9 +26,9 @@
     <color name="colorOrangish">#ff773f</color>
     <color name="colorOrangish_alpha_15">#26ff773f</color>
     <color name="colorDark">#19181b</color>
+    <color name="colorDark30">#4D19181b</color>
     <color name="colorOrangeyRed">#ff3b30</color>
     <color name="colorPutty">#b0aca8</color>
-    <color name="colorDark70">#19181b</color>
     <color name="colorSeafoamBlue">#75d48b</color>
 
 </resources>
