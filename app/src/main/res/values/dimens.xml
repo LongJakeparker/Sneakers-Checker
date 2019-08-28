@@ -87,7 +87,8 @@
     <dimen name="drawer_padding_left">30dp</dimen>
 
 
-    <dimen name="dimen_radius_button">6dp</dimen>
+    <dimen name="dimen_radius_button_4dp">4dp</dimen>
+    <dimen name="dimen_radius_button_6dp">6dp</dimen>
 
     <dimen name="dimen_radius_button_8dp">8dp</dimen>
 

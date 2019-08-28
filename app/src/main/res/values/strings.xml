@@ -62,6 +62,8 @@
 
     <string name="label_create_account">Create account</string>
     <string name="label_log_in">Log in to Grails</string>
+    <string name="label_Explore">Explore</string>
+    <string name="label_Copied">Copied</string>
 
     <string name="text_holder_user_name">Your name</string>
     <string name="text_holder_user_email">Your email</string>
@@ -81,6 +83,9 @@
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>
     <string name="text_question_login_3">What should I do?</string>
+
+    <string name="text_explore_1">Do you want to\nknow everything about\nyour <b color="#ff773f">GRAILS?</b></string>
+    <string name="text_explore_2">Do you want to\nmake sure your <b color="#ff773f">GRAILS</b>\nsafety?</string>
 
     <string name="text_message_input_valid_email">Please enter a valid email address</string>
     <string name="text_message_incorrect_key">Private key is not correct.\nPlease try again later!</string>
