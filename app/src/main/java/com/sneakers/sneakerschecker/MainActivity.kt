@@ -17,6 +17,7 @@ import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instance
 import com.sneakers.sneakerschecker.screens.activity.AuthenticationActivity
 import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
+import com.sneakers.sneakerschecker.screens.activity.LoginActivity
 import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
@@ -28,11 +29,10 @@ import org.web3j.protocol.http.HttpService
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val TYPE_UNLINK: Int = 0
+    private val REQUEST_CODE_START_LOGIN_ACTIVITY = 1000
 
     private lateinit var sharedPref: SharedPref
 
-    private lateinit var builder: AlertDialog.Builder
-    private lateinit var dialog: AlertDialog
     private var popupType: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,37 +41,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         EventBus.getDefault().register(this)
 
-        builder = AlertDialog.Builder(this)
-        builder.setCancelable(false) // if you want user to wait for some process to finish,
-        //builder.setView(R.layout.layout_loading_dialog)
-        dialog = builder.create()
-        dialog.show()
-
         sharedPref = SharedPref(this)
 
-        tvAddressMain.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
+//        tvAddressMain.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
 
-        val qrCode = GenerateQrCode.accountId(this, 0.55)
+//        val qrCode = GenerateQrCode.accountId(this, 0.55)
 
-        if (qrCode != null) {
-            ivQrCodeMain.setImageBitmap(qrCode)
-        }
+//        if (qrCode != null) {
+//            ivQrCodeMain.setImageBitmap(qrCode)
+//        }
 
         Thread {
             try {
                 Web3Instance.setInstance(Web3j.build(HttpService(Constant.ETHEREUM_API_URL)))
-                dialog.dismiss()
             } catch (e: Exception) {
-                dialog.dismiss()
                 runOnUiThread { Toast.makeText(this, "Connect Blockchain Failed", Toast.LENGTH_LONG).show() }
             }
         }.start()
 
         btnMenuMain.setOnClickListener(this)
-        btnUnlinkWalletMain.setOnClickListener(this)
-        ibtnCopyMain.setOnClickListener(this)
-        btnScanMain.setOnClickListener(this)
-        btnCollection.setOnClickListener(this)
+        tvLogin.setOnClickListener(this)
+//        tvLogout.setOnClickListener(this)
+//        ibtnCopyMain.setOnClickListener(this)
+        btnScanToken.setOnClickListener(this)
+//        btnCollection.setOnClickListener(this)
 
         Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
     }
@@ -83,24 +76,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnMenuMain -> drawer_layout.openDrawer(GravityCompat.START)
+            R.id.btnMenuMain -> drawer_layout.openDrawer(GravityCompat.END)
 
-            R.id.ibtnCopyMain -> copyToClipboard(tvAddressMain.text.toString())
-
-            R.id.btnCollection -> {
-                drawer_layout.closeDrawer(GravityCompat.START)
-                CollectionActivity.start(this@MainActivity)
+            R.id.tvLogin -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivityForResult(intent, REQUEST_CODE_START_LOGIN_ACTIVITY)
             }
+//            R.id.ibtnCopyMain -> copyToClipboard(tvAddressMain.text.toString())
+//
+//            R.id.btnCollection -> {
+//                drawer_layout.closeDrawer(GravityCompat.START)
+//                CollectionActivity.start(this@MainActivity)
+//            }
+//
+//            R.id.btnUnlinkWalletMain -> {
+//                popupType = TYPE_UNLINK
+//                builder.setTitle("Log Out")
+//                    .setMessage("Do you want to unlink your wallet?")
+//                    .setPositiveButton("Yes", dialogClickListener)
+//                    .setNegativeButton("No", dialogClickListener).show()
+//            }
 
-            R.id.btnUnlinkWalletMain -> {
-                popupType = TYPE_UNLINK
-                builder.setTitle("Log Out")
-                    .setMessage("Do you want to unlink your wallet?")
-                    .setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show()
-            }
-
-            R.id.btnScanMain -> goToScan()
+            R.id.btnScanToken -> goToScan()
         }
     }
 
@@ -156,9 +154,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     @Subscribe
     fun getMessage(refreshWorkMessage: BusEventMessage) {
         if (refreshWorkMessage.message == Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN) {
-            builder.setTitle("Transfer Status")
-                .setMessage("Your transfer was succeed")
-                .setPositiveButton("OK", dialogClickListener).show()
+//            builder.setTitle("Transfer Status")
+//                .setMessage("Your transfer was succeed")
+//                .setPositiveButton("OK", dialogClickListener).show()
         }
     }
 

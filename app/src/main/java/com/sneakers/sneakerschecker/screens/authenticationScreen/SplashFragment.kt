@@ -37,17 +37,20 @@ class SplashFragment : Fragment() {
         fragmentView = inflater.inflate(R.layout.fragment_splash, container, false)
 
         Handler().postDelayed({
-            val sharedPref = SharedPref(this.context!!)
-            if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
-                val intent = Intent(activity, MainActivity::class.java)
+            val intent = Intent(activity, MainActivity::class.java)
                 startActivity(intent)
                 activity!!.finish()
-            }
-            else {
-                val transaction = activity!!.supportFragmentManager.beginTransaction();
-                transaction.replace(R.id.authentication_layout, AuthenticationFragment())
-                    .commitAllowingStateLoss()
-            }
+//            val sharedPref = SharedPref(this.context!!)
+//            if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
+//                val intent = Intent(activity, MainActivity::class.java)
+//                startActivity(intent)
+//                activity!!.finish()
+//            }
+//            else {
+//                val transaction = activity!!.supportFragmentManager.beginTransaction();
+//                transaction.replace(R.id.authentication_layout, AuthenticationFragment())
+//                    .commitAllowingStateLoss()
+//            }
         }, SPLASH_DISPLAY_LENGTH)
 
         return fragmentView
