@@ -15,10 +15,7 @@ import com.sneakers.sneakerschecker.model.BusEventMessage
 import com.sneakers.sneakerschecker.model.GenerateQrCode
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instance
-import com.sneakers.sneakerschecker.screens.activity.AuthenticationActivity
-import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
-import com.sneakers.sneakerschecker.screens.activity.LoginActivity
-import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
+import com.sneakers.sneakerschecker.screens.activity.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
 import org.greenrobot.eventbus.EventBus
@@ -30,6 +27,7 @@ import org.web3j.protocol.http.HttpService
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val TYPE_UNLINK: Int = 0
     private val REQUEST_CODE_START_LOGIN_ACTIVITY = 1000
+    private val REQUEST_CODE_START_CREATE_ACTIVITY = 1001
 
     private lateinit var sharedPref: SharedPref
 
@@ -61,6 +59,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         btnMenuMain.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
+        tvCreateNew.setOnClickListener(this)
 //        tvLogout.setOnClickListener(this)
 //        ibtnCopyMain.setOnClickListener(this)
         btnScanToken.setOnClickListener(this)
@@ -82,6 +81,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivityForResult(intent, REQUEST_CODE_START_LOGIN_ACTIVITY)
+            }
+
+            R.id.tvCreateNew -> {
+                val intent = Intent(this, CreateNewActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivityForResult(intent, REQUEST_CODE_START_CREATE_ACTIVITY)
             }
 //            R.id.ibtnCopyMain -> copyToClipboard(tvAddressMain.text.toString())
 //
