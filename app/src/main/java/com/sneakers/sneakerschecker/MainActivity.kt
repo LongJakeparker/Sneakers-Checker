@@ -2,20 +2,25 @@ package com.sneakers.sneakerschecker
 
 import android.content.*
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v4.view.GravityCompat
-import android.support.v7.app.AlertDialog
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.zxing.integration.android.IntentIntegrator
+import com.sneakers.sneakerschecker.adapter.MainSliderAdapter
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.BusEventMessage
-import com.sneakers.sneakerschecker.model.GenerateQrCode
+import com.sneakers.sneakerschecker.model.MainSliderItem
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instance
-import com.sneakers.sneakerschecker.screens.activity.*
+import com.sneakers.sneakerschecker.screens.activity.AuthenticationActivity
+import com.sneakers.sneakerschecker.screens.activity.CreateNewActivity
+import com.sneakers.sneakerschecker.screens.activity.LoginActivity
+import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
 import org.greenrobot.eventbus.EventBus
@@ -26,12 +31,20 @@ import org.web3j.protocol.http.HttpService
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val TYPE_UNLINK: Int = 0
+    private val TIME_AUTO_NEXT = 4000
     private val REQUEST_CODE_START_LOGIN_ACTIVITY = 1000
     private val REQUEST_CODE_START_CREATE_ACTIVITY = 1001
 
     private lateinit var sharedPref: SharedPref
 
     private var popupType: Int = -1
+
+    private val mainSliderList = arrayListOf(
+        MainSliderItem(R.string.text_explore_1, R.drawable.drawable_explore_pager_1),
+        MainSliderItem(R.string.text_explore_2, R.drawable.drawable_explore_pager_2)
+    )
+
+    var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +70,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }.start()
 
+        setViewPager()
+
         btnMenuMain.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
         tvCreateNew.setOnClickListener(this)
@@ -68,9 +83,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun setViewPager() {
+        viewpagerMain.adapter = MainSliderAdapter(this, mainSliderList)
+        viewpagerMain.setOnTouchListener { v, event -> true }
+        viewpagerMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
 
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                startTimer()
+            }
+
+        })
+        viewpagerMain.setPageTransformer(false) { view, position ->
+            view.translationX = view.width * -position
+
+            if(position <= -1.0F || position >= 1.0F) {
+                view.alpha = 0.0F
+            } else if( position == 0.0F ) {
+                view.alpha = 1.0F
+            } else {
+                // position is between -1.0F & 0.0F OR 0.0F & 1.0F
+                view.alpha = 1.0F - Math.abs(position)
+            }
+        }
+        startTimer()
     }
 
     override fun onClick(v: View?) {
@@ -168,5 +209,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        countDownTimer!!.cancel()
+    }
+
+    private fun cancelTimer() {
+        if (countDownTimer != null) {
+            countDownTimer!!.cancel()
+            countDownTimer = null
+        }
+    }
+
+    private fun startTimer() {
+        cancelTimer()
+        countDownTimer = object : CountDownTimer(TIME_AUTO_NEXT.toLong(), 500) {
+            override fun onTick(millisUntilFinished: Long) {}
+
+            override fun onFinish() {
+                var nextItem = viewpagerMain.currentItem + 1
+                if (nextItem >= viewpagerMain.adapter!!.count) {
+                    nextItem = viewpagerMain.adapter!!.count / 2
+                }
+                viewpagerMain.setCurrentItem(nextItem, true)
+            }
+        }
+        countDownTimer!!.start()
     }
 }

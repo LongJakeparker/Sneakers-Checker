@@ -84,11 +84,8 @@
     <string name="text_question_login_2">How to find out private key?</string>
     <string name="text_question_login_3">What should I do?</string>
 
-    <string name="text_explore_1">Do you want to\nknow everything about\nyour
-        <b color="#ff773f">GRAILS?</b>
-    </string>
-    <string name="text_explore_2">Do you want to\nmake sure your <b color="#ff773f">GRAILS</b>\nsafety?
-    </string>
+    <string name="text_explore_1">Do you want to\nknow everything about\nyour <font color="#ff773f"><b>GRAILS?</b></font></string>
+    <string name="text_explore_2">Do you want to\nmake sure your <font color="#ff773f"><b>GRAILS</b></font>\nsafety?</string>
 
     <string name="text_message_input_valid_email">Please enter a valid email address</string>
     <string name="text_message_incorrect_key">Private key is not correct.\nPlease try again later!</string>
