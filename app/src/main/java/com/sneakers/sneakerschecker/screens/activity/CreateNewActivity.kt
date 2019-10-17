@@ -3,7 +3,7 @@ package com.sneakers.sneakerschecker.screens.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.sneakers.sneakerschecker.R
-import com.sneakers.sneakerschecker.screens.authenticationScreen.CreateNewFragment
+import com.sneakers.sneakerschecker.screens.fragment.CreateNewFragment
 
 class CreateNewActivity : AppCompatActivity() {
 

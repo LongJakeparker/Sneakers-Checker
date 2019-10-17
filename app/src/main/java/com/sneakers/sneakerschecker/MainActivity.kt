@@ -1,5 +1,6 @@
 package com.sneakers.sneakerschecker
 
+import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -17,10 +18,7 @@ import com.sneakers.sneakerschecker.model.BusEventMessage
 import com.sneakers.sneakerschecker.model.MainSliderItem
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.Web3Instance
-import com.sneakers.sneakerschecker.screens.activity.AuthenticationActivity
-import com.sneakers.sneakerschecker.screens.activity.CreateNewActivity
-import com.sneakers.sneakerschecker.screens.activity.LoginActivity
-import com.sneakers.sneakerschecker.screens.activity.SneakerInfoActivity
+import com.sneakers.sneakerschecker.screens.activity.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
 import org.greenrobot.eventbus.EventBus
@@ -180,7 +178,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun UnlinkWallet() {
         sharedPref.clearPref()
         sharedPref.setBool(true, Constant.ACCOUNT_UNLINK)
-        val intent = Intent(this, AuthenticationActivity::class.java)
+        val intent = Intent(this, SplashActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -194,6 +192,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
+        }
+
+        when {
+            requestCode == REQUEST_CODE_START_CREATE_ACTIVITY &&
+                    resultCode == Activity.RESULT_OK -> ConfirmRegisterActivity.start(this)
         }
     }
 

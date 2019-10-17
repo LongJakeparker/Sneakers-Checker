@@ -20,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".screens.activity.ConfirmRegisterActivity">
+        </activity>
         <activity android:name=".screens.activity.LoginActivity">
         </activity>
         <activity android:name=".screens.activity.CreateNewActivity">
@@ -39,7 +41,7 @@
         </activity>
         <activity android:name=".screens.activity.SneakerInfoActivity">
         </activity>
-        <activity android:name=".screens.activity.AuthenticationActivity">
+        <activity android:name=".screens.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

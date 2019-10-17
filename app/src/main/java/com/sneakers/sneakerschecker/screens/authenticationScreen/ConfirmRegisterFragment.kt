@@ -6,18 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat.getSystemService
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.google.common.hash.Hashing
 import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
 import kotlinx.android.synthetic.main.fragment_confirm_register.*
-import java.nio.charset.StandardCharsets
 
 class ConfirmRegisterFragment: Fragment() {
     private var fragmentView: View? = null

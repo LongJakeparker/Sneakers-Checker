@@ -51,7 +51,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
             val intent = Intent(activity, SneakerInfoActivity::class.java)
             intent.putExtra(Constant.EXTRA_SNEAKER_TOKEN, itemToken)
 
-            if (activity is AuthenticationActivity) {
+            if (activity is SplashActivity) {
                 intent.putExtra(Constant.EXTRA_IS_FROM_AUTHEN, true)
             } else intent.putExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)
 

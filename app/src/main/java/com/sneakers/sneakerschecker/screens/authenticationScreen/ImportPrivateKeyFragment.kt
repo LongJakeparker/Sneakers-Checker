@@ -19,6 +19,7 @@ import com.sneakers.sneakerschecker.model.CheckPrivateKeyResultModel
 import com.sneakers.sneakerschecker.model.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.screens.fragment.LoginFragment
 import kotlinx.android.synthetic.main.fragment_import_private_key.*
 import org.web3j.crypto.Credentials
 import retrofit2.Call
@@ -55,6 +56,7 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
         etUserPrivateKey.addTextChangedListener(textWatcher)
         btnScanPrivateKey.setOnClickListener(this)
         btnNext.setOnClickListener(this)
+        btnBack.setOnClickListener(this)
         tv_question_1.setOnClickListener(this)
         tv_question_2.setOnClickListener(this)
         tv_question_3.setOnClickListener(this)
@@ -65,6 +67,8 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
             R.id.btnScanPrivateKey -> goToScan()
 
             R.id.btnNext -> checkPrivateKey()
+
+            R.id.btnBack -> activity?.onBackPressed()
         }
     }
 
@@ -125,7 +129,7 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
         loginFragment.arguments = bundle
 
         val transaction = activity!!.supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.authentication_layout, loginFragment)
+        transaction.replace(R.id.fl_login_content, loginFragment)
             .addToBackStack(null)
             .commit()
     }

@@ -2,7 +2,6 @@ package com.sneakers.sneakerschecker.screens.authenticationScreen
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -13,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
@@ -187,9 +185,9 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
 
                     activity!!.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-                    val transaction = activity!!.supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.authentication_layout, ConfirmRegisterFragment())
-                        .commit()
+//                    val transaction = activity!!.supportFragmentManager.beginTransaction()
+//                    transaction.replace(R.id.authentication_layout, ConfirmRegisterFragment())
+//                        .commit()
                 } else if (response.code() == 400) {
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }

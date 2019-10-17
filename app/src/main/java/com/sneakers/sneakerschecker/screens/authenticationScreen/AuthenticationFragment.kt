@@ -99,15 +99,15 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.btnNewWalletAuthen -> {
-                transaction.replace(R.id.authentication_layout, CreateNewFragment())
-                    .addToBackStack(null)
-                    .commit()
+//                transaction.replace(R.id.authentication_layout, CreateNewFragment())
+//                    .addToBackStack(null)
+//                    .commit()
             }
 
             R.id.btnRestoreWalletAuthen -> {
-                transaction.replace(R.id.authentication_layout, ImportPrivateKeyFragment())
-                    .addToBackStack(null)
-                    .commit()
+//                transaction.replace(R.id.authentication_layout, ImportPrivateKeyFragment())
+//                    .addToBackStack(null)
+//                    .commit()
             }
         }
     }

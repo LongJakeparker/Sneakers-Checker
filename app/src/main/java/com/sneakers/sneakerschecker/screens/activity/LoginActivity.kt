@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.screens.authenticationScreen.ImportPrivateKeyFragment
-import com.sneakers.sneakerschecker.screens.authenticationScreen.LoginFragment
 
 class LoginActivity : AppCompatActivity() {
 

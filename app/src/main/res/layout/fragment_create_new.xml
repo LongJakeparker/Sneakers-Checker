@@ -5,9 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_margin_18dp"
     android:paddingHorizontal="@dimen/activity_margin_24dp"
-    tools:context=".screens.authenticationScreen.CreateNewFragment">
+    tools:context=".screens.fragment.CreateNewFragment">
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -17,7 +16,7 @@
         android:paddingVertical="@dimen/activity_margin_10dp"
         android:paddingRight="@dimen/activity_margin_10dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/activity_margin_16dp"
+        android:layout_marginTop="@dimen/activity_margin_34dp"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/ibBack"/>
 

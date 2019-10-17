@@ -1,9 +1,8 @@
-package com.sneakers.sneakerschecker.screens.authenticationScreen
+package com.sneakers.sneakerschecker.screens.fragment
 
-import android.Manifest
+import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.PasswordTransformationMethod
@@ -121,8 +120,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             isShowingPassword = true
             etUserPassword.setSelection(cursorStart, cursorEnd)
             btnShowPassword.setImageResource(R.drawable.ic_hide_password)
-        }
-        else {
+        } else {
             etUserPassword.transformationMethod = PasswordTransformationMethod()
             isShowingPassword = false
             etUserPassword.setSelection(cursorStart, cursorEnd)
@@ -135,8 +133,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
         if (!Validation.validateEmail(email)!!) {
             visibleWarning(getString(R.string.text_message_input_valid_email))
-        }
-        else {
+        } else {
             tvWarning.visibility = GONE
         }
     }
@@ -157,7 +154,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
             userRegister()
         } catch (e: Exception) {
-            Log.e( "Error: " , e.message)
+            Log.e("Error: ", e.message)
         }
     }
 
@@ -176,15 +173,17 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         call.enqueue(object : Callback<SignUp> {
 
             override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
-                if (response.code() == 201) {
-                    //newAccount(response.body()!!.passwordHash)
-                    requestLogIn()
-                } else if (response.code() == 400) {
-                    CommonUtils.toggleLoading(fragmentView, false)
-                    visibleWarning("Email has used")
-                } else {
-                    CommonUtils.toggleLoading(fragmentView, false)
-                    Toast.makeText(context, "Response Code: " + response.code(), Toast.LENGTH_SHORT).show()
+                when {
+                    response.code() == 201 -> //newAccount(response.body()!!.passwordHash)
+                        requestLogIn()
+                    response.code() == 400 -> {
+                        CommonUtils.toggleLoading(fragmentView, false)
+                        visibleWarning("Email has been used")
+                    }
+                    else -> {
+                        CommonUtils.toggleLoading(fragmentView, false)
+                        Toast.makeText(context, "Response Code: " + response.code(), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
@@ -214,11 +213,8 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                     sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
                     sharedPref.setCredentials(credentials, Constant.USER_CREDENTIALS)
 
-                    activity!!.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-                    val transaction = activity!!.supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.authentication_layout, ConfirmRegisterFragment())
-                        .commit()
+                    activity?.setResult(Activity.RESULT_OK)
+                    activity?.finish()
                 } else if (response.code() == 400) {
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }
