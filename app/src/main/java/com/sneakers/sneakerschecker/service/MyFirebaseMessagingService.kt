@@ -7,8 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
-import android.support.v4.app.NotificationCompat
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sneakers.sneakerschecker.R
@@ -16,7 +16,7 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
 
-class MyFirebaseMessagingService: FirebaseMessagingService() {
+class MyFirebaseMessagingService : FirebaseMessagingService() {
     private var NOTIFICATION_ID = 1
     private lateinit var sharedPref: SharedPref
 
@@ -26,7 +26,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
 
     private fun generateNotification(body: String?, title: String?) {
         val intent = Intent(this, CollectionActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 

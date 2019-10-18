@@ -4,13 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.animation.Interpolator
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
 import com.google.zxing.integration.android.IntentIntegrator
@@ -146,7 +146,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun getItem(i: Int): Int {
-        return viewPagerValidateProgress.getCurrentItem() + i
+        return viewPagerValidateProgress.currentItem + i
     }
 
     private fun movePagerNext() {
@@ -155,7 +155,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun callApi() {
-        val call = service.create(MainApi::class.java!!)
+        val call = service.create(MainApi::class.java)
             .validateSneaker(itemToken)
         call.enqueue(object : Callback<ValidateModel> {
             override fun onFailure(call: Call<ValidateModel>, t: Throwable) {

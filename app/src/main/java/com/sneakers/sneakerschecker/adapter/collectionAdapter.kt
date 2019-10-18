@@ -2,15 +2,14 @@ package com.sneakers.sneakerschecker.adapter
 
 import android.animation.LayoutTransition
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.sneakers.sneakerschecker.model.SneakerModel
 import kotlinx.android.synthetic.main.item_collection.view.*
 

@@ -4,12 +4,13 @@ import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.viewpager.widget.ViewPager
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.adapter.MainSliderAdapter
@@ -100,9 +101,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         viewpagerMain.setPageTransformer(false) { view, position ->
             view.translationX = view.width * -position
 
-            if(position <= -1.0F || position >= 1.0F) {
+            if (position <= -1.0F || position >= 1.0F) {
                 view.alpha = 0.0F
-            } else if( position == 0.0F ) {
+            } else if (position == 0.0F) {
                 view.alpha = 1.0F
             } else {
                 // position is between -1.0F & 0.0F OR 0.0F & 1.0F
@@ -142,7 +143,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                    .setNegativeButton("No", dialogClickListener).show()
 //            }
 
-            R.id.btnScanToken -> goToScan()
+            R.id.btnScanToken -> ConfirmRegisterActivity.start(this)
         }
     }
 

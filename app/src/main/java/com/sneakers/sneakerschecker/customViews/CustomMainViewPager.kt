@@ -1,11 +1,11 @@
 package com.sneakers.sneakerschecker.customViews
 
 import android.content.Context
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.Scroller
+import androidx.viewpager.widget.ViewPager
 
 class CustomMainViewPager(context: Context, attrs: AttributeSet?) : ViewPager(context, attrs) {
     private var mScroller: FixedSpeedScroller? = null

@@ -3,14 +3,13 @@ package com.sneakers.sneakerschecker.screens.authenticationScreen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.zxing.integration.android.IntentIntegrator
-
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
@@ -39,8 +38,10 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
     private lateinit var sharedPref: SharedPref
     private lateinit var credentials: Credentials
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                                savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_authentication, container, false)
 
@@ -50,7 +51,9 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
             try {
                 Web3Instance.setInstance(Web3j.build(HttpService(Constant.ETHEREUM_API_URL)))
             } catch (e: Exception) {
-                activity?.runOnUiThread { Toast.makeText(activity, "Connect Blockchain Failed", Toast.LENGTH_LONG).show() }
+                activity?.runOnUiThread {
+                    Toast.makeText(activity, "Connect Blockchain Failed", Toast.LENGTH_LONG).show()
+                }
             }
         }.start()
 
@@ -87,7 +90,7 @@ class AuthenticationFragment : Fragment(), View.OnClickListener {
             sharedPref.setCredentials(credentials, Constant.APP_CREDENTIALS)
 
         } catch (e: Exception) {
-            Log.e( "Error: " , e.message)
+            Log.e("Error: ", e.message)
         }
     }
 

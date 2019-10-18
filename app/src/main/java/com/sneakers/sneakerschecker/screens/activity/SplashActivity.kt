@@ -3,7 +3,7 @@ package com.sneakers.sneakerschecker.screens.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.sneakers.sneakerschecker.MainActivity
@@ -27,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
         Handler().postDelayed({
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.slide_in, R.anim.slide_out)
+//            overridePendingTransition(R.anim.slide_in, R.anim.slide_out)
             finish()
 //            val sharedPref = SharedPref(this.context!!)
 //            if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {

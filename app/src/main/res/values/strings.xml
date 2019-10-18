@@ -103,4 +103,10 @@
     <string name="text_message_confirm_email_login_2">Please input your password to continue.</string>
     <string name="text_private_key">Private key</string>
 
+    <string name="confirm_title_1">What is private key?</string>
+    <string name="confirm_content_1">Private key encryption is the form of encryption where only a single private key can encrypt and decrypt information. It is a fast process since it uses a single key. However, protecting one key creates a key management issue when everyone is using private keys. The private key may be stolen or leaked. Key management requires prevention of these risks and necessitates changing the encryption key often, and appropriately distributing  the key.</string>
+    <string name="confirm_title_2">Is it important?</string>
+    <string name="confirm_content_temp">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
+    <string name="confirm_title_3">What should you do?</string>
+
 </resources>

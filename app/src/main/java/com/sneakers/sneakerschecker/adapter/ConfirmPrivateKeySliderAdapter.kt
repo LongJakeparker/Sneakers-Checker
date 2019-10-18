@@ -6,24 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import com.sneakers.sneakerschecker.R
-import com.sneakers.sneakerschecker.model.MainSliderItem
-import kotlinx.android.synthetic.main.main_slider_item.view.*
+import com.sneakers.sneakerschecker.model.ConfirmPrivateKeySliderItem
+import kotlinx.android.synthetic.main.confirm_private_key_slider_item.view.*
 
-class PrivateKeyTutorialAdapter(context: Context, items: ArrayList<MainSliderItem>) : PagerAdapter() {
-    private var mItems: ArrayList<MainSliderItem> = items
+class ConfirmPrivateKeySliderAdapter(context: Context, items: ArrayList<ConfirmPrivateKeySliderItem>) : PagerAdapter() {
+    private var mItems: ArrayList<ConfirmPrivateKeySliderItem> = items
     private var mContext: Context = context
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.main_slider_item, null)
+        val view = LayoutInflater.from(mContext).inflate(R.layout.confirm_private_key_slider_item, null)
         val item = getItem(position)
-        view.tvSliderContent.text = mContext.resources.getText(item.content)
-        view.ivSliderImage.setImageResource(item.background)
+        view.tvTitle.text = item.title
+        view.tvContent.text = item.content
         container.addView(view)
         return view
     }
 
-    private fun getItem(position: Int): MainSliderItem {
-        return mItems[position % mItems.size]
+    private fun getItem(position: Int): ConfirmPrivateKeySliderItem {
+        return mItems[position]
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
@@ -31,11 +31,7 @@ class PrivateKeyTutorialAdapter(context: Context, items: ArrayList<MainSliderIte
     }
 
     override fun getCount(): Int {
-        return if (mItems.size != 1) {
-            Int.MAX_VALUE
-        } else {
-            mItems.size
-        }
+        return mItems.size
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

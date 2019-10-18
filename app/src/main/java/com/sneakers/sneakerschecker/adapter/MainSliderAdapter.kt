@@ -1,10 +1,10 @@
 package com.sneakers.sneakerschecker.adapter
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.model.MainSliderItem
 import kotlinx.android.synthetic.main.main_slider_item.view.*
