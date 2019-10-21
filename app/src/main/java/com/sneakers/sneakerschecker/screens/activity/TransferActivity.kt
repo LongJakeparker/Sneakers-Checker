@@ -157,10 +157,10 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun goToScan() {
-        val intentIntegrator = IntentIntegrator(this)
-        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_address))
-        intentIntegrator.initiateScan()
+//        val intentIntegrator = IntentIntegrator(this)
+//        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+//        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_address))
+//        intentIntegrator.initiateScan()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

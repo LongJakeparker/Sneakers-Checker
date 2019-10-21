@@ -8,7 +8,7 @@
     <dimen name="text_size_xlarge">16sp</dimen>
     <dimen name="text_size_xxlarge">18sp</dimen>
     <dimen name="text_size_xxxlarge">20sp</dimen>
-    <dimen name="text_size_xxxxlarge">24sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
     <dimen name="text_size_big">32sp</dimen>
 
     <dimen name="activity_margin_5dp">5dp</dimen>

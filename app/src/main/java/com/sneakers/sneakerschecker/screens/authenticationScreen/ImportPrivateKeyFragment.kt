@@ -135,9 +135,9 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
     }
 
     private fun goToScan() {
-        val intentIntegrator = IntentIntegrator.forSupportFragment(this)
-        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-        intentIntegrator.initiateScan()
+//        val intentIntegrator = IntentIntegrator.forSupportFragment(this)
+//        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+//        intentIntegrator.initiateScan()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
