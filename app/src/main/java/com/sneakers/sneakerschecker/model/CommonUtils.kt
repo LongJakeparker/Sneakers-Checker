@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -49,6 +50,26 @@ class CommonUtils {
                 e.printStackTrace()
             }
             return null
+        }
+
+        /**
+         * function hide/close soft keyboard
+         *
+         * @param activity
+         */
+        fun hideKeyboard(activity: Activity?) {
+            if (activity == null) {
+                return
+            }
+            val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            //Find the currently focused view, so we can grab the correct window token from it.
+            var view = activity.currentFocus
+            //If no view currently has focus, create a new one, just so we can grab a window token from it
+            if (view == null) {
+                view = View(activity)
+            }
+            view.clearFocus()
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 }

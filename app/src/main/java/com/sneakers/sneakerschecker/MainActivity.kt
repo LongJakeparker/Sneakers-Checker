@@ -7,6 +7,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -15,10 +16,6 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.adapter.MainSliderAdapter
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.model.BusEventMessage
-import com.sneakers.sneakerschecker.model.MainSliderItem
-import com.sneakers.sneakerschecker.model.SharedPref
-import com.sneakers.sneakerschecker.model.Web3Instance
 import com.sneakers.sneakerschecker.screens.activity.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
@@ -26,6 +23,14 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
+import android.widget.LinearLayout
+import com.sneakers.sneakerschecker.model.*
+import android.R.attr.right
+import android.R.attr.left
+import android.animation.LayoutTransition
+import android.widget.RelativeLayout
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -35,6 +40,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val REQUEST_CODE_START_CREATE_ACTIVITY = 1001
 
     private lateinit var sharedPref: SharedPref
+    private var isExpanded: Boolean = false
 
     private var popupType: Int = -1
 
@@ -53,13 +59,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         sharedPref = SharedPref(this)
 
-//        tvAddressMain.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
-
-//        val qrCode = GenerateQrCode.accountId(this, 0.55)
-
-//        if (qrCode != null) {
-//            ivQrCodeMain.setImageBitmap(qrCode)
-//        }
+        checkUserLogin()
 
         Thread {
             try {
@@ -74,12 +74,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnMenuMain.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
         tvCreateNew.setOnClickListener(this)
-//        tvLogout.setOnClickListener(this)
+        tvLogout.setOnClickListener(this)
+        ivLogout.setOnClickListener(this)
 //        ibtnCopyMain.setOnClickListener(this)
         btnScanToken.setOnClickListener(this)
 //        btnCollection.setOnClickListener(this)
 
         Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
+    }
+
+    private fun checkUserLogin() {
+        if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
+                notifyUserLogin()
+        }
     }
 
     private fun setViewPager() {
@@ -119,13 +126,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.tvLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivityForResult(intent, REQUEST_CODE_START_LOGIN_ACTIVITY)
             }
 
             R.id.tvCreateNew -> {
                 val intent = Intent(this, CreateNewActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivityForResult(intent, REQUEST_CODE_START_CREATE_ACTIVITY)
             }
 //            R.id.ibtnCopyMain -> copyToClipboard(tvAddressMain.text.toString())
@@ -135,15 +140,87 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                CollectionActivity.start(this@MainActivity)
 //            }
 //
-//            R.id.btnUnlinkWalletMain -> {
-//                popupType = TYPE_UNLINK
+            R.id.tvLogout, R.id.ivLogout -> {
 //                builder.setTitle("Log Out")
 //                    .setMessage("Do you want to unlink your wallet?")
 //                    .setPositiveButton("Yes", dialogClickListener)
 //                    .setNegativeButton("No", dialogClickListener).show()
-//            }
+            }
 
-            R.id.btnScanToken -> ConfirmRegisterActivity.start(this)
+            R.id.btnScanToken -> goToScan()
+        }
+    }
+
+    fun notifyUserLogin() {
+//        tvUserName.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
+        tvUserAddress.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
+
+        val qrCode = CommonUtils.generateQrCode(this, 1.0,
+                                                sharedPref.getCredentials(Constant.USER_CREDENTIALS).address)
+
+        if (qrCode != null) {
+            ivQrAddress.setImageBitmap(qrCode)
+        }
+
+        ivAddressNonLogin.visibility = View.GONE
+        lnNavigationItemUnLogin.visibility = View.GONE
+
+        cvQrAddress.visibility = View.VISIBLE
+        ivExpand.visibility = View.VISIBLE
+        lnNavigationItemUnexpanded.visibility = View.VISIBLE
+        tvLogout.visibility = View.VISIBLE
+
+        ivExpand.setOnClickListener { expandMenu() }
+    }
+
+    private fun expandMenu() {
+        if (!isExpanded) {
+            val layoutTransition = (lnTopNavigation.parent as ConstraintLayout).layoutTransition
+            layoutTransition.setDuration(300)
+            layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+            ivQrAddress.layoutParams.width = resources.getDimension(R.dimen.qr_code_size_expanded).toInt()
+            ivQrAddress.layoutParams.height = resources.getDimension(R.dimen.qr_code_size_expanded).toInt()
+            ivQrAddress.requestLayout()
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(0, resources.getDimension(R.dimen.activity_margin_24dp).toInt(), 0, 0)
+            tvUserName.layoutParams = params
+
+            rlUserAddress.visibility = View.VISIBLE
+            ivExpand.setImageResource(R.drawable.ic_expand_up)
+            lnNavigationItemExpanded.visibility = View.VISIBLE
+
+            lnNavigationItemUnexpanded.visibility = View.GONE
+            tvLogout.visibility = View.GONE
+
+            isExpanded = true
+        }
+        else {
+            val layoutTransition = (lnTopNavigation.parent as ConstraintLayout).layoutTransition
+            layoutTransition.setDuration(300)
+            layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+            ivQrAddress.layoutParams.width = resources.getDimension(R.dimen.qr_code_size_normal).toInt()
+            ivQrAddress.layoutParams.height = resources.getDimension(R.dimen.qr_code_size_normal).toInt()
+            ivQrAddress.requestLayout()
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(0, resources.getDimension(R.dimen.activity_margin_16dp).toInt(), 0, 0)
+            tvUserName.layoutParams = params
+
+            rlUserAddress.visibility = View.GONE
+            ivExpand.setImageResource(R.drawable.ic_expand_down)
+            lnNavigationItemExpanded.visibility = View.GONE
+
+            lnNavigationItemUnexpanded.visibility = View.VISIBLE
+            tvLogout.visibility = View.VISIBLE
+
+            isExpanded = false
         }
     }
 
@@ -179,9 +256,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun UnlinkWallet() {
         sharedPref.clearPref()
         sharedPref.setBool(true, Constant.ACCOUNT_UNLINK)
-        val intent = Intent(this, SplashActivity::class.java)
-        startActivity(intent)
-        finish()
+
+        notifyUserLogout()
+    }
+
+    private fun notifyUserLogout() {
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -196,8 +276,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         when {
-            requestCode == REQUEST_CODE_START_CREATE_ACTIVITY &&
-                    resultCode == Activity.RESULT_OK -> ConfirmRegisterActivity.start(this)
+            requestCode == REQUEST_CODE_START_CREATE_ACTIVITY && resultCode == Activity.RESULT_OK -> {
+                Handler().postDelayed({
+                    ConfirmRegisterActivity.start(this)
+                }, 500)
+                notifyUserLogin()
+            }
+
+            requestCode == REQUEST_CODE_START_LOGIN_ACTIVITY && resultCode == Activity.RESULT_OK -> {
+                notifyUserLogin()
+            }
         }
     }
 

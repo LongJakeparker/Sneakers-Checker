@@ -10,7 +10,6 @@
     tools:context=".MainActivity">
 
     <RelativeLayout
-        android:paddingTop="@dimen/activity_margin_18dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,7 +20,7 @@
             android:src="@drawable/ic_menu"
             android:background="@android:color/transparent"
             android:padding="@dimen/activity_margin_12dp"
-            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_40dp"
             android:layout_marginEnd="@dimen/activity_margin_12dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"/>

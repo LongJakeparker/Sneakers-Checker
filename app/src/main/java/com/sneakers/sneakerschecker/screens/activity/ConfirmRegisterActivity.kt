@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ConfirmPrivateKeySliderAdapter
+import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.CommonUtils
 import com.sneakers.sneakerschecker.model.ConfirmPrivateKeySliderItem
 import com.sneakers.sneakerschecker.model.SharedPref
@@ -23,14 +24,13 @@ class ConfirmRegisterActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        overridePendingTransition(R.anim.slide_up, R.anim.slide_down)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirm_register)
 
         sharedPref = SharedPref(this)
 
-//        tvPrivateKey.text = "0x" + sharedPref.getCredentials(Constant.USER_CREDENTIALS).ecKeyPair.privateKey.toString(16)
-        tvPrivateKey.text = "0xadvregaregaaggregqmj44235431343rwe234n23o423"
+        tvPrivateKey.text = "0x" + sharedPref.getCredentials(Constant.USER_CREDENTIALS).ecKeyPair.privateKey.toString(16)
+//        tvPrivateKey.text = "0xadvregaregaaggregqmj44235431343rwe234n23o423"
 
         confirmPrivateKeySliderList = arrayListOf(
             ConfirmPrivateKeySliderItem(
