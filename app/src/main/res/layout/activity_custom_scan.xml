@@ -35,11 +35,16 @@
         android:layout_below="@+id/tvTitle"
         app:zxing_scanner_layout="@layout/custom_barcode_scanner"/>
 
-    <TextView
-        android:id="@+id/tvCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"/>
+    <View
+        android:id="@+id/blurView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"/>
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/include_bottom_view_scan"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
