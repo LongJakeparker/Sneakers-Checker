@@ -6,8 +6,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.Typeface
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -70,6 +72,14 @@ class CommonUtils {
             }
             view.clearFocus()
             imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+
+        fun setTextBold(textView: TextView?) {
+            if (textView == null) {
+                return
+            }
+
+            textView.setTypeface(null, Typeface.BOLD)
         }
     }
 }

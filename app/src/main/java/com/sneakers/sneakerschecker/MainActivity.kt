@@ -7,7 +7,6 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -25,12 +24,10 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import android.widget.LinearLayout
 import com.sneakers.sneakerschecker.model.*
-import android.R.attr.right
-import android.R.attr.left
 import android.animation.LayoutTransition
-import android.widget.RelativeLayout
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.sneakers.sneakerschecker.`interface`.IDialogListener
+import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -76,7 +73,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tvCreateNew.setOnClickListener(this)
         tvLogout.setOnClickListener(this)
         ivLogout.setOnClickListener(this)
-//        ibtnCopyMain.setOnClickListener(this)
+        rlUserAddress.setOnClickListener(this)
         btnScanToken.setOnClickListener(this)
 //        btnCollection.setOnClickListener(this)
 
@@ -133,7 +130,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val intent = Intent(this, CreateNewActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_START_CREATE_ACTIVITY)
             }
-//            R.id.ibtnCopyMain -> copyToClipboard(tvAddressMain.text.toString())
+            R.id.rlUserAddress -> {
+                CommonUtils.copyToClipboard(this, tvUserAddress.text.toString())
+                tvCopied.visibility = View.VISIBLE
+            }
 //
 //            R.id.btnCollection -> {
 //                drawer_layout.closeDrawer(GravityCompat.START)
@@ -141,10 +141,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //            }
 //
             R.id.tvLogout, R.id.ivLogout -> {
-//                builder.setTitle("Log Out")
-//                    .setMessage("Do you want to unlink your wallet?")
-//                    .setPositiveButton("Yes", dialogClickListener)
-//                    .setNegativeButton("No", dialogClickListener).show()
+                val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_logout),
+                    resources.getString(R.string.msg_logout), true)
+                confirmDialogFragment.setListener(object : IDialogListener {
+                    override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
+                        if (ok) {
+                            logOut()
+                        }
+                    }
+
+                    override fun onDialogCancel(tag: String) {
+
+                    }
+                })
+                confirmDialogFragment.show(supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
             }
 
             R.id.btnScanToken -> goToScan()
@@ -219,31 +229,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             lnNavigationItemUnexpanded.visibility = View.VISIBLE
             tvLogout.visibility = View.VISIBLE
+            tvCopied.visibility = View.GONE
 
             isExpanded = false
         }
-    }
-
-    var dialogClickListener: DialogInterface.OnClickListener =
-        DialogInterface.OnClickListener { dialog, which ->
-            when (which) {
-                DialogInterface.BUTTON_POSITIVE -> {
-                    when (popupType) {
-                        TYPE_UNLINK -> UnlinkWallet()
-                    }
-                }
-
-                DialogInterface.BUTTON_NEGATIVE -> {
-                    dialog.dismiss()
-                }
-            }
-        }
-
-    private fun copyToClipboard(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip: ClipData = ClipData.newPlainText("simple text", text)
-        clipboard.primaryClip = clip
-        Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
     private fun goToScan() {
@@ -253,7 +242,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         intentIntegrator.initiateScan()
     }
 
-    private fun UnlinkWallet() {
+    private fun logOut() {
         sharedPref.clearPref()
         sharedPref.setBool(true, Constant.ACCOUNT_UNLINK)
 
@@ -261,7 +250,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun notifyUserLogout() {
+        isExpanded = true
+        expandMenu()
 
+        ivAddressNonLogin.visibility = View.VISIBLE
+        lnNavigationItemUnLogin.visibility = View.VISIBLE
+
+        cvQrAddress.visibility = View.GONE
+        ivExpand.visibility = View.GONE
+        lnNavigationItemUnexpanded.visibility = View.GONE
+        tvLogout.visibility = View.GONE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

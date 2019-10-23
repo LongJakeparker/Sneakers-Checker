@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.adapter.ConfirmPrivateKeySliderAdapter
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.CommonUtils
 import com.sneakers.sneakerschecker.model.ConfirmPrivateKeySliderItem
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
 import kotlinx.android.synthetic.main.activity_confirm_register.*
 
 class ConfirmRegisterActivity : AppCompatActivity() {
@@ -30,7 +32,6 @@ class ConfirmRegisterActivity : AppCompatActivity() {
         sharedPref = SharedPref(this)
 
         tvPrivateKey.text = "0x" + sharedPref.getCredentials(Constant.USER_CREDENTIALS).ecKeyPair.privateKey.toString(16)
-//        tvPrivateKey.text = "0xadvregaregaaggregqmj44235431343rwe234n23o423"
 
         confirmPrivateKeySliderList = arrayListOf(
             ConfirmPrivateKeySliderItem(
@@ -50,7 +51,22 @@ class ConfirmRegisterActivity : AppCompatActivity() {
         setupViewPager()
 
         btnCopy.setOnClickListener { CommonUtils.copyToClipboard(this, tvPrivateKey.text.toString()) }
-        btnClose.setOnClickListener { finish() }
+        btnClose.setOnClickListener {
+            val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_close_private_key_confirm),
+                resources.getString(R.string.dialog_msg_close_private_key_confirm), true)
+            confirmDialogFragment.setListener(object : IDialogListener {
+                override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
+                    if (ok) {
+                        finish()
+                    }
+                }
+
+                override fun onDialogCancel(tag: String) {
+
+                }
+            })
+            confirmDialogFragment.show(supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
+        }
     }
 
     private fun setupViewPager() {
