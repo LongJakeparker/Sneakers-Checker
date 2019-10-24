@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                    .setNegativeButton("No", dialogClickListener).show()
 //            }
 
-            R.id.btnScanToken -> goToScan()
+            R.id.btnScanToken -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
         }
     }
 
@@ -167,14 +167,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val clip: ClipData = ClipData.newPlainText("simple text", text)
         clipboard.primaryClip = clip
         Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun goToScan() {
-//        val intentIntegrator = IntentIntegrator(this)
-//        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-//        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_sneaker_id))
-//        intentIntegrator.initiateScan()
-        CustomScanActivity.start(this)
     }
 
     private fun UnlinkWallet() {

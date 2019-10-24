@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/btnBack"
+        android:id="@+id/btnClose"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:gravity="center"
-        android:layout_below="@+id/btnBack"
+        android:layout_below="@+id/btnClose"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="@dimen/activity_margin_24dp"
         android:text="Scan Grails QR"
@@ -39,7 +39,9 @@
         android:id="@+id/blurView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/black"
+        android:alpha="0.7"
+        android:visibility="gone"/>
 
     <include
         android:layout_width="match_parent"

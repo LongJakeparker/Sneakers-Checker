@@ -19,6 +19,7 @@ import com.sneakers.sneakerschecker.model.CheckPrivateKeyResultModel
 import com.sneakers.sneakerschecker.model.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.screens.activity.CustomScanActivity
 import com.sneakers.sneakerschecker.screens.fragment.LoginFragment
 import kotlinx.android.synthetic.main.fragment_import_private_key.*
 import org.web3j.crypto.Credentials
@@ -28,6 +29,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
+    private val START_SCAN_PRIVATE_KEY = 1000
 
     private var fragmentView: View? = null
     private lateinit var credentials: Credentials
@@ -64,7 +66,7 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnScanPrivateKey -> goToScan()
+            R.id.btnScanPrivateKey -> CustomScanActivity.startForResult(activity!!, CustomScanActivity.ScanType.SCAN_PRIVATE_KEY, START_SCAN_PRIVATE_KEY)
 
             R.id.btnNext -> checkPrivateKey()
 
@@ -132,12 +134,6 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
         transaction.replace(R.id.fl_login_content, loginFragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    private fun goToScan() {
-//        val intentIntegrator = IntentIntegrator.forSupportFragment(this)
-//        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-//        intentIntegrator.initiateScan()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
