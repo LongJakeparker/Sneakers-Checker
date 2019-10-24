@@ -4,10 +4,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
 import com.google.zxing.integration.android.IntentIntegrator
@@ -127,7 +127,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun callApi() {
         val accessToken = "Bearer " + sharedPref.getUser(Constant.WALLET_USER).accessToken
-        val call = service.create(MainApi::class.java!!)
+        val call = service.create(MainApi::class.java)
             .changeOwnership(accessToken, sellItem.id.toString(), etTransferAddress.text.toString().toLowerCase())
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -157,10 +157,10 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun goToScan() {
-        val intentIntegrator = IntentIntegrator(this)
-        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_address))
-        intentIntegrator.initiateScan()
+//        val intentIntegrator = IntentIntegrator(this)
+//        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+//        intentIntegrator.setPrompt(resources.getString(R.string.scan_tutorial_scan_address))
+//        intentIntegrator.initiateScan()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

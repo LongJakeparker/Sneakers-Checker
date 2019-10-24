@@ -2,10 +2,7 @@ package com.sneakers.sneakerschecker.screens.authenticationScreen
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +10,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.sneakers.sneakerschecker.MainActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
@@ -21,13 +19,13 @@ import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
 import com.sneakers.sneakerschecker.model.SignUp
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.Keys
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.Security
 
 
@@ -125,7 +123,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
             UserRegister()
         } catch (e: Exception) {
             dialog.dismiss()
-            Log.e( "Error: " , e.message)
+            Log.e("Error: ", e.message)
         }
     }
 
@@ -143,7 +141,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
             data.put("registrationToken", sharedPref.getString(Constant.FCM_TOKEN))
 
             /*Create handle for the RetrofitInstance interface*/
-            val call = service.create(AuthenticationApi::class.java!!).signUpApi(data)
+            val call = service.create(AuthenticationApi::class.java).signUpApi(data)
             call.enqueue(object : Callback<SignUp> {
 
                 override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
@@ -187,9 +185,9 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
 
                     activity!!.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-                    val transaction = activity!!.supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.authentication_layout, ConfirmRegisterFragment())
-                        .commit()
+//                    val transaction = activity!!.supportFragmentManager.beginTransaction()
+//                    transaction.replace(R.id.authentication_layout, ConfirmRegisterFragment())
+//                        .commit()
                 } else if (response.code() == 400) {
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }

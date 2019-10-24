@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Sneakers Checker</string>
+    <string name="app_name">True Grails</string>
+    <string name="label_app_version">Version 1.0.0</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="splash_prevent_text">Your assistants</string>
 
     <string name="copyright">2019 - @copyright</string>
 
@@ -59,5 +59,70 @@
 
     <string name="label_is_validated">Item is validated</string>
     <string name="label_is_not_validated">Item is not validated</string>
+
+    <string name="label_create_account">Create account</string>
+    <string name="label_log_in">Log in to Grails</string>
+    <string name="label_Explore">Explore</string>
+    <string name="label_Copied">Copied</string>
+
+    <string name="text_holder_user_name">Your name</string>
+    <string name="text_holder_user_email">Your email</string>
+    <string name="text_holder_user_password">Your password</string>
+    <string name="text_holder_private_key">Paste your private key</string>
+
+    <string name="label_button_register">Register</string>
+    <string name="label_button_login">Login</string>
+    <string name="label_button_next">Next</string>
+    <string name="label_button_create_new_account">Create new account</string>
+    <string name="label_button_profile">Profile</string>
+    <string name="label_button_collection">My Grails</string>
+    <string name="label_button_card_manage">Payment cards</string>
+    <string name="label_button_setting">Setting</string>
+    <string name="label_button_logout">Log out</string>
+
+    <string name="text_question_login_1">What is private key?</string>
+    <string name="text_question_login_2">How to find out private key?</string>
+    <string name="text_question_login_3">What should I do?</string>
+
+    <string name="text_explore_1">Do you want to\nknow everything about\nyour
+        <font color="#ff773f">
+            <b>GRAILS?</b>
+        </font>
+    </string>
+    <string name="text_explore_2">Do you want to\nmake sure your
+        <font color="#ff773f">
+            <b>GRAILS</b>
+        </font>
+        \nsafety?
+    </string>
+
+    <string name="text_message_input_valid_email">Please enter a valid email address</string>
+    <string name="text_message_incorrect_key">Private key is not correct.\nPlease try again later!</string>
+    <string name="text_message_incorrect_password">Your password is incorrect.\nPlease try again!</string>
+    <string name="text_message_confirm_email_login_1">Are you logging in account has email</string>
+    <string name="text_message_confirm_email_login_2">Please input your password to continue.</string>
+    <string name="text_private_key">Private key</string>
+
+    <string name="confirm_title_1">What is private key?</string>
+    <string name="confirm_content_1">Private key encryption is the form of encryption where only a single private key can encrypt and decrypt information. It is a fast process since it uses a single key. However, protecting one key creates a key management issue when everyone is using private keys. The private key may be stolen or leaked. Key management requires prevention of these risks and necessitates changing the encryption key often, and appropriately distributing  the key.</string>
+    <string name="confirm_title_2">Is it important?</string>
+    <string name="confirm_content_temp">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
+    <string name="confirm_title_3">What should you do?</string>
+
+    <string name="activity_title_scan_grail">Scan Grails QR</string>
+    <string name="header_guide_scan_grail">How to use the scan feature?</string>
+    <string name="title_guide_scan_grail">WHAT DO YOU SCAN FOR?</string>
+    <string name="content_guide_scan_grail">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
+    <string name="activity_title_scan_private_key">Scan Private Key</string>
+    <string name="header_guide_scan_private_key">What is private key?</string>
+    <string name="title_guide_scan_private_key">WHAT IS PRIVATE KEY?</string>
+    <string name="content_guide_scan_private_key">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
+
+    <string name="activity_title_scan_address">Scan Buyer QR</string>
+    <string name="header_guide_scan_address">What is buyer QR mean?</string>
+    <string name="title_guide_scan_address">WHAT IS BUYER QR?</string>
+    <string name="content_guide_scan_address">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
 
 </resources>

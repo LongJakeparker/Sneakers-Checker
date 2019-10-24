@@ -4,7 +4,6 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contracts.TrueGrailToken
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.Web3j
-import org.web3j.tx.ClientTransactionManager
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
 

@@ -2,12 +2,12 @@ package com.sneakers.sneakerschecker.adapter
 
 import android.app.Activity
 import android.content.Context
-import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.model.ValidatePagerModel
 import kotlinx.android.synthetic.main.item_validate_progress.view.*

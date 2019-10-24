@@ -20,4 +20,18 @@
     <color name="colorGreyTitle">#999999</color>
     <color name="colorYellow">#dba622</color>
 
+    <color name="colorBlueGreen">#146062</color>
+    <color name="colorDarkTurquoise">#095255</color>
+    <color name="colorDarkTurquoise_alpha_50">#80095255</color>
+    <color name="colorOffWhite">#fefdf6</color>
+    <color name="colorOrangish">#ff773f</color>
+    <color name="colorOrangish_alpha_15">#26ff773f</color>
+    <color name="colorDark">#19181b</color>
+    <color name="colorDark30">#4D19181b</color>
+    <color name="colorOrangeyRed">#ff3b30</color>
+    <color name="colorPutty">#b0aca8</color>
+    <color name="colorSeafoamBlue">#75d48b</color>
+    <color name="black_with_alpha_10">#1A000000</color>
+    <color name="greyishBrown">#4a4a4a</color>
+
 </resources>

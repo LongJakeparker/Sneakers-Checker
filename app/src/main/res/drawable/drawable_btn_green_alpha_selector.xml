@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/colorPutty" />
+            <corners android:radius="@dimen/dimen_radius_button_4dp" />
+
+        </shape>
+
+    </item>
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/colorDarkTurquoise" />
+            <corners android:radius="@dimen/dimen_radius_button_4dp" />
+
+        </shape>
+
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="@color/colorDarkTurquoise_alpha_50" />
+            <corners android:radius="@dimen/dimen_radius_button_4dp" />
+        </shape>
+
+    </item>
+
+
+</selector>
