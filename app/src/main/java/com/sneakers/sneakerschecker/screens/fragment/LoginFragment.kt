@@ -132,6 +132,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
                 } else if (response.code() == 400) {
                     CommonUtils.toggleLoading(fragmentView, false)
+                    tvWarning.visibility = View.VISIBLE
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }
             }
