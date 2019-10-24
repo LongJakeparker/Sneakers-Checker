@@ -1,5 +1,6 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -60,6 +61,12 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val emailName = email.split("@")[0]
+        val hidedPart = emailName.substring(3, emailName.length - 1)
+        val hidedEmail = emailName.replace(hidedPart, "****") + email.split("@")[1]
+
+        tvConfirmEmail.text = "$hidedEmail?"
 
         etUserPassword.addTextChangedListener(textWatcher)
         btnLogin.setOnClickListener(this)
@@ -140,8 +147,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     private fun importPrivateKey() {
         sharedPref.setCredentials(credentials, Constant.USER_CREDENTIALS)
 
-        val intent = Intent(activity, MainActivity::class.java)
-        startActivity(intent)
+        activity!!.setResult(Activity.RESULT_OK)
         activity!!.finish()
     }
 }

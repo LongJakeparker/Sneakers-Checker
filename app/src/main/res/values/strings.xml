@@ -108,6 +108,12 @@
     <string name="confirm_title_2">Is it important?</string>
     <string name="confirm_content_temp">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
     <string name="confirm_title_3">What should you do?</string>
+    <string name="common_OK">OK</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="msg_logout">Do you want to logout?</string>
+    <string name="dialog_title_logout">Log Out</string>
+    <string name="dialog_title_close_private_key_confirm">Do you want to close?</string>
+    <string name="dialog_msg_close_private_key_confirm">Please copy or write down your private key before close this screen.\nYou can\'t regain if you lost your private key.</string>
 
     <string name="activity_title_scan_grail">Scan Grails QR</string>
     <string name="header_guide_scan_grail">How to use the scan feature?</string>

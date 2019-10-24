@@ -25,6 +25,7 @@
     <dimen name="activity_margin_32dp">32dp</dimen>
     <dimen name="activity_margin_34dp">34dp</dimen>
     <dimen name="activity_margin_36dp">36dp</dimen>
+    <dimen name="activity_margin_40dp">40dp</dimen>
     <dimen name="activity_margin_48dp">48dp</dimen>
     <dimen name="activity_margin_56dp">56dp</dimen>
     <dimen name="activity_margin_64dp">64dp</dimen>
@@ -82,7 +83,9 @@
     <dimen name="qr_code_size_print">130dp</dimen>
 
     //Main Screen
-    <dimen name="qr_code_size_main">160dp</dimen>
+    <dimen name="qr_code_size_main">80dp</dimen>
+    <dimen name="qr_code_size_normal">80dp</dimen>
+    <dimen name="qr_code_size_expanded">230dp</dimen>
 
     //Drawer Menu
     <dimen name="drawer_button_height">40dp</dimen>

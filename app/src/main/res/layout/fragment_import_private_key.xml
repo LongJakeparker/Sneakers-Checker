@@ -44,16 +44,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_large"
-            android:maxLength="6"
             android:hint="@string/text_holder_private_key"
             android:id="@+id/etUserPrivateKey"
             android:drawableLeft="@drawable/ic_key"
+            android:singleLine="true"
             android:drawablePadding="@dimen/activity_margin_12dp"
             android:paddingVertical="@dimen/activity_margin_12dp"
-            android:paddingHorizontal="@dimen/activity_margin_16dp"
+            android:paddingLeft="@dimen/activity_margin_12dp"
             android:background="@android:color/transparent"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/btnShowPassword"/>
+            android:layout_toLeftOf="@+id/btnScanPrivateKey"/>
 
         <ImageView
             android:id="@+id/btnScanPrivateKey"

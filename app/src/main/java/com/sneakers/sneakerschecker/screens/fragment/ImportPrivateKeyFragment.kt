@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.screens.authenticationScreen
+package com.sneakers.sneakerschecker.screens.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -20,7 +20,6 @@ import com.sneakers.sneakerschecker.model.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.screens.activity.CustomScanActivity
-import com.sneakers.sneakerschecker.screens.fragment.LoginFragment
 import kotlinx.android.synthetic.main.fragment_import_private_key.*
 import org.web3j.crypto.Credentials
 import retrofit2.Call
