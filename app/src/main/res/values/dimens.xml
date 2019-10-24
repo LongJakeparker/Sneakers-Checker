@@ -26,6 +26,7 @@
     <dimen name="activity_margin_34dp">34dp</dimen>
     <dimen name="activity_margin_36dp">36dp</dimen>
     <dimen name="activity_margin_40dp">40dp</dimen>
+    <dimen name="activity_margin_44dp">44dp</dimen>
     <dimen name="activity_margin_48dp">48dp</dimen>
     <dimen name="activity_margin_56dp">56dp</dimen>
     <dimen name="activity_margin_64dp">64dp</dimen>

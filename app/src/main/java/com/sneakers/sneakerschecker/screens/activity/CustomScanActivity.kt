@@ -19,6 +19,7 @@ import com.sneakers.sneakerschecker.constant.Constant
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
 
+
 class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     class ScanType {
         companion object {
@@ -28,7 +29,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             val SCAN_CLAIM_TOKEN = 4
         }
     }
-    private val VIEW_CHANGE_DURATION = 300L
+
     private val TAG = CustomScanActivity::class.java.simpleName
     private var barcodeView: DecoratedBarcodeView? = null
     private var beepManager: BeepManager? = null
@@ -44,10 +45,16 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 return
             }
 
-            lastText = result.text
-
             beepManager!!.playBeepSoundAndVibrate()
 
+            when (scanType) {
+                ScanType.SCAN_PRIVATE_KEY -> {
+                    val returnIntent = Intent()
+                    returnIntent.putExtra(Constant.EXTRA_PRIVATE_KEY, result.text)
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
+                }
+            }
         }
 
         override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
@@ -93,20 +100,32 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     private fun setupBottomView() {
         when (scanType) {
             ScanType.SCAN_GRAIL -> {
-                setContentBottomView(R.string.activity_title_scan_grail, R.string.header_guide_scan_grail,
+                setContentBottomView(
+                    R.string.activity_title_scan_grail, R.string.header_guide_scan_grail,
                     R.drawable.ic_guideline_scan_grail, R.string.title_guide_scan_grail,
-                    R.string.content_guide_scan_grail)
+                    R.string.content_guide_scan_grail
+                )
             }
 
             ScanType.SCAN_PRIVATE_KEY -> {
-                setContentBottomView(R.string.activity_title_scan_private_key, R.string.header_guide_scan_private_key,
-                    R.drawable.ic_guideline_scan_private_key, R.string.title_guide_scan_private_key,
-                    R.string.content_guide_scan_private_key)
+                setContentBottomView(
+                    R.string.activity_title_scan_private_key,
+                    R.string.header_guide_scan_private_key,
+                    R.drawable.ic_guideline_scan_private_key,
+                    R.string.title_guide_scan_private_key,
+                    R.string.content_guide_scan_private_key
+                )
             }
         }
     }
 
-    private fun setContentBottomView(activityTitle: Int, header: Int, image: Int, title: Int, content: Int) {
+    private fun setContentBottomView(
+        activityTitle: Int,
+        header: Int,
+        image: Int,
+        title: Int,
+        content: Int
+    ) {
         tvTitle.text = resources.getText(activityTitle)
         tvHeaderGuide.text = resources.getText(header)
         ivGuideImage.setImageResource(image)
@@ -141,8 +160,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
                 barcodeView?.pause()
                 isExpanded = true
-            }
-            else {
+            } else {
                 tvHeaderGuide.visibility = View.VISIBLE
 
                 rlRootGuide.visibility = View.GONE

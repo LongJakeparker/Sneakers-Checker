@@ -28,6 +28,10 @@ import android.animation.LayoutTransition
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
+import android.view.WindowManager
+import android.os.Build
+
+
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -38,8 +42,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPref
     private var isExpanded: Boolean = false
-
-    private var popupType: Int = -1
 
     private val mainSliderList = arrayListOf(
         MainSliderItem(R.string.text_explore_1, R.drawable.drawable_explore_pager_1),
