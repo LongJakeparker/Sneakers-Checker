@@ -25,6 +25,7 @@ object Constant {
     const val EXTRA_IS_FROM_AUTHEN = "EXTRA_IS_FROM_AUTHEN"
     const val EXTRA_PRIVATE_KEY = "EXTRA_PRIVATE_KEY"
     const val EXTRA_USER_EMAiL = "EXTRA_USER_EMAiL"
+    const val EXTRA_SCAN_TYPE = "EXTRA_SCAN_TYPE"
 
 
 

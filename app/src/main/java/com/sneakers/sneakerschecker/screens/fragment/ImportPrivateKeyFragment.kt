@@ -1,5 +1,6 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -7,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
@@ -19,6 +21,7 @@ import com.sneakers.sneakerschecker.model.CheckPrivateKeyResultModel
 import com.sneakers.sneakerschecker.model.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.screens.activity.CustomScanActivity
 import kotlinx.android.synthetic.main.fragment_import_private_key.*
 import org.web3j.crypto.Credentials
 import retrofit2.Call
@@ -27,6 +30,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
+    private val START_SCAN_PRIVATE_KEY = 1000
 
     private var fragmentView: View? = null
     private lateinit var credentials: Credentials
@@ -59,15 +63,25 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
         tv_question_1.setOnClickListener(this)
         tv_question_2.setOnClickListener(this)
         tv_question_3.setOnClickListener(this)
+        root.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnScanPrivateKey -> goToScan()
+          
+            R.id.btnScanPrivateKey -> {
+                if (etUserPrivateKey.text.toString().isNotEmpty()) {
+                    etUserPrivateKey.setText("")
+                } else {
+                    CustomScanActivity.startForResult(activity!!, CustomScanActivity.ScanType.SCAN_PRIVATE_KEY, START_SCAN_PRIVATE_KEY)
+                }
+            }
 
             R.id.btnNext -> checkPrivateKey()
 
             R.id.btnBack -> activity?.onBackPressed()
+
+            R.id.root -> CommonUtils.hideKeyboard(activity)
         }
     }
 
@@ -82,12 +96,27 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
 
         override fun afterTextChanged(s: Editable) {
             btnNext.isEnabled = etUserPrivateKey.text.toString().isNotEmpty()
+            if (s.isNotEmpty()) {
+                btnScanPrivateKey.setImageResource(R.drawable.ic_close)
+            }
+            else {
+                btnScanPrivateKey.setImageResource(R.drawable.ic_scan)
+            }
         }
     }
 
     private fun checkPrivateKey() {
         CommonUtils.toggleLoading(fragmentView, true)
-        credentials = Credentials.create(etUserPrivateKey.text.toString().trim())
+        try {
+            credentials = Credentials.create(etUserPrivateKey.text.toString().trim())
+            tvWarning.visibility = GONE
+        }
+        catch (e: Exception) {
+            tvWarning.text = "Wrong key format"
+            tvWarning.visibility = VISIBLE
+            CommonUtils.toggleLoading(fragmentView, false)
+            return
+        }
         var data = HashMap<String, String>()
         data["registrationToken"] = sharedPref.getString(Constant.FCM_TOKEN)
         val call = service.create(AuthenticationApi::class.java)
@@ -105,14 +134,15 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
                 if (response.code() == 200) {
                     goToLogin(response.body()!!.email)
 
-                } else if (response.code() == 400) {
+                } else {
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
+                    tvWarning.text = resources.getText(R.string.text_message_incorrect_key)
+                    tvWarning.visibility = VISIBLE
                 }
             }
 
             override fun onFailure(call: Call<CheckPrivateKeyResultModel>, t: Throwable) {
                 CommonUtils.toggleLoading(fragmentView, false)
-                tvWarning.visibility = VISIBLE
                 Toast.makeText(context, "Something went wrong when login", Toast.LENGTH_SHORT).show()
             }
 
@@ -133,21 +163,11 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
             .commit()
     }
 
-    private fun goToScan() {
-        val intentIntegrator = IntentIntegrator.forSupportFragment(this)
-        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-        intentIntegrator.initiateScan()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-
-        if (result != null) {
-            if (result.contents != null) {
-                etUserPrivateKey.setText(result.contents)
+        when {
+            requestCode == START_SCAN_PRIVATE_KEY && resultCode == Activity.RESULT_OK -> {
+                etUserPrivateKey.setText(data?.getStringExtra(Constant.EXTRA_PRIVATE_KEY))
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

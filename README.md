@@ -1,4 +1,4 @@
-# Sneakers-Checker
+# True Grails
 
 How To Use:
 
