@@ -53,13 +53,13 @@ class CollectionActivity : AppCompatActivity() {
             )
         }!!
 
-        listCollection.add(SneakerModel())
-        listCollection.add(SneakerModel())
-        listCollection.add(SneakerModel())
+//        listCollection.add(SneakerModel())
+//        listCollection.add(SneakerModel())
+//        listCollection.add(SneakerModel())
+//
+//        viewPagerCollection.adapter = CollectionAdapter(listCollection, this)
 
-        viewPagerCollection.adapter = CollectionAdapter(listCollection, this)
-
-//        getCollection()
+        getCollection()
 
         btnBack.setOnClickListener { onBackPressed() }
     }

@@ -8,7 +8,7 @@ import java.math.BigInteger
 class Contract private constructor(web3: Web3j, address: String) {
 
     companion object {
-        const val CONTRACT_ADDRESS = "0xc482C0Ab3fAa90821c7a01d6D22df2DBcf82bA83"
+        const val CONTRACT_ADDRESS = "0xff22cA3A631C7aFBdB7CF9bA4397Fb1f903f3c27"
         private val GAS_PRICE: BigInteger = BigInteger.valueOf(20000000000L)
         private val GAS_LIMIT: BigInteger = BigInteger.valueOf(6721975L)
         var sleepDuration = 15 * 1000

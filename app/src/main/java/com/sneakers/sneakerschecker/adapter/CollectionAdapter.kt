@@ -30,6 +30,14 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         view.tvItemSize.text = item.size.toString()
         view.tvItemBrand.text = item.brand
 
+        if (item.limitedEdition) {
+            view.ivLimitedFront.visibility = VISIBLE
+            view.ivLimitedBack.visibility = VISIBLE
+        } else {
+            view.ivLimitedFront.visibility = GONE
+            view.ivLimitedBack.visibility = GONE
+        }
+
         view.flipCard.setOnClickListener {
             view.flipCard.flipTheView()
             view.cvSale.isClickable = false

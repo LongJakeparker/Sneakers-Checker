@@ -275,8 +275,9 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         progressBar.visibility = View.VISIBLE
         tvHeaderGuide.visibility = View.GONE
 
-        rlRootGuide.visibility = View.GONE
-        ivGuideImage.visibility = View.GONE
+        rlScanResultHeader.visibility = View.GONE
+        llScanResultDetail.visibility = View.GONE
+        showMessageScanFail(false)
 
         blurView.visibility = View.GONE
         blurView.isClickable = false
@@ -288,16 +289,33 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         callApi()
     }
 
+    private fun showMessageScanFail(isShow: Boolean) {
+        showMessageScanFail("", isShow)
+    }
+
+    private fun showMessageScanFail(msg: String, isShow: Boolean) {
+        if (isShow) {
+            if (msg.isNotEmpty()) {
+                tvScanFailMessage.text = msg
+            }
+
+            progressBar.visibility = View.GONE
+            rlScanFail.visibility = View.VISIBLE
+            rlRootBottomView.isClickable = false
+
+            barcodeView?.resume()
+        } else {
+            rlScanFail.visibility = View.GONE
+            rlRootBottomView.isClickable = true
+        }
+    }
+
     private fun callApi() {
         val call = service.create(MainApi::class.java)
             .validateSneaker(scanResult)
         call.enqueue(object : Callback<ValidateModel> {
             override fun onFailure(call: Call<ValidateModel>, t: Throwable) {
-                Toast.makeText(
-                    this@CustomScanActivity,
-                    "Something went wrong when validate",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
             }
 
             override fun onResponse(call: Call<ValidateModel>, response: Response<ValidateModel>) {
@@ -318,18 +336,10 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
                         validateItem(responseHash)
                     } else {
-                        Toast.makeText(
-                            this@CustomScanActivity,
-                            "Something went wrong when validate",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
                     }
                 } else {
-                    Toast.makeText(
-                        this@CustomScanActivity,
-                        "Something went wrong when validate - Response Code: " + response.code(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
                 }
             }
 
@@ -347,20 +357,12 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 }
             ) {
                 if (blockchainHash.isNullOrEmpty()) {
-                    Toast.makeText(
-                        this@CustomScanActivity,
-                        "Something went wrong when validate",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
                 } else {
                     if (responseHash == blockchainHash) {
                         loadItemInfo()
                     } else {
-                        Toast.makeText(
-                            this@CustomScanActivity,
-                            "Validate with blockchain failed",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showMessageScanFail("Validate with blockchain failed", true)
                     }
                 }
             }

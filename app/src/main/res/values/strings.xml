@@ -139,5 +139,6 @@
     <string name="text_item_stolen">This item has been stolen</string>
 
     <string name="msg_grant_permission_camera">Please grant camera permission to scan</string>
+    <string name="msg_scan_fail">Something went wrong when validate</string>
 
 </resources>

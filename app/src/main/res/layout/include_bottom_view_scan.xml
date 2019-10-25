@@ -238,6 +238,49 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/rlScanFail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_margin_16dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/tvScanFailTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:text="Oops..."
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tvScanFailMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_large"
+                    android:text="Couldn’t find information, try again..."
+                    android:layout_below="@+id/tvItemName"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_scan_fail"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <ImageView
