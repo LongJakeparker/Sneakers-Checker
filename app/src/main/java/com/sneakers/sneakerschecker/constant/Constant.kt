@@ -1,7 +1,6 @@
 package com.sneakers.sneakerschecker.constant
 
 object Constant {
-    const val CONTRACT_ADDRESS = "0xc482C0Ab3fAa90821c7a01d6D22df2DBcf82bA83"
     const val ETHEREUM_API_URL= "http://128.199.134.167:8545/"
 
     const val ACCOUNT_UNLINK= "ACCOUNT_UNLINK"

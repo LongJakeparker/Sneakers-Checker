@@ -12,7 +12,8 @@ import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.collectionAdapter
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.contracts.TrueGrailToken
+import com.sneakers.sneakerschecker.contract.Contract
+import com.sneakers.sneakerschecker.contract.TrueGrailToken
 import com.sneakers.sneakerschecker.model.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
