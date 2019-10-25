@@ -71,6 +71,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
         etUserPassword.addTextChangedListener(textWatcher)
         btnLogin.setOnClickListener(this)
         btnShowPassword.setOnClickListener(this)
+        root.setOnClickListener(this)
     }
 
     private val textWatcher = object : TextWatcher {
@@ -93,6 +94,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
             R.id.btnLogin -> requestLogIn()
 
             R.id.btnShowPassword -> showPassword()
+
+            R.id.root -> CommonUtils.hideKeyboard(activity)
         }
     }
 
