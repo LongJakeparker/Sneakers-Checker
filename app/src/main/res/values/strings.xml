@@ -115,4 +115,20 @@
     <string name="dialog_title_close_private_key_confirm">Do you want to close?</string>
     <string name="dialog_msg_close_private_key_confirm">Please copy or write down your private key before close this screen.\nYou can\'t regain if you lost your private key.</string>
 
+    <string name="activity_title_scan_grail">Scan Grails QR</string>
+    <string name="header_guide_scan_grail">How to use the scan feature?</string>
+    <string name="title_guide_scan_grail">WHAT DO YOU SCAN FOR?</string>
+    <string name="content_guide_scan_grail">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
+    <string name="activity_title_scan_private_key">Scan Private Key</string>
+    <string name="header_guide_scan_private_key">What is private key?</string>
+    <string name="title_guide_scan_private_key">WHAT IS PRIVATE KEY?</string>
+    <string name="content_guide_scan_private_key">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
+
+    <string name="activity_title_scan_address">Scan Buyer QR</string>
+    <string name="header_guide_scan_address">What is buyer QR mean?</string>
+    <string name="title_guide_scan_address">WHAT IS BUYER QR?</string>
+    <string name="content_guide_scan_address">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
+
 </resources>

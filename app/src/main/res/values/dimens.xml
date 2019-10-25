@@ -8,7 +8,7 @@
     <dimen name="text_size_xlarge">16sp</dimen>
     <dimen name="text_size_xxlarge">18sp</dimen>
     <dimen name="text_size_xxxlarge">20sp</dimen>
-    <dimen name="text_size_xxxxlarge">24sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
     <dimen name="text_size_big">32sp</dimen>
 
     <dimen name="activity_margin_5dp">5dp</dimen>
@@ -26,6 +26,7 @@
     <dimen name="activity_margin_34dp">34dp</dimen>
     <dimen name="activity_margin_36dp">36dp</dimen>
     <dimen name="activity_margin_40dp">40dp</dimen>
+    <dimen name="activity_margin_44dp">44dp</dimen>
     <dimen name="activity_margin_48dp">48dp</dimen>
     <dimen name="activity_margin_56dp">56dp</dimen>
     <dimen name="activity_margin_64dp">64dp</dimen>

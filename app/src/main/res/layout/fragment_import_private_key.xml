@@ -8,6 +8,7 @@
     android:paddingTop="@dimen/activity_margin_18dp"
     android:paddingHorizontal="@dimen/activity_margin_24dp"
     android:id="@+id/root"
+    android:background="@android:color/white"
     tools:context=".screens.fragment.LoginFragment">
 
     <ImageButton
