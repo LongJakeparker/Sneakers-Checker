@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -26,7 +27,23 @@
             android:gravity="center"
             android:text="How to use the scan feature?"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/text_size_large" />
+            android:textSize="@dimen/text_size_large"/>
+
+        <com.agrawalsuneet.dotsloader.loaders.LazyLoader
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/activity_margin_26dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            app:lazyloader_animDur="500"
+            app:lazyloader_dotsDist="5dp"
+            app:lazyloader_dotsRadius="3dp"
+            app:lazyloader_firstDotColor="@color/colorDarkTurquoise"
+            app:lazyloader_interpolator="@android:anim/decelerate_interpolator"
+            app:lazyloader_secondDotColor="@color/colorDarkTurquoise"
+            app:lazyloader_thirdDotColor="@color/colorDarkTurquoise"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/rlRootGuide"
@@ -72,6 +89,154 @@
                 android:layout_marginBottom="@dimen/activity_margin_36dp"/>
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlScanResultHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_margin_16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true">
+
+                    <TextView
+                        android:id="@+id/tvItemName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_xlarge"
+                        android:text="NMD R1 Trainer"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvItemBrand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPutty"
+                        android:textSize="@dimen/text_size_large"
+                        android:text="Adidas"
+                        android:layout_below="@+id/tvItemName"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivBrandLogo"
+                    android:layout_width="@dimen/activity_margin_64dp"
+                    android:layout_height="@dimen/activity_margin_64dp"
+                    android:src="@drawable/logo_adidas"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/llScanResultDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="@dimen/activity_margin_16dp"
+                android:layout_marginBottom="@dimen/activity_margin_16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="@dimen/activity_margin_8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_large"
+                        android:text="@string/label_color"
+                        android:textColor="@android:color/black"
+                        android:drawableLeft="@drawable/ic_color"
+                        android:gravity="center"
+                        android:drawablePadding="@dimen/activity_margin_8dp"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPutty"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="@dimen/activity_margin_8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_large"
+                        android:text="@string/label_size"
+                        android:textColor="@android:color/black"
+                        android:drawableLeft="@drawable/ic_size"
+                        android:gravity="center"
+                        android:drawablePadding="@dimen/activity_margin_8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvItemSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_xlarge"
+                        android:textStyle="bold"
+                        android:text="7"
+                        android:gravity="end"
+                        android:layout_marginLeft="@dimen/activity_margin_10dp"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPutty"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="@dimen/activity_margin_8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_large"
+                        android:text="@string/label_release_date"
+                        android:textColor="@android:color/black"
+                        android:drawableLeft="@drawable/ic_release_date"
+                        android:gravity="center"
+                        android:drawablePadding="@dimen/activity_margin_8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvItemReleaseDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_xlarge"
+                        android:textStyle="bold"
+                        android:text="August 28, 2019"
+                        android:gravity="end"
+                        android:layout_marginLeft="@dimen/activity_margin_10dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

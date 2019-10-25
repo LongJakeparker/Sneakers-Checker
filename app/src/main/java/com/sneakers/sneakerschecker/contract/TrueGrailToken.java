@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.contracts;
+package com.sneakers.sneakerschecker.contract;
 
 import io.reactivex.Flowable;
 import java.math.BigInteger;

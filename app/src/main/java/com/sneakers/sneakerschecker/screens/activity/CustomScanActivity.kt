@@ -3,10 +3,14 @@ package com.sneakers.sneakerschecker.screens.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.common.hash.Hashing
+import com.google.gson.GsonBuilder
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
@@ -15,9 +19,21 @@ import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.contract.Contract
+import com.sneakers.sneakerschecker.contract.TrueGrailToken
+import com.sneakers.sneakerschecker.model.*
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import java.math.BigInteger
+import java.nio.charset.StandardCharsets
 
 
 class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
@@ -37,6 +53,14 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     private var scanType: Int? = null
     private var hadScanResult: Boolean = false
     private var isExpanded: Boolean = false
+    private lateinit var validatedItem: ValidateModel
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+
+    private var scanResult: String = ""
+
+    private lateinit var contract: TrueGrailToken
+    private lateinit var sharedPref: SharedPref
+    private lateinit var service: Retrofit
 
     private val callback = object : BarcodeCallback {
         override fun barcodeResult(result: BarcodeResult) {
@@ -45,15 +69,18 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 return
             }
 
+            scanResult = result.text
             beepManager!!.playBeepSoundAndVibrate()
 
             when (scanType) {
                 ScanType.SCAN_PRIVATE_KEY -> {
                     val returnIntent = Intent()
-                    returnIntent.putExtra(Constant.EXTRA_PRIVATE_KEY, result.text)
+                    returnIntent.putExtra(Constant.EXTRA_PRIVATE_KEY, scanResult)
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
                 }
+
+                ScanType.SCAN_GRAIL -> scanGrail()
             }
         }
 
@@ -81,6 +108,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
         scanType = intent?.getIntExtra(Constant.EXTRA_SCAN_TYPE, 0)
 
+        sharedPref = SharedPref(this)
+
         barcodeView = findViewById<View>(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
         val formats = listOf(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
         barcodeView!!.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
@@ -105,6 +134,17 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     R.drawable.ic_guideline_scan_grail, R.string.title_guide_scan_grail,
                     R.string.content_guide_scan_grail
                 )
+
+                //Get instant retrofit
+                service = RetrofitClientInstance().getRetrofitInstance()!!
+
+                val web3 = Web3Instance.getInstance()
+
+                if (intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
+                    contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.APP_CREDENTIALS)) }!!
+                } else {
+                    contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
+                }
             }
 
             ScanType.SCAN_PRIVATE_KEY -> {
@@ -148,11 +188,37 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun expandBottomView() {
         if (!hadScanResult) {
-            if (!isExpanded) {
-                tvHeaderGuide.visibility = View.GONE
+            if (progressBar.visibility == View.GONE) {
+                if (!isExpanded) {
+                    tvHeaderGuide.visibility = View.GONE
 
-                rlRootGuide.visibility = View.VISIBLE
-                ivGuideImage.visibility = View.VISIBLE
+                    rlRootGuide.visibility = View.VISIBLE
+                    ivGuideImage.visibility = View.VISIBLE
+
+                    blurView.visibility = View.VISIBLE
+                    blurView.isClickable = true
+                    blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_view))
+
+                    barcodeView?.pause()
+                    isExpanded = true
+                } else {
+                    tvHeaderGuide.visibility = View.VISIBLE
+
+                    rlRootGuide.visibility = View.GONE
+                    ivGuideImage.visibility = View.GONE
+
+                    blurView.visibility = View.GONE
+                    blurView.isClickable = false
+                    blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out_view))
+
+                    barcodeView?.resume()
+                    isExpanded = false
+                }
+            }
+        }
+        else {
+            if (!isExpanded) {
+                llScanResultDetail.visibility = View.VISIBLE
 
                 blurView.visibility = View.VISIBLE
                 blurView.isClickable = true
@@ -161,10 +227,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 barcodeView?.pause()
                 isExpanded = true
             } else {
-                tvHeaderGuide.visibility = View.VISIBLE
-
-                rlRootGuide.visibility = View.GONE
-                ivGuideImage.visibility = View.GONE
+                llScanResultDetail.visibility = View.GONE
 
                 blurView.visibility = View.GONE
                 blurView.isClickable = false
@@ -174,6 +237,113 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 isExpanded = false
             }
         }
+    }
+
+    private fun scanGrail() {
+        progressBar.visibility = View. VISIBLE
+        tvHeaderGuide.visibility = View.GONE
+
+        rlRootGuide.visibility = View.GONE
+        ivGuideImage.visibility = View.GONE
+
+        blurView.visibility = View.GONE
+        blurView.isClickable = false
+        blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out_view))
+
+        barcodeView?.pause()
+        isExpanded = false
+
+        callApi()
+    }
+
+    private fun callApi() {
+        val call = service.create(MainApi::class.java)
+            .validateSneaker(scanResult)
+        call.enqueue(object : Callback<ValidateModel> {
+            override fun onFailure(call: Call<ValidateModel>, t: Throwable) {
+                Toast.makeText(
+                    this@CustomScanActivity,
+                    "Something went wrong when validate",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onResponse(call: Call<ValidateModel>, response: Response<ValidateModel>) {
+                if (response.code() == 200) {
+                    if (response.body() != null) {
+                        validatedItem = response.body()!!
+
+                        val gson =
+                            GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer())
+                                .create()
+                        val strResponseHash = gson.toJson(validatedItem.detail)
+                        val responseHash =
+                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
+
+                        validateItem(responseHash)
+                    } else {
+                        Toast.makeText(
+                            this@CustomScanActivity,
+                            "Something went wrong when validate",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(
+                        this@CustomScanActivity,
+                        "Something went wrong when validate - Response Code: " + response.code(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+        })
+    }
+
+    private fun validateItem(responseHash: String) {
+        var blockchainHash: String? = ""
+        val rxGetSneakerHash = contract.tokenMetadata(BigInteger(scanResult))
+            .flowable()
+            .subscribeOn(Schedulers.io())
+            .subscribe({ response -> blockchainHash = response },
+                { throwable ->
+                    Log.e("TAG", "Throwable " + throwable.message)
+                }
+            ) {
+                if (blockchainHash.isNullOrEmpty()) {
+                    Toast.makeText(
+                        this@CustomScanActivity,
+                        "Something went wrong when validate",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (responseHash == blockchainHash) {
+                        loadItemInfo()
+                    } else {
+                        Toast.makeText(
+                            this@CustomScanActivity,
+                            "Validate with blockchain failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
+        compositeDisposable.add(rxGetSneakerHash)
+    }
+
+    private fun loadItemInfo() {
+        hadScanResult = true
+        barcodeView?.resume()
+
+        tvItemName.text = validatedItem.detail.model
+        tvItemBrand.text = validatedItem.detail.brand
+        tvItemSize.text = validatedItem.detail.size.toString()
+        tvItemReleaseDate.text = validatedItem.detail.releaseDate
+
+        progressBar.visibility = View.GONE
+
+        rlScanResultHeader.visibility = View.VISIBLE
     }
 
     override fun onResume() {
