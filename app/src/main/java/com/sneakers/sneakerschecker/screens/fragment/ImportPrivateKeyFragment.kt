@@ -63,15 +63,25 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
         tv_question_1.setOnClickListener(this)
         tv_question_2.setOnClickListener(this)
         tv_question_3.setOnClickListener(this)
+        root.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnScanPrivateKey -> CustomScanActivity.startForResult(activity!!, CustomScanActivity.ScanType.SCAN_PRIVATE_KEY, START_SCAN_PRIVATE_KEY)
+          
+            R.id.btnScanPrivateKey -> {
+                if (etUserPrivateKey.text.toString().isNotEmpty()) {
+                    etUserPrivateKey.setText("")
+                } else {
+                    CustomScanActivity.startForResult(activity!!, CustomScanActivity.ScanType.SCAN_PRIVATE_KEY, START_SCAN_PRIVATE_KEY)
+                }
+            }
 
             R.id.btnNext -> checkPrivateKey()
 
             R.id.btnBack -> activity?.onBackPressed()
+
+            R.id.root -> CommonUtils.hideKeyboard(activity)
         }
     }
 
@@ -86,6 +96,12 @@ class ImportPrivateKeyFragment : Fragment(), View.OnClickListener {
 
         override fun afterTextChanged(s: Editable) {
             btnNext.isEnabled = etUserPrivateKey.text.toString().isNotEmpty()
+            if (s.isNotEmpty()) {
+                btnScanPrivateKey.setImageResource(R.drawable.ic_close)
+            }
+            else {
+                btnScanPrivateKey.setImageResource(R.drawable.ic_scan)
+            }
         }
     }
 

@@ -70,6 +70,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         btnRegister.setOnClickListener(this)
         ibBack.setOnClickListener(this)
         btnShowPassword.setOnClickListener(this)
+        root.setOnClickListener(this)
     }
 
     private fun setupBouncyCastle() {
@@ -109,6 +110,8 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             R.id.ibBack -> activity?.onBackPressed()
 
             R.id.btnShowPassword -> showPassword()
+
+            R.id.root -> CommonUtils.hideKeyboard(activity)
         }
     }
 
