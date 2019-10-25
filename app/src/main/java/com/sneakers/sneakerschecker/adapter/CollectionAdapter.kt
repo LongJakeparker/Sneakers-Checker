@@ -19,31 +19,6 @@ import kotlinx.android.synthetic.main.item_collection.view.*
 class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context) :
     PagerAdapter() {
 
-    //    override fun getItemCount(): Int {
-//        return items.size
-//    }
-//
-//    // Inflates the item views
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionViewHolder {
-//        return CollectionViewHolder(
-//            LayoutInflater.from(context).inflate(
-//                R.layout.item_collection,
-//                parent,
-//                false
-//            )
-//        )
-//    }
-//
-//    override fun onBindViewHolder(holder: CollectionViewHolder, position: Int) {
-//        val item = items[position]
-//
-//        holder.tvItemIndexFront.text = (position + 1).toString()
-//        holder.tvItemIndexBack.text = (position + 1).toString()
-//        holder.tvItemNameFront.text = item.model
-//        holder.tvItemNameBack.text = item.model
-//        holder.tvItemSize.text = item.size.toString()
-//        holder.tvItemBrand.text = item.brand
-//    }
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(context).inflate(R.layout.item_collection, null)
         val item = getItem(position)
@@ -109,51 +84,3 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         container.removeView(`object` as View)
     }
 }
-
-//class CollectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//    val tvItemIndexBack = view.tvItemIndexBack
-//    val tvItemIndexFront = view.tvItemIndexFront
-//    val tvItemNameFront = view.tvItemNameFront
-//    val tvItemNameBack = view.tvItemNameBack
-//    val tvItemSize = view.tvItemSize
-//    val tvItemBrand = view.tvItemBrand
-//    val btnSale = view.btnItemSale
-//    val btnStolen = view.btnItemStolen
-//    val btnFound = view.btnItemFound
-//
-//    init {
-//        view.flipCard.setOnClickListener {
-//            view.flipCard.flipTheView()
-//            view.cvSale.isClickable = false
-//            btnStolen.isClickable = false
-//            view.cvFound.isClickable = false
-//            view.flipCard.onFlipListener =
-//                EasyFlipView.OnFlipAnimationListener { easyFlipView, newCurrentSide ->
-//                    if (newCurrentSide == EasyFlipView.FlipState.BACK_SIDE) {
-//                        view.cvSale.visibility = VISIBLE
-//                        view.cvSale.startAnimation(
-//                            AnimationUtils.loadAnimation(
-//                                view.context,
-//                                R.anim.fade_in_view
-//                            )
-//                        )
-//                        btnStolen.visibility = VISIBLE
-//                        btnStolen.startAnimation(
-//                            AnimationUtils.loadAnimation(
-//                                view.context,
-//                                R.anim.fade_in_view
-//                            )
-//                        )
-//
-//                        view.cvSale.isClickable = true
-//                        btnStolen.isClickable = true
-//                        view.cvFound.isClickable = true
-//                    } else {
-//                        view.cvSale.visibility = GONE
-//                        btnStolen.visibility = GONE
-//                        view.cvFound.visibility = GONE
-//                    }
-//                }
-//        }
-//    }
-//}

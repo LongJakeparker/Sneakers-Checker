@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="327dp"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent"
     android:paddingVertical="@dimen/activity_margin_24dp">
 
     <ImageView
+        android:id="@+id/ivBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/bg_flip_card_back"
-        android:layout_centerInParent="true"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="fitXY"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        app:layout_constraintTop_toTopOf="@+id/ivBackground"
+        app:layout_constraintEnd_toEndOf="@+id/ivBackground"
         android:layout_marginRight="@dimen/activity_margin_34dp">
 
         <ImageView
@@ -43,31 +48,50 @@
         android:id="@+id/ivBrandLogoBack"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        app:layout_constraintTop_toTopOf="@+id/ivBackground"
+        app:layout_constraintStart_toStartOf="@+id/ivBackground"
         android:layout_marginLeft="@dimen/activity_margin_34dp"
         android:layout_marginTop="@dimen/activity_margin_34dp"
         android:src="@drawable/logo_adidas" />
 
-    <TextView
-        android:id="@+id/tvItemNameBack"
+    <RelativeLayout
+        android:id="@+id/rlItemNameBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NMD R1 Trainer"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_size_xlarge"
-        android:textColor="@android:color/black"
-        android:layout_below="@+id/ivBrandLogoBack"
-        android:layout_alignParentStart="true"
+        app:layout_constraintTop_toBottomOf="@+id/ivBrandLogoBack"
+        app:layout_constraintStart_toStartOf="@+id/ivBackground"
         android:layout_marginLeft="@dimen/activity_margin_34dp"
-        android:layout_marginTop="@dimen/activity_margin_4dp"/>
+        android:layout_marginTop="@dimen/activity_margin_4dp">
+
+        <TextView
+            android:id="@+id/tvItemNameBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NMD R1 Trainer"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@android:color/black"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:id="@+id/ivLimitedBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_limited_small"
+            android:layout_toEndOf="@+id/tvItemNameBack"
+            android:layout_marginLeft="@dimen/activity_margin_4dp"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/llColorSize"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/tvItemNameBack"
+        app:layout_constraintTop_toBottomOf="@id/rlItemNameBack"
+        app:layout_constraintStart_toStartOf="@id/ivBackground"
+        app:layout_constraintEnd_toEndOf="@id/ivBackground"
         android:layout_marginTop="@dimen/activity_margin_12dp"
         android:layout_marginHorizontal="@dimen/activity_margin_34dp">
 
@@ -91,10 +115,12 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-        android:layout_below="@+id/llColorSize"
+        app:layout_constraintTop_toBottomOf="@+id/llColorSize"
+        app:layout_constraintStart_toStartOf="@id/ivBackground"
+        app:layout_constraintEnd_toEndOf="@id/ivBackground"
         android:layout_marginTop="@dimen/activity_margin_16dp"
         android:layout_marginBottom="@dimen/activity_margin_34dp"
         android:layout_marginHorizontal="@dimen/activity_margin_34dp"
@@ -102,4 +128,4 @@
         android:textColor="@color/colorPutty"
         android:textSize="@dimen/text_size_large"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

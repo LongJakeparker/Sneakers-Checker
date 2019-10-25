@@ -1,7 +1,9 @@
 package com.sneakers.sneakerschecker.screens.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -9,6 +11,8 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
 import com.google.zxing.BarcodeFormat
@@ -47,6 +51,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private val TAG = CustomScanActivity::class.java.simpleName
+    private val MY_PERMISSIONS_REQUEST_CAMERA = 101
     private var barcodeView: DecoratedBarcodeView? = null
     private var beepManager: BeepManager? = null
     private var lastText: String? = null
@@ -118,6 +123,19 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
         beepManager = BeepManager(this)
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                MY_PERMISSIONS_REQUEST_CAMERA
+            )
+
+            Toast.makeText(this, resources.getText(R.string.msg_grant_permission_camera), Toast.LENGTH_LONG).show()
+
+        }
+
         setupBottomView()
 
         rlRootBottomView.setOnClickListener(this)
@@ -140,10 +158,20 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
                 val web3 = Web3Instance.getInstance()
 
-                if (intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
-                    contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.APP_CREDENTIALS)) }!!
+                if (CommonUtils.isNonLoginUser(this)) {
+                    contract = web3?.let {
+                        Contract.getInstance(
+                            it,
+                            sharedPref.getCredentials(Constant.APP_CREDENTIALS)
+                        )
+                    }!!
                 } else {
-                     contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
+                    contract = web3?.let {
+                        Contract.getInstance(
+                            it,
+                            sharedPref.getCredentials(Constant.USER_CREDENTIALS)
+                        )
+                    }!!
                 }
             }
 
@@ -209,14 +237,18 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
                     blurView.visibility = View.GONE
                     blurView.isClickable = false
-                    blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out_view))
+                    blurView.startAnimation(
+                        AnimationUtils.loadAnimation(
+                            this,
+                            R.anim.fade_out_view
+                        )
+                    )
 
                     barcodeView?.resume()
                     isExpanded = false
                 }
             }
-        }
-        else {
+        } else {
             if (!isExpanded) {
                 llScanResultDetail.visibility = View.VISIBLE
 
@@ -240,7 +272,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun scanGrail() {
-        progressBar.visibility = View. VISIBLE
+        progressBar.visibility = View.VISIBLE
         tvHeaderGuide.visibility = View.GONE
 
         rlRootGuide.visibility = View.GONE
@@ -274,11 +306,15 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                         validatedItem = response.body()!!
 
                         val gson =
-                            GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer())
+                            GsonBuilder().registerTypeAdapter(
+                                SneakerModel::class.java,
+                                SneakerModelJsonSerializer()
+                            )
                                 .create()
                         val strResponseHash = gson.toJson(validatedItem.detail)
                         val responseHash =
-                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
+                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
+                                .toString()
 
                         validateItem(responseHash)
                     } else {

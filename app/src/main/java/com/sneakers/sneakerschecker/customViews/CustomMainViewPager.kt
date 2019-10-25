@@ -6,6 +6,9 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.Scroller
 import androidx.viewpager.widget.ViewPager
+import android.view.MotionEvent
+
+
 
 class CustomMainViewPager(context: Context, attrs: AttributeSet?) : ViewPager(context, attrs) {
     private var mScroller: FixedSpeedScroller? = null
@@ -19,6 +22,16 @@ class CustomMainViewPager(context: Context, attrs: AttributeSet?) : ViewPager(co
             scroller.set(this, mScroller)
         } catch (ignored: Exception) {
         }
+    }
+
+    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        // Never allow swiping to switch between pages
+        return false
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        // Never allow swiping to switch between pages
+        return false
     }
 
     /*

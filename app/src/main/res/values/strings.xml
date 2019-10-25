@@ -138,4 +138,6 @@
     <string name="label_item_found">Found it</string>
     <string name="text_item_stolen">This item has been stolen</string>
 
+    <string name="msg_grant_permission_camera">Please grant camera permission to scan</string>
+
 </resources>

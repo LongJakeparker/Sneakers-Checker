@@ -30,8 +30,10 @@ import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
 import android.view.WindowManager
 import android.os.Build
-
-
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.web3j.crypto.Credentials
+import org.web3j.crypto.Keys
+import java.security.Security
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -60,6 +62,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         checkUserLogin()
 
+        setupBouncyCastle()
+
+        if (sharedPref.getString(Constant.APP_CREDENTIALS) == "") {
+            createAppCredentials()
+        }
+
         Thread {
             try {
                 Web3Instance.setInstance(Web3j.build(HttpService(Constant.ETHEREUM_API_URL)))
@@ -84,14 +92,40 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun checkUserLogin() {
-        if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
+        if (!CommonUtils.isNonLoginUser(this)) {
                 notifyUserLogin()
         }
     }
 
+    private fun createAppCredentials() {
+        try {
+            val keyPair = Keys.createEcKeyPair()
+            val credentials = Credentials.create(keyPair)
+            sharedPref.setCredentials(credentials, Constant.APP_CREDENTIALS)
+
+        } catch (e: Exception) {
+            Log.e("Error: ", e.message)
+        }
+    }
+
+    private fun setupBouncyCastle() {
+        val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)
+            ?: // Web3j will set up the provider lazily when it's first used.
+            return
+        if (provider.javaClass == BouncyCastleProvider::class.java) {
+            // BC with same package name, shouldn't happen in real life.
+            return
+        }
+        // Android registers its own BC provider. As it might be outdated and might not include
+        // all needed ciphers, we substitute it with a known BC bundled in the app.
+        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
+        // of that it's possible to have another BC implementation loaded in VM.
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
+        Security.insertProviderAt(BouncyCastleProvider(), 1)
+    }
+
     private fun setViewPager() {
         viewpagerMain.adapter = MainSliderAdapter(this, mainSliderList)
-        viewpagerMain.setOnTouchListener { v, event -> true }
         viewpagerMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }

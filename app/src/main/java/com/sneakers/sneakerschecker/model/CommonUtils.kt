@@ -16,6 +16,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.constant.Constant
 
 class CommonUtils {
     companion object {
@@ -80,6 +81,15 @@ class CommonUtils {
             }
 
             textView.setTypeface(null, Typeface.BOLD)
+        }
+
+        fun isNonLoginUser(context: Context): Boolean {
+            val sharedPref = SharedPref(context)
+
+            if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
+                return false
+            }
+            return true
         }
     }
 }

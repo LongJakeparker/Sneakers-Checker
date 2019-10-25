@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/bg_flip_card_front"
+        android:scaleType="fitXY"
         android:layout_centerInParent="true"/>
 
     <RelativeLayout
@@ -49,6 +50,19 @@
         android:layout_marginTop="@dimen/activity_margin_34dp"/>
 
     <TextView
+        android:id="@+id/tvItemBrand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adidas"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@android:color/black"
+
+        android:layout_below="@+id/ivBrandLogoFront"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_margin_8dp"/>
+
+    <TextView
         android:id="@+id/tvItemNameFront"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,20 +70,17 @@
         android:textStyle="bold"
         android:textSize="@dimen/text_size_xxxlarge"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/ivBrandLogoFront"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_margin_8dp"/>
+        android:layout_below="@+id/tvItemBrand"
+        android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/tvItemBrand"
+    <ImageView
+        android:id="@+id/ivLimitedFront"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adidas"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_size_large"
-        android:textColor="@color/colorPutty"
-        android:layout_below="@+id/tvItemNameFront"
+        android:src="@drawable/ic_limited_large"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_margin_4dp"/>
+        android:layout_below="@id/tvItemNameFront"
+        android:layout_marginTop="@dimen/activity_margin_8dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

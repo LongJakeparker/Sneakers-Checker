@@ -43,6 +43,7 @@
             android:id="@+id/viewpagerMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
             android:layout_marginTop="@dimen/activity_margin_32dp"
             android:layout_below="@+id/title"/>
 
