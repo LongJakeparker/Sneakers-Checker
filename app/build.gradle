@@ -74,6 +74,7 @@ dependencies {
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
     implementation 'com.google.android.material:material:1.1.0-beta01'
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
+    implementation 'com.wajahatkarim3.EasyFlipView:EasyFlipView:2.1.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

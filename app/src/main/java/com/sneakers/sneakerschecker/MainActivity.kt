@@ -77,7 +77,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         ivLogout.setOnClickListener(this)
         rlUserAddress.setOnClickListener(this)
         btnScanToken.setOnClickListener(this)
-//        btnCollection.setOnClickListener(this)
+        tvCollection.setOnClickListener(this)
+        ivCollection.setOnClickListener(this)
 
         Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
     }
@@ -126,22 +127,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.tvLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_START_LOGIN_ACTIVITY)
+                drawer_layout.closeDrawer(GravityCompat.END)
             }
 
             R.id.tvCreateNew -> {
                 val intent = Intent(this, CreateNewActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_START_CREATE_ACTIVITY)
+                drawer_layout.closeDrawer(GravityCompat.END)
             }
             R.id.rlUserAddress -> {
                 CommonUtils.copyToClipboard(this, tvUserAddress.text.toString())
                 tvCopied.visibility = View.VISIBLE
             }
-//
-//            R.id.btnCollection -> {
-//                drawer_layout.closeDrawer(GravityCompat.START)
-//                CollectionActivity.start(this@MainActivity)
-//            }
-//
+
+            R.id.tvCollection, R.id.ivCollection -> {
+                drawer_layout.closeDrawer(GravityCompat.END)
+                CollectionActivity.start(this@MainActivity)
+            }
+
             R.id.tvLogout, R.id.ivLogout -> {
                 val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_logout),
                     resources.getString(R.string.msg_logout), true)

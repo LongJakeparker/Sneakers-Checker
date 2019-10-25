@@ -143,7 +143,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 if (intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
                     contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.APP_CREDENTIALS)) }!!
                 } else {
-                    contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
+                     contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
                 }
             }
 

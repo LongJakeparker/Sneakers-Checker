@@ -64,6 +64,7 @@
     <string name="label_log_in">Log in to Grails</string>
     <string name="label_Explore">Explore</string>
     <string name="label_Copied">Copied</string>
+    <string name="label_Collection">Grail collection</string>
 
     <string name="text_holder_user_name">Your name</string>
     <string name="text_holder_user_email">Your email</string>
@@ -133,5 +134,8 @@
     <string name="label_color">Color</string>
     <string name="label_size">Size (U.S)</string>
     <string name="label_release_date">Released at</string>
+    <string name="label_sale">Sale</string>
+    <string name="label_item_found">Found it</string>
+    <string name="text_item_stolen">This item has been stolen</string>
 
 </resources>

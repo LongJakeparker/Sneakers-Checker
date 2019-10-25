@@ -1,59 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/test_background"
-        tools:context=".screens.activity.CollectionActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:paddingTop="@dimen/activity_margin_18dp"
+    tools:context=".screens.activity.CollectionActivity">
 
-    <RelativeLayout
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/logo_margin_top"
-            android:layout_marginHorizontal="@dimen/layout_padding_Horizontal"
-    >
-
-        <ImageView
-                android:id="@+id/btnBackCollection"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_back_arrow"
-                android:padding="10dp"
-                android:layout_marginLeft="-18dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"/>
-
-        <ImageView
-                android:src="@mipmap/logo"
-                android:layout_width="@dimen/logo_width"
-                android:layout_height="@dimen/logo_heigh"
-                android:layout_centerHorizontal="true"/>
-
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerCollection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/imageView3"
-            android:layout_above="@+id/textView3"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="@dimen/copyright_margin_bottom">
-
-    </androidx.recyclerview.widget.RecyclerView>
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/activity_margin_16dp"
+        android:background="@android:color/transparent"
+        android:paddingVertical="@dimen/activity_margin_10dp"
+        android:paddingRight="@dimen/activity_margin_10dp"
+        android:src="@drawable/ic_back"
+        android:paddingHorizontal="@dimen/activity_margin_24dp"/>
 
     <TextView
-            android:text="@string/copyright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:id="@+id/textView3"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/copyright_text_size"
-            android:layout_marginBottom="@dimen/copyright_margin_bottom"
-            android:layout_alignParentBottom="true"
-    />
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnBack"
+        android:layout_alignParentStart="true"
+        android:text="@string/label_Collection"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_big"
+        android:textStyle="bold"
+        android:paddingHorizontal="@dimen/activity_margin_24dp"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPagerCollection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_margin_12dp"
+        android:paddingHorizontal="@dimen/activity_margin_40dp"
+        android:clipToPadding="false"
+        android:layout_below="@+id/title">
+
+    </androidx.viewpager.widget.ViewPager>
+
+    <include
+        android:id="@+id/pb_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/loading_medium"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

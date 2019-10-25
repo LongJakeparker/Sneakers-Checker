@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="327dp"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:paddingVertical="@dimen/activity_margin_24dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bg_flip_card_back"
+        android:layout_centerInParent="true"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/activity_margin_34dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_flag_card" />
+
+        <TextView
+            android:id="@+id/tvItemIndexBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/activity_margin_5dp"
+            android:text="1"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ivBrandLogoBack"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_margin_34dp"
+        android:layout_marginTop="@dimen/activity_margin_34dp"
+        android:src="@drawable/logo_adidas" />
+
+    <TextView
+        android:id="@+id/tvItemNameBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NMD R1 Trainer"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_xlarge"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/ivBrandLogoBack"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_margin_34dp"
+        android:layout_marginTop="@dimen/activity_margin_4dp"/>
+
+    <LinearLayout
+        android:id="@+id/llColorSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/tvItemNameBack"
+        android:layout_marginTop="@dimen/activity_margin_12dp"
+        android:layout_marginHorizontal="@dimen/activity_margin_34dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/tvItemSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7"
+            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_size"
+            android:drawablePadding="@dimen/activity_margin_8dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+        android:layout_below="@+id/llColorSize"
+        android:layout_marginTop="@dimen/activity_margin_16dp"
+        android:layout_marginBottom="@dimen/activity_margin_34dp"
+        android:layout_marginHorizontal="@dimen/activity_margin_34dp"
+        android:ellipsize="end"
+        android:textColor="@color/colorPutty"
+        android:textSize="@dimen/text_size_large"/>
+
+</RelativeLayout>

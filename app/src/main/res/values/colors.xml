@@ -33,5 +33,6 @@
     <color name="colorSeafoamBlue">#75d48b</color>
     <color name="black_with_alpha_10">#1A000000</color>
     <color name="greyishBrown">#4a4a4a</color>
+    <color name="scarlet">#d0021b</color>
 
 </resources>

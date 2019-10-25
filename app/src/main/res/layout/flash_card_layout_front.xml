@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:paddingVertical="@dimen/activity_margin_24dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bg_flip_card_front"
+        android:layout_centerInParent="true"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/activity_margin_34dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_flag_card"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/tvItemIndexFront"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_large"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/activity_margin_5dp"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ivBrandLogoFront"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/logo_adidas"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/activity_margin_34dp"/>
+
+    <TextView
+        android:id="@+id/tvItemNameFront"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NMD R1 Trainer"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_xxxlarge"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/ivBrandLogoFront"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_margin_8dp"/>
+
+    <TextView
+        android:id="@+id/tvItemBrand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adidas"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/colorPutty"
+        android:layout_below="@+id/tvItemNameFront"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_margin_4dp"/>
+
+</RelativeLayout>

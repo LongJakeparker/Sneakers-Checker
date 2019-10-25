@@ -21,23 +21,23 @@ class SneakerModel() : Parcelable {
     }
 
     @SerializedName("id")
-    lateinit var id: BigInteger
+    var id: BigInteger? = null
     @SerializedName("brand")
-    lateinit var brand: String
+    var brand: String? =""
     @SerializedName("model")
-    lateinit var model: String
+    var model: String? =""
     @SerializedName("colorway")
-    lateinit var colorway: String
+    var colorway: String =""
     @SerializedName("limitedEdition")
     var limitedEdition: Boolean = false
     @SerializedName("releaseDate")
-    lateinit var releaseDate: String
+    var releaseDate: String =""
     @SerializedName("size")
     var size: Float = 0.0f
     @SerializedName("condition")
-    lateinit var condition: String
+    var condition: String =""
     @SerializedName("ownerAddress")
-    lateinit var ownerAddress: String
+    var ownerAddress: String =""
 
     constructor(parcel: Parcel) : this() {
         id = BigInteger(parcel.readString())
