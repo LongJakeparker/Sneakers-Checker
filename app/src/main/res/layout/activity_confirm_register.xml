@@ -16,7 +16,7 @@
         android:src="@drawable/ic_close"
         android:layout_gravity="end"
         android:padding="@dimen/activity_margin_12dp"
-        android:layout_marginTop="@dimen/activity_margin_32dp"
+        android:layout_marginTop="@dimen/activity_margin_36dp"
         android:layout_marginRight="@dimen/activity_margin_12dp"/>
 
     <FrameLayout
