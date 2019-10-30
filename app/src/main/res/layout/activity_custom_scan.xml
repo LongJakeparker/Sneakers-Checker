@@ -13,7 +13,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/activity_margin_12dp"
         android:padding="@dimen/activity_margin_12dp"
-        android:layout_marginTop="@dimen/activity_margin_32dp"
+        android:layout_marginTop="@dimen/activity_margin_4dp"
         android:src="@drawable/ic_close"
         android:tint="@android:color/black" />
 

@@ -2,7 +2,8 @@ package com.sneakers.sneakerschecker.screens.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -10,11 +11,10 @@ import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
+import kotlinx.android.synthetic.main.activity_splash.*
 
 
 class SplashActivity : AppCompatActivity() {
-    /** Delay duration */
-    private val SPLASH_DISPLAY_LENGTH: Long = 4000
 
     private lateinit var sharedPref: SharedPref
 
@@ -24,24 +24,6 @@ class SplashActivity : AppCompatActivity() {
 
         sharedPref = SharedPref(this)
 
-        Handler().postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-//            overridePendingTransition(R.anim.slide_in, R.anim.slide_out)
-            finish()
-//            val sharedPref = SharedPref(this.context!!)
-//            if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
-//                val intent = Intent(activity, MainActivity::class.java)
-//                startActivity(intent)
-//                activity!!.finish()
-//            }
-//            else {
-//                val transaction = activity!!.supportFragmentManager.beginTransaction();
-//                transaction.replace(R.id.authentication_layout, AuthenticationFragment())
-//                    .commitAllowingStateLoss()
-//            }
-        }, SPLASH_DISPLAY_LENGTH)
-
         getFCMToken()
     }
 
@@ -49,11 +31,33 @@ class SplashActivity : AppCompatActivity() {
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
+                    nextStep()
                     return@OnCompleteListener
                 }
 
                 // Get new Instance ID token
                 sharedPref.setString(task.result!!.token, Constant.FCM_TOKEN)
+                nextStep()
             })
+    }
+
+    private fun nextStep() {
+        val myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in_1s)
+        myFadeInAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                val intent = Intent(baseContext, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+
+            }
+        })
+        ivSplashLogo.startAnimation(myFadeInAnimation)
     }
 }

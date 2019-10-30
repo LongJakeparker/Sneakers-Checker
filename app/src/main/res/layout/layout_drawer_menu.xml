@@ -24,14 +24,12 @@
             android:id="@+id/ivAddressNonLogin"
             android:src="@drawable/ic_default_sneaker_header_navigation"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin_40dp"/>
+            android:layout_height="wrap_content"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cvQrAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin_40dp"
             app:cardCornerRadius="4dp"
             app:cardElevation="0dp"
             android:visibility="gone">

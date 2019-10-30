@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/activity_margin_24dp"
     android:id="@+id/root"
     android:background="@android:color/white"
     tools:context=".screens.fragment.CreateNewFragment">
@@ -15,10 +14,11 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_back"
         android:background="@android:color/transparent"
-        android:paddingVertical="@dimen/activity_margin_10dp"
-        android:paddingRight="@dimen/activity_margin_10dp"
+        android:paddingVertical="@dimen/activity_margin_12dp"
+        android:paddingHorizontal="@dimen/activity_margin_12dp"
+        android:layout_marginLeft="@dimen/activity_margin_12dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/activity_margin_34dp"
+        android:layout_marginTop="@dimen/activity_margin_4dp"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/ibBack"/>
 
@@ -30,6 +30,7 @@
         android:textSize="@dimen/text_size_big"
         android:textColor="@color/colorBlack"
         android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_margin_24dp"
         app:layout_constraintTop_toBottomOf="@+id/ibBack"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -41,6 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
         android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="@dimen/activity_margin_24dp"
         android:id="@+id/linearLayout">
 
         <EditText
@@ -124,6 +126,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/activity_margin_24dp"
     />
 
     <TextView
@@ -139,6 +142,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         android:background="@drawable/warning_background"
         android:visibility="gone"
+        android:layout_marginHorizontal="@dimen/activity_margin_24dp"
     />
 
     <include
