@@ -123,7 +123,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
         beepManager = BeepManager(this)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
