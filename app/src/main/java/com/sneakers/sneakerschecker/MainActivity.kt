@@ -37,7 +37,6 @@ import java.security.Security
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private val TYPE_UNLINK: Int = 0
     private val TIME_AUTO_NEXT = 4000
     private val REQUEST_CODE_START_LOGIN_ACTIVITY = 1000
     private val REQUEST_CODE_START_CREATE_ACTIVITY = 1001
@@ -239,10 +238,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             rlUserAddress.visibility = View.VISIBLE
             ivExpand.setImageResource(R.drawable.ic_expand_up)
-            lnNavigationItemExpanded.visibility = View.VISIBLE
 
             lnNavigationItemUnexpanded.visibility = View.GONE
             tvLogout.visibility = View.GONE
+
+            lnNavigationItemExpanded.visibility = View.VISIBLE
 
             isExpanded = true
         }

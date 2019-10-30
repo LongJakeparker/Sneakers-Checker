@@ -65,9 +65,8 @@
                 android:id="@+id/tvUserAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
                 android:gravity="center_vertical"
-                android:ellipsize="end"
+                android:ellipsize="middle"
                 android:textSize="@dimen/text_size_default"
                 android:textColor="@color/colorOffWhite"
                 android:drawableLeft="@drawable/ic_location"
@@ -75,7 +74,8 @@
                 android:paddingHorizontal="@dimen/activity_margin_16dp"
                 android:paddingVertical="13dp"
                 android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/tvCopied"/>
+                android:layout_toStartOf="@+id/tvCopied"
+                android:singleLine="true" />
 
             <TextView
                 android:id="@+id/tvCopied"
@@ -87,7 +87,7 @@
                 android:textColor="@color/colorOffWhite"
                 android:background="@drawable/drawable_bg_address_copied"
                 android:paddingHorizontal="@dimen/activity_margin_16dp"
-                android:paddingVertical="16dp"
+                android:paddingVertical="15.3dp"
                 android:layout_centerVertical="true"
                 android:visibility="gone"/>
 
