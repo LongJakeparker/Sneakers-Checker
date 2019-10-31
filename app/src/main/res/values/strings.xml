@@ -140,5 +140,8 @@
 
     <string name="msg_grant_permission_camera">Please grant camera permission to scan</string>
     <string name="msg_scan_fail">Something went wrong when validate</string>
+    <string name="label_button_sell">Sale item</string>
+    <string name="label_button_stolen">Stolen</string>
+    <string name="label_button_found">Found it</string>
 
 </resources>

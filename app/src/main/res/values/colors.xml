@@ -34,5 +34,7 @@
     <color name="black_with_alpha_10">#1A000000</color>
     <color name="greyishBrown">#4a4a4a</color>
     <color name="scarlet">#d0021b</color>
+    <color name="brick">#c92525</color>
+    <color name="darkRed">#8d0101</color>
 
 </resources>

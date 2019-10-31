@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sneakers.sneakerschecker.R
@@ -53,13 +54,15 @@ class CollectionActivity : AppCompatActivity() {
             )
         }!!
 
-//        listCollection.add(SneakerModel())
-//        listCollection.add(SneakerModel())
-//        listCollection.add(SneakerModel())
-//
-//        viewPagerCollection.adapter = CollectionAdapter(listCollection, this)
+        listCollection.add(SneakerModel())
+        listCollection.add(SneakerModel())
+        listCollection.add(SneakerModel())
 
-        getCollection()
+        val adapter = CollectionAdapter(listCollection, this)
+        adapter.setCardFlipListener(cardFlipListener)
+        viewPagerCollection.adapter = adapter
+
+//        getCollection()
 
         btnBack.setOnClickListener { onBackPressed() }
     }
@@ -97,8 +100,9 @@ class CollectionActivity : AppCompatActivity() {
                                 })
                             {
                                 runOnUiThread {
-                                    viewPagerCollection.adapter =
-                                        CollectionAdapter(listCollection, this@CollectionActivity)
+                                    val adapter = CollectionAdapter(listCollection, this@CollectionActivity)
+                                    adapter.setCardFlipListener(cardFlipListener)
+                                    viewPagerCollection.adapter = adapter
                                 }
                             }
 
@@ -111,6 +115,23 @@ class CollectionActivity : AppCompatActivity() {
             }
 
         })
+
+    }
+
+    private val cardFlipListener = object : CollectionAdapter.CardFlipListener {
+        override fun onCardFlipedFront() {
+            rlBtnSaleAndStolen.visibility = View.GONE
+        }
+
+        override fun onCardFlipedBack() {
+            rlBtnSaleAndStolen.visibility = View.VISIBLE
+            rlBtnSaleAndStolen.startAnimation(
+                            android.view.animation.AnimationUtils.loadAnimation(
+                                this@CollectionActivity,
+                                R.anim.fade_in_view
+                            )
+                        )
+        }
 
     }
 }

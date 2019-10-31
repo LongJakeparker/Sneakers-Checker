@@ -17,6 +17,7 @@ class SneakerModel() : Parcelable {
             dest.writeFloat(this.size)
             dest.writeString(this.condition)
             dest.writeString(this.ownerAddress)
+            dest.writeByte(if (this.isCardFliped) 1.toByte() else 0.toByte())
         }
     }
 
@@ -38,6 +39,7 @@ class SneakerModel() : Parcelable {
     var condition: String =""
     @SerializedName("ownerAddress")
     var ownerAddress: String =""
+    var isCardFliped: Boolean = false
 
     constructor(parcel: Parcel) : this() {
         id = BigInteger(parcel.readString())
@@ -49,6 +51,7 @@ class SneakerModel() : Parcelable {
         size = parcel.readFloat()
         condition = parcel.readString()
         ownerAddress = parcel.readString()
+        isCardFliped = parcel.readByte() != 0.toByte()
     }
 
     override fun describeContents(): Int {

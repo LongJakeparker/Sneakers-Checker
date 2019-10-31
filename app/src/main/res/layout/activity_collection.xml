@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     tools:context=".screens.activity.CollectionActivity">
 
@@ -37,9 +38,107 @@
         android:layout_marginTop="@dimen/activity_margin_12dp"
         android:paddingHorizontal="@dimen/activity_margin_40dp"
         android:clipToPadding="false"
-        android:layout_below="@+id/title">
+        android:layout_below="@+id/title"
+        android:layout_above="@+id/rlButton">
 
     </androidx.viewpager.widget.ViewPager>
+
+    <RelativeLayout
+        android:id="@+id/rlButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/activity_margin_36dp"
+        android:layout_marginBottom="@dimen/activity_margin_36dp"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:id="@+id/rlBtnSaleAndStolen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/activity_margin_4dp"
+            android:paddingHorizontal="@dimen/activity_margin_4dp"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvSale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                app:cardCornerRadius="6dp"
+                android:layout_alignParentEnd="true">
+
+                <TextView
+                    android:id="@+id/btnItemSale"
+                    android:layout_width="145dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/drawable_btn_green_gradient_selector"
+                    android:text="@string/label_button_sell"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:paddingHorizontal="@dimen/activity_margin_20dp"
+                    android:paddingVertical="@dimen/activity_margin_14dp"
+                    android:drawableLeft="@drawable/ic_sale"
+                    android:drawableTint="@android:color/white"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvStolen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                app:cardCornerRadius="6dp"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:id="@+id/btnItemStolen"
+                    android:layout_width="145dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/drawable_btn_red_gradient_selector"
+                    android:text="@string/label_button_stolen"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:paddingHorizontal="@dimen/activity_margin_28dp"
+                    android:paddingVertical="@dimen/activity_margin_14dp"
+                    android:drawableLeft="@drawable/ic_stolen"
+                    android:drawableTint="@android:color/white"/>
+
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvFound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            app:cardCornerRadius="6dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/btnItemFound"
+                android:layout_width="145dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/drawable_btn_green_gradient_selector"
+                android:text="@string/label_button_found"
+                android:textColor="@color/colorWhite"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size_xlarge"
+                android:paddingHorizontal="@dimen/activity_margin_20dp"
+                android:paddingVertical="@dimen/activity_margin_14dp"
+                android:layout_margin="@dimen/activity_margin_4dp"
+                android:drawableLeft="@drawable/ic_found"
+                android:drawableTint="@android:color/white"/>
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
 
     <include
         android:id="@+id/pb_loading"

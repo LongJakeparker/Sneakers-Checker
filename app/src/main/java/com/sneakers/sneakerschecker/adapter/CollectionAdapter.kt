@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.viewpager.widget.PagerAdapter
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.model.SneakerModel
@@ -16,8 +15,8 @@ import kotlinx.android.synthetic.main.flash_card_layout_front.view.*
 import kotlinx.android.synthetic.main.item_collection.view.*
 
 
-class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context) :
-    PagerAdapter() {
+class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context) : PagerAdapter() {
+    private var cardFlipListener: CardFlipListener? = null
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(context).inflate(R.layout.item_collection, null)
@@ -40,34 +39,17 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
 
         view.flipCard.setOnClickListener {
             view.flipCard.flipTheView()
-            view.cvSale.isClickable = false
-            view.btnItemStolen.isClickable = false
-            view.cvFound.isClickable = false
+            item.isCardFliped = !item.isCardFliped
             view.flipCard.onFlipListener =
                 EasyFlipView.OnFlipAnimationListener { easyFlipView, newCurrentSide ->
                     if (newCurrentSide == EasyFlipView.FlipState.BACK_SIDE) {
-                        view.cvSale.visibility = VISIBLE
-                        view.cvSale.startAnimation(
-                            AnimationUtils.loadAnimation(
-                                view.context,
-                                R.anim.fade_in_view
-                            )
-                        )
-                        view.btnItemStolen.visibility = VISIBLE
-                        view.btnItemStolen.startAnimation(
-                            AnimationUtils.loadAnimation(
-                                view.context,
-                                R.anim.fade_in_view
-                            )
-                        )
-
-                        view.cvSale.isClickable = true
-                        view.btnItemStolen.isClickable = true
-                        view.cvFound.isClickable = true
+                        if (cardFlipListener != null) {
+                            cardFlipListener?.onCardFlipedBack()
+                        }
                     } else {
-                        view.cvSale.visibility = GONE
-                        view.btnItemStolen.visibility = GONE
-                        view.cvFound.visibility = GONE
+                        if (cardFlipListener != null) {
+                            cardFlipListener?.onCardFlipedFront()
+                        }
                     }
                 }
         }
@@ -90,5 +72,15 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
+    }
+
+    interface CardFlipListener{
+        fun onCardFlipedFront()
+
+        fun onCardFlipedBack()
+    }
+
+    fun setCardFlipListener(cardFlipListener: CardFlipListener) {
+        this.cardFlipListener = cardFlipListener
     }
 }
