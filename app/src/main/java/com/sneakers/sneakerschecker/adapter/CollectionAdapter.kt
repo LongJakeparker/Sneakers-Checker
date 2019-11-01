@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.item_collection.view.*
 
 
 class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context) : PagerAdapter() {
-    private var cardFlipListener: CardFlipListener? = null
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(context).inflate(R.layout.item_collection, null)
@@ -40,18 +39,6 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         view.flipCard.setOnClickListener {
             view.flipCard.flipTheView()
             item.isCardFliped = !item.isCardFliped
-            view.flipCard.onFlipListener =
-                EasyFlipView.OnFlipAnimationListener { easyFlipView, newCurrentSide ->
-                    if (newCurrentSide == EasyFlipView.FlipState.BACK_SIDE) {
-                        if (cardFlipListener != null) {
-                            cardFlipListener?.onCardFlipedBack()
-                        }
-                    } else {
-                        if (cardFlipListener != null) {
-                            cardFlipListener?.onCardFlipedFront()
-                        }
-                    }
-                }
         }
 
         container.addView(view)
@@ -72,15 +59,5 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
-    }
-
-    interface CardFlipListener{
-        fun onCardFlipedFront()
-
-        fun onCardFlipedBack()
-    }
-
-    fun setCardFlipListener(cardFlipListener: CardFlipListener) {
-        this.cardFlipListener = cardFlipListener
     }
 }

@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.CollectionAdapter
 import com.sneakers.sneakerschecker.api.MainApi
@@ -21,6 +21,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+
 
 class CollectionActivity : AppCompatActivity() {
 
@@ -58,9 +59,8 @@ class CollectionActivity : AppCompatActivity() {
         listCollection.add(SneakerModel())
         listCollection.add(SneakerModel())
 
-        val adapter = CollectionAdapter(listCollection, this)
-        adapter.setCardFlipListener(cardFlipListener)
-        viewPagerCollection.adapter = adapter
+        viewPagerCollection.adapter = CollectionAdapter(listCollection, this)
+        viewPagerCollection.addOnPageChangeListener(viewChangeListener)
 
 //        getCollection()
 
@@ -100,9 +100,8 @@ class CollectionActivity : AppCompatActivity() {
                                 })
                             {
                                 runOnUiThread {
-                                    val adapter = CollectionAdapter(listCollection, this@CollectionActivity)
-                                    adapter.setCardFlipListener(cardFlipListener)
-                                    viewPagerCollection.adapter = adapter
+                                    viewPagerCollection.adapter = CollectionAdapter(listCollection, this@CollectionActivity)
+                                    viewPagerCollection.addOnPageChangeListener(viewChangeListener)
                                 }
                             }
 
@@ -118,20 +117,21 @@ class CollectionActivity : AppCompatActivity() {
 
     }
 
-    private val cardFlipListener = object : CollectionAdapter.CardFlipListener {
-        override fun onCardFlipedFront() {
-            rlBtnSaleAndStolen.visibility = View.GONE
+    val viewChangeListener = object : ViewPager.OnPageChangeListener {
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int
+        ) {
+
         }
 
-        override fun onCardFlipedBack() {
-            rlBtnSaleAndStolen.visibility = View.VISIBLE
-            rlBtnSaleAndStolen.startAnimation(
-                            android.view.animation.AnimationUtils.loadAnimation(
-                                this@CollectionActivity,
-                                R.anim.fade_in_view
-                            )
-                        )
+        override fun onPageSelected(position: Int) {
+
         }
 
+        override fun onPageScrollStateChanged(state: Int) {
+
+        }
     }
 }
