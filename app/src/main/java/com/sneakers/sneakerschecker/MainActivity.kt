@@ -200,14 +200,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     fun notifyUserLogin() {
 //        tvUserName.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
-        tvUserAddress.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
-
-        val qrCode = CommonUtils.generateQrCode(this, 1.0,
-                                                sharedPref.getCredentials(Constant.USER_CREDENTIALS).address)
-
-        if (qrCode != null) {
-            ivQrAddress.setImageBitmap(qrCode)
-        }
+//        tvUserAddress.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
+//
+//        val qrCode = CommonUtils.generateQrCode(this, 1.0,
+//                                                sharedPref.getCredentials(Constant.USER_CREDENTIALS).address)
+//
+//        if (qrCode != null) {
+//            ivQrAddress.setImageBitmap(qrCode)
+//        }
 
         ivAddressNonLogin.visibility = View.GONE
         lnNavigationItemUnLogin.visibility = View.GONE
@@ -305,14 +305,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         when {
-            requestCode == REQUEST_CODE_START_CREATE_ACTIVITY && resultCode == Activity.RESULT_OK -> {
-                Handler().postDelayed({
-                    ConfirmRegisterActivity.start(this)
-                }, 500)
-                notifyUserLogin()
-            }
-
-            requestCode == REQUEST_CODE_START_LOGIN_ACTIVITY && resultCode == Activity.RESULT_OK -> {
+            (requestCode == REQUEST_CODE_START_CREATE_ACTIVITY || requestCode == REQUEST_CODE_START_LOGIN_ACTIVITY) &&
+                    resultCode == Activity.RESULT_OK -> {
                 notifyUserLogin()
             }
         }

@@ -86,7 +86,7 @@ class CommonUtils {
         fun isNonLoginUser(context: Context): Boolean {
             val sharedPref = SharedPref(context)
 
-            if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
+            if (sharedPref.getUser(Constant.WALLET_USER) != null) {
                 return false
             }
             return true

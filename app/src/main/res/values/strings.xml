@@ -61,7 +61,7 @@
     <string name="label_is_not_validated">Item is not validated</string>
 
     <string name="label_create_account">Create account</string>
-    <string name="label_log_in">Log in to Grails</string>
+    <string name="label_log_in">Log in</string>
     <string name="label_Explore">Explore</string>
     <string name="label_Copied">Copied</string>
     <string name="label_Collection">Grail collection</string>

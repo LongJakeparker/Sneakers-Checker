@@ -55,10 +55,15 @@ class SharedPref {
         editor.apply()
     }
 
-    fun getUser(fieldName: String): SignIn {
+    fun getUser(fieldName: String): SignIn? {
         val gson = Gson()
 
-        return gson.fromJson(prefs!!.getString(fieldName, ""), SignIn::class.java)
+        val strUser = prefs!!.getString(fieldName, "")
+
+        if (strUser.isEmpty())
+            return null
+
+        return gson.fromJson(strUser, SignIn::class.java)
     }
 
     fun setCredentials(value: Credentials, fieldName: String) {
