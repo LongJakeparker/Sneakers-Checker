@@ -380,6 +380,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         tvItemReleaseDate.text = validatedItem.detail.releaseDate
 
         progressBar.visibility = View.GONE
+        rlScanFail.visibility = View.GONE
 
         rlScanResultHeader.visibility = View.VISIBLE
     }
