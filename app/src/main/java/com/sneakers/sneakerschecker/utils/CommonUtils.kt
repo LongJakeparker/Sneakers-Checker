@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.model
+package com.sneakers.sneakerschecker.utils
 
 import android.app.Activity
 import android.content.ClipData
@@ -17,6 +17,7 @@ import com.google.zxing.WriterException
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.SharedPref
 
 class CommonUtils {
     companion object {

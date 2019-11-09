@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -28,8 +27,7 @@ import android.animation.LayoutTransition
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
-import android.view.WindowManager
-import android.os.Build
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.Keys

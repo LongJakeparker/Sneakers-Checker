@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.model.CommonUtils
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
