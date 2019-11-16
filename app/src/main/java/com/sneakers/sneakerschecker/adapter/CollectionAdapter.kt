@@ -8,8 +8,8 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SneakerModel
-import com.wajahatkarim3.easyflipview.EasyFlipView
 import kotlinx.android.synthetic.main.flash_card_layout_back.view.*
 import kotlinx.android.synthetic.main.flash_card_layout_front.view.*
 import kotlinx.android.synthetic.main.item_collection.view.*
@@ -34,6 +34,11 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         } else {
             view.ivLimitedFront.visibility = GONE
             view.ivLimitedBack.visibility = GONE
+        }
+
+        if (item.condition == Constant.ItemCondition.STOLEN) {
+            view.rlViewItemStolenFront.visibility = VISIBLE
+            view.clViewItemStolenBack.visibility = VISIBLE
         }
 
         view.flipCard.setOnClickListener {

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -102,6 +103,11 @@ class CollectionActivity : AppCompatActivity() {
                                 runOnUiThread {
                                     viewPagerCollection.adapter = CollectionAdapter(listCollection, this@CollectionActivity)
                                     viewPagerCollection.addOnPageChangeListener(viewChangeListener)
+                                    if (listCollection.size > 0) {
+                                        llViewNoData.visibility = View.GONE
+                                        btnScan.visibility = View.VISIBLE
+                                        rlBtnSaleAndStolen.visibility = View.VISIBLE
+                                    }
                                 }
                             }
 
