@@ -19,10 +19,17 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".screens.activity.CustomScanActivity"></activity>
-        <activity android:name=".screens.activity.ConfirmRegisterActivity"></activity>
-        <activity android:name=".screens.activity.LoginActivity"></activity>
-        <activity android:name=".screens.activity.CreateNewActivity"></activity>
+        <activity android:name=".screens.activity.PhoneAuthActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".screens.activity.CustomScanActivity" />
+        <activity android:name=".screens.activity.ConfirmRegisterActivity" />
+        <activity android:name=".screens.activity.LoginActivity" />
+        <activity android:name=".screens.activity.CreateNewActivity" />
 
         <service
             android:name=".service.MyFirebaseMessagingService"
@@ -32,17 +39,13 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".screens.activity.TransferActivity"></activity>
-        <activity android:name=".screens.activity.CollectionActivity"></activity>
-        <activity android:name=".screens.activity.SneakerInfoActivity"></activity>
+        <activity android:name=".screens.activity.TransferActivity" />
+        <activity android:name=".screens.activity.CollectionActivity" />
+        <activity android:name=".screens.activity.SneakerInfoActivity" />
         <activity android:name=".screens.activity.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"

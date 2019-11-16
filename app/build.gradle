@@ -75,6 +75,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-beta01'
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
     implementation 'com.wajahatkarim3.EasyFlipView:EasyFlipView:2.1.2'
+
+    //Firebase auth with phone number
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    //Country code picker
+    implementation 'com.hbb20:ccp:2.3.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
