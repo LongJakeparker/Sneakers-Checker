@@ -87,6 +87,9 @@ dependencies {
     implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.0'
     implementation 'one.block:eosiojavarpcprovider:0.1.0'
 
+    //Country code picker
+    implementation 'com.hbb20:ccp:2.3.4'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

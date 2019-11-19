@@ -65,6 +65,7 @@
     <string name="label_Explore">Explore</string>
     <string name="label_Copied">Copied</string>
     <string name="label_Collection">Grail collection</string>
+    <string name="label_verify_phone">Verify Phone Number</string>
 
     <string name="text_holder_user_name">Your name</string>
     <string name="text_holder_user_email">Your email</string>
@@ -80,6 +81,8 @@
     <string name="label_button_card_manage">Payment cards</string>
     <string name="label_button_setting">Setting</string>
     <string name="label_button_logout">Log out</string>
+    <string name="label_button_verify">Verify</string>
+    <string name="label_button_resend_code"><u>Resend verify code</u></string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>
