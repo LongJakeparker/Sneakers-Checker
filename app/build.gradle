@@ -86,6 +86,7 @@ dependencies {
     implementation 'one.block:eosiojavasoftkeysignatureprovider:0.1.0'
     implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.0'
     implementation 'one.block:eosiojavarpcprovider:0.1.0'
+    implementation 'one.block:eosioandroidkeystoresignatureprovider:0.1.0'
 
     //Country code picker
     implementation 'com.hbb20:ccp:2.3.4'

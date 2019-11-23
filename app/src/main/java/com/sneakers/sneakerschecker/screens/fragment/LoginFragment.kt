@@ -117,7 +117,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
             override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
                 if (response.code() == 200) {
-                    sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
+                    sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
                     activity!!.setResult(Activity.RESULT_OK)
                     activity!!.finish()
 

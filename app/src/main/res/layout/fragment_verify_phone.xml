@@ -56,7 +56,6 @@
                 android:layout_height="45dp"
                 android:background="@drawable/bubble_background"
                 android:gravity="center"
-                android:text="1"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_size_xxxlarge"
                 android:textColor="@android:color/black"/>
@@ -71,7 +70,6 @@
                 android:layout_height="45dp"
                 android:background="@drawable/bubble_background"
                 android:gravity="center"
-                android:text="1"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_size_xxxlarge"
                 android:textColor="@android:color/black"/>
@@ -86,7 +84,6 @@
                 android:layout_height="45dp"
                 android:background="@drawable/bubble_background"
                 android:gravity="center"
-                android:text="1"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_size_xxxlarge"
                 android:textColor="@android:color/black"/>
@@ -101,7 +98,6 @@
                 android:layout_height="45dp"
                 android:background="@drawable/bubble_background"
                 android:gravity="center"
-                android:text="1"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_size_xxxlarge"
                 android:textColor="@android:color/black"/>
@@ -116,7 +112,6 @@
                 android:layout_height="45dp"
                 android:background="@drawable/bubble_background"
                 android:gravity="center"
-                android:text="1"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_size_xxxlarge"
                 android:textColor="@android:color/black"/>
@@ -131,7 +126,6 @@
                 android:layout_height="45dp"
                 android:background="@drawable/bubble_background"
                 android:gravity="center"
-                android:text="1"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_size_xxxlarge"
                 android:textColor="@android:color/black"/>
@@ -144,7 +138,10 @@
             android:layout_height="45dp"
             android:background="@android:color/transparent"
             android:layout_marginHorizontal="@dimen/activity_margin_48dp"
-            android:textColor="@android:color/transparent"/>
+            android:textColor="@android:color/transparent"
+            android:maxLength="6"
+            android:inputType="numberDecimal"
+            android:cursorVisible="false"/>
 
     </FrameLayout>
 

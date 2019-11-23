@@ -9,7 +9,8 @@ object Constant {
     const val APP_CREDENTIALS= "APP_CREDENTIALS"
     const val FCM_TOKEN= "FCM_TOKEN"
 
-    const val WALLET_USER= "wallet user"
+    const val LOGIN_USER= "login user"
+    const val USER_ROLE_COLLECTOR= "collector"
 
     const val GRANT_TYPE_PASSWORD= "password"
     const val GRANT_TYPE_REFRESH_TOKEN= "refresh_token"
@@ -30,9 +31,13 @@ object Constant {
 
     const val API_FIELD_USER_NAME = "username"
     const val API_FIELD_USER_EMAIL = "email"
+    const val API_FIELD_USER_PHONE = "phone"
     const val API_FIELD_USER_PASSWORD = "password"
-    const val API_FIELD_NETWORK_ADDRESS = "networkAddress"
     const val API_FIELD_REGISTRATION_TOKEN = "registrationToken"
+    const val API_FIELD_PUBLIC_KEY = "publicKey"
+    const val API_FIELD_ENCRYPTED_PRIVATE_KEY = "encryptedPrivateKey"
+    const val API_FIELD_USER_ROLE = "role"
+    const val API_FIELD_USER_ADDRESS = "address"
 
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"

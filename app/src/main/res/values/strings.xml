@@ -68,8 +68,8 @@
     <string name="label_verify_phone">Verify Phone Number</string>
 
     <string name="text_holder_user_name">Your name</string>
-    <string name="text_holder_user_email">Your email</string>
-    <string name="text_holder_user_password">Your password</string>
+    <string name="text_holder_user_phone">Your phone</string>
+    <string name="text_holder_user_password">Your password (6 digits)</string>
     <string name="text_holder_private_key">Paste your private key</string>
 
     <string name="label_button_register">Register</string>
@@ -143,5 +143,6 @@
 
     <string name="msg_grant_permission_camera">Please grant camera permission to scan</string>
     <string name="msg_scan_fail">Something went wrong when validate</string>
+    <string name="format_eascrypt_password">%struegrails</string>
 
 </resources>

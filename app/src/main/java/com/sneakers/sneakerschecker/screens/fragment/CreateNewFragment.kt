@@ -1,6 +1,5 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +7,6 @@ import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
@@ -16,17 +14,15 @@ import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.eosCommander.crypto.ec.EosPrivateKey
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_new.*
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.web3j.crypto.Credentials
-import org.web3j.crypto.Keys
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.security.Security
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -54,8 +50,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
         sharedPref = context?.let { SharedPref(it) }!!
 
-        setupBouncyCastle()
-
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
@@ -65,8 +59,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        etUserName.addTextChangedListener(textWatcher)
-        etUserEmail.addTextChangedListener(textWatcher)
+        etUserPhone.addTextChangedListener(textWatcher)
         etUserPassword.addTextChangedListener(textWatcher)
         btnRegister.setOnClickListener(this)
         ibBack.setOnClickListener(this)
@@ -74,21 +67,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         root.setOnClickListener(this)
     }
 
-    private fun setupBouncyCastle() {
-        val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)
-            ?: // Web3j will set up the provider lazily when it's first used.
-            return
-        if (provider.javaClass == BouncyCastleProvider::class.java) {
-            // BC with same package name, shouldn't happen in real life.
-            return
-        }
-        // Android registers its own BC provider. As it might be outdated and might not include
-        // all needed ciphers, we substitute it with a known BC bundled in the app.
-        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
-        // of that it's possible to have another BC implementation loaded in VM.
-        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
-        Security.insertProviderAt(BouncyCastleProvider(), 1)
-    }
 
     private val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -132,43 +110,36 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun callValidateEmail() {
-        val email = etUserEmail.text.toString()
-
-        if (!Validation.validateEmail(email)!!) {
-            visibleWarning(getString(R.string.text_message_input_valid_email))
-        } else {
-            tvWarning.visibility = GONE
-        }
-    }
-
     fun validateData(): Boolean {
-        return if (etUserName.text.isEmpty() || etUserEmail.text.isEmpty() || etUserPassword.text.isEmpty()) {
-            false
-        } else {
-            callValidateEmail()
-            Validation.validateEmail(etUserEmail.text.toString())!!
-        }
+        return !(etUserPhone.text.isEmpty() || etUserPassword.text.length < 6)
     }
 
     private fun createNewAccount() {
         try {
-            val keyPair = Keys.createEcKeyPair()
-            credentials = Credentials.create(keyPair)
+            val generatePrivateKey = EosPrivateKey()
+            val publicKey = generatePrivateKey.publicKey.toString()
+            val encryptedPrivateKey = AESCrypt.encrypt(
+                generatePrivateKey.toWif(),
+                getString(R.string.format_eascrypt_password, etUserPassword.text.toString())
+            )
 
-            userRegister()
+            userRegister(publicKey, encryptedPrivateKey)
         } catch (e: Exception) {
-            Log.e("Error: ", e.message)
+            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun userRegister() {
+    private fun userRegister(publicKey: String, encryptedPrivateKey: String) {
         var data = HashMap<String, String>()
-        data[Constant.API_FIELD_USER_NAME] = etUserName.text.toString()
-        data[Constant.API_FIELD_USER_EMAIL] = etUserEmail.text.toString()
+        data[Constant.API_FIELD_USER_EMAIL] =
+            pickerCountryCode.selectedCountryCode + etUserPhone.text.toString()
         data[Constant.API_FIELD_USER_PASSWORD] = etUserPassword.text.toString()
-        data[Constant.API_FIELD_NETWORK_ADDRESS] = credentials.address
-        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
+        data[Constant.API_FIELD_USER_ADDRESS] = "New York"
+        data[Constant.API_FIELD_PUBLIC_KEY] = publicKey
+        data[Constant.API_FIELD_ENCRYPTED_PRIVATE_KEY] = encryptedPrivateKey
+        data[Constant.API_FIELD_USER_ROLE] = Constant.USER_ROLE_COLLECTOR
+        data[Constant.API_FIELD_USER_NAME] = "Test Mobile"
+//        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
 
         CommonUtils.toggleLoading(fragmentView, true)
 
@@ -178,34 +149,43 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
             override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
                 when {
-                    response.code() == 201 -> //newAccount(response.body()!!.passwordHash)
+                    response.code() == 201 ->
                         requestLogIn()
                     response.code() == 400 -> {
                         CommonUtils.toggleLoading(fragmentView, false)
-                        visibleWarning("Email has been used")
+                        visibleWarning("Phone has been used")
                     }
                     else -> {
                         CommonUtils.toggleLoading(fragmentView, false)
-                        Toast.makeText(context, "Response Code: " + response.code(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Response Code ${response.code()}: ${response.message()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
 
             override fun onFailure(call: Call<SignUp>, t: Throwable) {
                 CommonUtils.toggleLoading(fragmentView, false)
-                Toast.makeText(context, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Something went wrong...Please try later!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
 
     private fun requestLogIn() {
 
-        val authToken = okhttp3.Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
+        val authToken =
+            okhttp3.Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
         val call = service.create(AuthenticationApi::class.java)
             .signInApi(
                 authToken,
                 Constant.GRANT_TYPE_PASSWORD,
-                etUserEmail.text.toString(),
+                pickerCountryCode.selectedCountryCode + etUserPhone.text.toString(),
                 etUserPassword.text.toString()
             )
         call.enqueue(object : Callback<SignIn> {
@@ -214,11 +194,16 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                 CommonUtils.toggleLoading(fragmentView, false)
 
                 if (response.code() == 200) {
-                    sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
-                    sharedPref.setCredentials(credentials, Constant.USER_CREDENTIALS)
+                    sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
 
-                    activity?.setResult(Activity.RESULT_OK)
-                    activity?.finish()
+                    val transaction = activity!!.supportFragmentManager.beginTransaction()
+                    transaction.setCustomAnimations(
+                        R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left,
+                        R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right
+                    )
+                        .replace(R.id.fl_create_content, VerifyPhoneFragment())
+                        .addToBackStack(null)
+                        .commit()
                 } else if (response.code() == 400) {
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }
@@ -226,7 +211,8 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
             override fun onFailure(call: Call<SignIn>, t: Throwable) {
                 CommonUtils.toggleLoading(fragmentView, false)
-                Toast.makeText(context, "Something went wrong when login", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Something went wrong when login", Toast.LENGTH_SHORT)
+                    .show()
             }
 
         })

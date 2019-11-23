@@ -67,7 +67,7 @@ class CollectionActivity : AppCompatActivity() {
 
     private fun getCollection() {
         CommonUtils.toggleLoading(window.decorView.rootView, true)
-        val accessToken = "Bearer " + sharedPref.getUser(Constant.WALLET_USER)?.accessToken
+        val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
         val userAddress = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
         val call = service.create(MainApi::class.java)
             .getCollection(accessToken, userAddress)

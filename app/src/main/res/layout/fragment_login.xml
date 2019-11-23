@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:inputType="textPersonName"
             android:textSize="@dimen/text_size_large"
-            android:hint="@string/text_holder_user_email"
+            android:hint="@string/text_holder_user_phone"
             android:id="@+id/etUserEmail"
             android:drawableLeft="@drawable/ic_email"
             android:drawablePadding="@dimen/activity_margin_12dp"

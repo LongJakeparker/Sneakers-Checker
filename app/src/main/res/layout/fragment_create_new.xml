@@ -45,35 +45,47 @@
         android:layout_marginHorizontal="@dimen/activity_margin_24dp"
         android:id="@+id/linearLayout">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textPersonName"
-            android:textSize="@dimen/text_size_large"
-            android:hint="@string/text_holder_user_name"
-            android:id="@+id/etUserName"
-            android:drawableLeft="@drawable/ic_user"
-            android:drawablePadding="@dimen/activity_margin_12dp"
-            android:paddingVertical="@dimen/activity_margin_12dp"
-            android:paddingHorizontal="@dimen/activity_margin_16dp"
-            android:layout_marginBottom="@dimen/activity_margin_16dp"
-            android:background="@drawable/bubble_background">
-        </EditText>
+<!--        <EditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:inputType="textPersonName"-->
+<!--            android:textSize="@dimen/text_size_large"-->
+<!--            android:hint="@string/text_holder_user_name"-->
+<!--            android:id="@+id/etUserName"-->
+<!--            android:drawableLeft="@drawable/ic_user"-->
+<!--            android:drawablePadding="@dimen/activity_margin_12dp"-->
+<!--            android:paddingVertical="@dimen/activity_margin_12dp"-->
+<!--            android:paddingHorizontal="@dimen/activity_margin_16dp"-->
+<!--            android:layout_marginBottom="@dimen/activity_margin_16dp"-->
+<!--            android:background="@drawable/bubble_background">-->
+<!--        </EditText>-->
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textPersonName"
-            android:textSize="@dimen/text_size_large"
-            android:hint="@string/text_holder_user_email"
-            android:id="@+id/etUserEmail"
-            android:drawableLeft="@drawable/ic_email"
-            android:drawablePadding="@dimen/activity_margin_12dp"
-            android:paddingVertical="@dimen/activity_margin_12dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bubble_background"
             android:paddingHorizontal="@dimen/activity_margin_16dp"
             android:layout_marginBottom="@dimen/activity_margin_16dp"
-            android:background="@drawable/bubble_background">
-        </EditText>
+            android:paddingVertical="@dimen/activity_margin_4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/pickerCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ccp_defaultNameCode="VN"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:textSize="@dimen/text_size_xxlarge"
+                android:id="@+id/etUserPhone"
+                android:background="@android:color/transparent"
+                android:maxLength="10"/>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -84,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberPassword"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_xxlarge"
                 android:maxLength="6"
                 android:hint="@string/text_holder_user_password"
                 android:id="@+id/etUserPassword"
@@ -94,7 +106,8 @@
                 android:paddingHorizontal="@dimen/activity_margin_16dp"
                 android:background="@android:color/transparent"
                 android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/btnShowPassword"/>
+                android:layout_toStartOf="@+id/btnShowPassword"
+                android:layout_centerVertical="true"/>
 
             <ImageView
                 android:id="@+id/btnShowPassword"

@@ -3,10 +3,10 @@ package com.sneakers.sneakerschecker.model
 import com.google.gson.annotations.SerializedName
 
 class SignUp {
-    @SerializedName("passwordHash")
-    var passwordHash: String
+    @SerializedName("eosName")
+    var eosName: String
 
-    constructor(passwordHash: String) {
-        this.passwordHash = passwordHash
+    constructor(eosName: String) {
+        this.eosName = eosName
     }
 }
