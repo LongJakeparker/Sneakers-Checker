@@ -144,5 +144,7 @@
     <string name="msg_grant_permission_camera">Please grant camera permission to scan</string>
     <string name="msg_scan_fail">Something went wrong when validate</string>
     <string name="format_eascrypt_password">%struegrails</string>
+    <string name="hint_phone">94 325–32563</string>
+    <string name="text_create_with_phone">Please choose your region and enter phone number to begin creating your account</string>
 
 </resources>
