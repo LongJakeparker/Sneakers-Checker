@@ -92,5 +92,16 @@ class CommonUtils {
             }
             return true
         }
+
+        fun generateEOSAccountName(): String {
+            var result = ""
+            val length = 12
+            val characters = "12345abcdefghijklmnopqrstuvwxyz"
+            for (i in 1..length) {
+                val randomIndex = Math.floor(Math.random() * length).toInt()
+                result += characters[randomIndex]
+            }
+            return result;
+        }
     }
 }

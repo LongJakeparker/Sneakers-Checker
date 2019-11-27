@@ -65,7 +65,7 @@
     <string name="label_Explore">Explore</string>
     <string name="label_Copied">Copied</string>
     <string name="label_Collection">Grail collection</string>
-    <string name="label_verify_phone">Verify Phone Number</string>
+    <string name="label_verify_phone">Verification</string>
 
     <string name="text_holder_user_name">Your name</string>
     <string name="text_holder_user_phone">Your phone</string>
@@ -82,7 +82,8 @@
     <string name="label_button_setting">Setting</string>
     <string name="label_button_logout">Log out</string>
     <string name="label_button_verify">Verify</string>
-    <string name="label_button_resend_code"><u>Resend verify code</u></string>
+    <string name="label_button_resend_code_count_down">Resend (%d)</string>
+    <string name="label_button_resend_code">Resend</string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>
@@ -103,6 +104,7 @@
     <string name="text_message_input_valid_email">Please enter a valid email address</string>
     <string name="text_message_incorrect_key">Private key is not correct.\nPlease try again later!</string>
     <string name="text_message_incorrect_password">Your password is incorrect.\nPlease try again!</string>
+    <string name="text_message_incorrect_code">Your code is incorrect.\nPlease try again!</string>
     <string name="text_message_confirm_email_login_1">Are you logging in account has email</string>
     <string name="text_message_confirm_email_login_2">Please input your password to continue.</string>
     <string name="text_private_key">Private key</string>
@@ -146,5 +148,7 @@
     <string name="format_eascrypt_password">%struegrails</string>
     <string name="hint_phone">94 325–32563</string>
     <string name="text_create_with_phone">Please choose your region and enter phone number to begin creating your account</string>
+    <string name="text_verify_otp">Enter the verification code we just sent you on your registered phone number *******%s.</string>
+    <string name="text_didnt_receive_code">I didn’t receive code.</string>
 
 </resources>

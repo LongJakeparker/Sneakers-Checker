@@ -15,7 +15,7 @@ object Constant {
     const val GRANT_TYPE_PASSWORD= "password"
     const val GRANT_TYPE_REFRESH_TOKEN= "refresh_token"
 
-    const val AUTH_TOKEN_USERNAME= "truegrailmobile"
+    const val AUTH_TOKEN_USERNAME= "truegrail_mobile"
     const val AUTH_TOKEN_PASSWORD= "secret"
 
     const val GRID_COLUMN= 4
@@ -38,6 +38,7 @@ object Constant {
     const val API_FIELD_ENCRYPTED_PRIVATE_KEY = "encryptedPrivateKey"
     const val API_FIELD_USER_ROLE = "role"
     const val API_FIELD_USER_ADDRESS = "address"
+    const val API_FIELD_EOS_NAME = "eosName"
 
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"

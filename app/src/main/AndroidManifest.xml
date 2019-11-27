@@ -22,7 +22,9 @@
         <activity android:name=".screens.activity.CustomScanActivity"/>
         <activity android:name=".screens.activity.ConfirmRegisterActivity"/>
         <activity android:name=".screens.activity.LoginActivity"/>
-        <activity android:name=".screens.activity.CreateNewActivity"/>
+        <activity
+            android:name=".screens.activity.CreateNewActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
 
         <service
             android:name=".service.MyFirebaseMessagingService"

@@ -18,7 +18,6 @@ import com.sneakers.sneakerschecker.eosCommander.crypto.ec.EosPrivateKey
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_new.*
-import org.web3j.crypto.Credentials
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,7 +36,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
     private lateinit var service: Retrofit
     private lateinit var sharedPref: SharedPref
-    private lateinit var credentials: Credentials
 
     private var isShowingPassword: Boolean = false
 
@@ -64,7 +62,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         btnRegister.setOnClickListener(this)
         ibBack.setOnClickListener(this)
         btnShowPassword.setOnClickListener(this)
-        root.setOnClickListener(this)
     }
 
 
@@ -89,8 +86,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             R.id.ibBack -> activity?.onBackPressed()
 
             R.id.btnShowPassword -> showPassword()
-
-            R.id.root -> CommonUtils.hideKeyboard(activity)
         }
     }
 
@@ -111,7 +106,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     }
 
     fun validateData(): Boolean {
-        return !(etUserPhone.text.isEmpty() || etUserPassword.text.length < 6)
+        return !(etUserPhone.text.length < 9 || etUserPassword.text.length < 6)
     }
 
     private fun createNewAccount() {
@@ -139,6 +134,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         data[Constant.API_FIELD_ENCRYPTED_PRIVATE_KEY] = encryptedPrivateKey
         data[Constant.API_FIELD_USER_ROLE] = Constant.USER_ROLE_COLLECTOR
         data[Constant.API_FIELD_USER_NAME] = "Test Mobile"
+        data[Constant.API_FIELD_EOS_NAME] = CommonUtils.generateEOSAccountName()
 //        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
 
         CommonUtils.toggleLoading(fragmentView, true)
@@ -202,7 +198,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                         R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right
                     )
                         .replace(R.id.fl_create_content, VerifyPhoneFragment())
-                        .addToBackStack(null)
                         .commit()
                 } else if (response.code() == 400) {
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
