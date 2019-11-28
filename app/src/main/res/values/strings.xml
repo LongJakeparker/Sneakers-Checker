@@ -84,6 +84,7 @@
     <string name="label_button_verify">Verify</string>
     <string name="label_button_resend_code_count_down">Resend (%d)</string>
     <string name="label_button_resend_code">Resend</string>
+    <string name="label_button_start">Start</string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>
@@ -150,5 +151,7 @@
     <string name="text_create_with_phone">Please choose your region and enter phone number to begin creating your account</string>
     <string name="text_verify_otp">Enter the verification code we just sent you on your registered phone number *******%s.</string>
     <string name="text_didnt_receive_code">I didn’t receive code.</string>
+    <string name="text_title_finish_verify">CONGRATULATIONS</string>
+    <string name="text_content_finish_verify">Your account has been registered successfully.\nLet’s experience!</string>
 
 </resources>

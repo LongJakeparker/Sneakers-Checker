@@ -23,6 +23,7 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
 
     private lateinit var listTvOTPCode: Array<TextView>
     private lateinit var sharedPref: SharedPref
+    private var countDown: CountDownTimer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +46,10 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
         val last3Num = phoneNumber?.substring(phoneNumber.length.minus(3))
         tvTutorial.text = getString(R.string.text_verify_otp, last3Num)
 
-        (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-            .showSoftInput(etInputCode, InputMethodManager.SHOW_IMPLICIT)
+        etInputCode.requestFocus()
+        val keyboard =
+            activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        keyboard.showSoftInput(etInputCode, 0)
 
         startCountDown()
 
@@ -81,7 +84,10 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
     private fun startCountDown() {
         tvResend.isEnabled = false
         tvResend.setTextColor(resources.getColor(R.color.colorPutty, null))
-        object : CountDownTimer(60000, 1000) {
+        if (countDown != null) {
+            countDown?.cancel()
+        }
+        countDown = object : CountDownTimer(60000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 tvResend.text = getString(
@@ -102,6 +108,13 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvResend -> startCountDown()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (countDown != null) {
+            countDown?.cancel()
         }
     }
 }

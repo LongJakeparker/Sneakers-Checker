@@ -45,20 +45,40 @@
         android:layout_marginHorizontal="@dimen/activity_margin_24dp"
         android:id="@+id/linearLayout">
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textPersonName"
-            android:textSize="@dimen/text_size_large"
-            android:hint="@string/text_holder_user_phone"
-            android:id="@+id/etUserEmail"
-            android:drawableLeft="@drawable/ic_email"
-            android:drawablePadding="@dimen/activity_margin_12dp"
-            android:paddingVertical="@dimen/activity_margin_12dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bubble_background"
             android:paddingHorizontal="@dimen/activity_margin_16dp"
             android:layout_marginBottom="@dimen/activity_margin_16dp"
-            android:background="@drawable/bubble_background">
-        </EditText>
+            android:paddingVertical="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_phone"/>
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/pickerCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ccp_defaultNameCode="VN"
+                app:ccp_textSize="@dimen/text_size_large"
+                app:ccp_showFlag="false"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:textSize="@dimen/text_size_large"
+                android:id="@+id/etUserPhone"
+                android:hint="@string/hint_phone"
+                android:background="@android:color/transparent"
+                android:maxLength="10"/>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -53,6 +53,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         etUserPassword.addTextChangedListener(textWatcher)
+        etUserPhone.addTextChangedListener(textWatcher)
         btnLogin.setOnClickListener(this)
         btnShowPassword.setOnClickListener(this)
         root.setOnClickListener(this)
@@ -69,8 +70,12 @@ class LoginFragment : Fragment(), View.OnClickListener {
         }
 
         override fun afterTextChanged(s: Editable) {
-            btnLogin.isEnabled = etUserPassword.text.toString().isNotEmpty()
+            btnLogin.isEnabled = validateData()
         }
+    }
+
+    fun validateData(): Boolean {
+        return !(etUserPhone.text.length < 9 || etUserPassword.text.length < 6)
     }
 
     override fun onClick(v: View?) {
@@ -110,7 +115,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
             .signInApi(
                 authToken,
                 Constant.GRANT_TYPE_PASSWORD,
-                etUserEmail.text.toString().trim(),
+                pickerCountryCode.selectedCountryCode + etUserPhone.text.toString(),
                 etUserPassword.text.toString().trim()
             )
         call.enqueue(object : Callback<SignIn> {

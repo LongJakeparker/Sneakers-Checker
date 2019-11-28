@@ -61,6 +61,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         etUserPassword.addTextChangedListener(textWatcher)
         btnRegister.setOnClickListener(this)
         ibBack.setOnClickListener(this)
+        root.setOnClickListener(this)
         btnShowPassword.setOnClickListener(this)
     }
 
@@ -80,12 +81,14 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnRegister -> createNewAccount()
+        when (v) {
+            btnRegister -> createNewAccount()
 
-            R.id.ibBack -> activity?.onBackPressed()
+            ibBack -> activity?.onBackPressed()
 
-            R.id.btnShowPassword -> showPassword()
+            btnShowPassword -> showPassword()
+
+            root -> CommonUtils.hideKeyboard(activity)
         }
     }
 
