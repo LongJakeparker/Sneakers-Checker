@@ -26,6 +26,8 @@ object Constant {
     const val EXTRA_PRIVATE_KEY = "EXTRA_PRIVATE_KEY"
     const val EXTRA_USER_EMAiL = "EXTRA_USER_EMAiL"
     const val EXTRA_SCAN_TYPE = "EXTRA_SCAN_TYPE"
+    const val EXTRA_VERIFICATION_ID = "EXTRA_VERIFICATION_ID"
+    const val EXTRA_RESEND_TOKEN = "EXTRA_RESEND_TOKEN"
 
 
 

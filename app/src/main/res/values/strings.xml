@@ -105,7 +105,7 @@
     <string name="text_message_input_valid_email">Please enter a valid email address</string>
     <string name="text_message_incorrect_key">Private key is not correct.\nPlease try again later!</string>
     <string name="text_message_incorrect_password">Your password is incorrect.\nPlease try again!</string>
-    <string name="text_message_incorrect_code">Your code is incorrect.\nPlease try again!</string>
+    <string name="text_message_incorrect_code">Your code is invalid.\nPlease try again!</string>
     <string name="text_message_confirm_email_login_1">Are you logging in account has email</string>
     <string name="text_message_confirm_email_login_2">Please input your password to continue.</string>
     <string name="text_private_key">Private key</string>

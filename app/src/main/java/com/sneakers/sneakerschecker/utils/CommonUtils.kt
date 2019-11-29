@@ -1,6 +1,7 @@
 package com.sneakers.sneakerschecker.utils
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -21,6 +22,8 @@ import com.sneakers.sneakerschecker.model.SharedPref
 
 class CommonUtils {
     companion object {
+        private var mProgressDialog: ProgressDialog? = null
+
         fun toggleLoading(loadingParent: View?, show: Boolean) {
             if (loadingParent == null) {
                 return
@@ -101,7 +104,26 @@ class CommonUtils {
                 val randomIndex = Math.floor(Math.random() * length).toInt()
                 result += characters[randomIndex]
             }
-            return result;
+            return result
         }
+
+//        fun showProgressDialog(context: Context) {
+//            if (mProgressDialog == null) {
+//                mProgressDialog = ProgressDialog(context)
+//                mProgressDialog?.setMessage(context.getString(R.string.common_loading))
+//                mProgressDialog?.setCanceledOnTouchOutside(false)
+//                mProgressDialog?.setCancelable(false)
+//            }
+//
+//            if (!mProgressDialog?.isShowing!!) {
+//                mProgressDialog?.show()
+//            }
+//        }
+//
+//        fun dismissProgressDialog() {
+//            if (mProgressDialog != null && mProgressDialog?.isShowing!!) {
+//                mProgressDialog?.dismiss()
+//            }
+//        }
     }
 }

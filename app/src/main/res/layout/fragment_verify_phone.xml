@@ -190,7 +190,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/btnVerify"
+        android:id="@+id/tvVerify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/drawable_btn_green_gradient_selector"

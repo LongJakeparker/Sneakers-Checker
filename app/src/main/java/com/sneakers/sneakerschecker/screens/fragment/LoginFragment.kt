@@ -75,7 +75,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     }
 
     fun validateData(): Boolean {
-        return !(etUserPhone.text.length < 9 || etUserPassword.text.length < 6)
+        return !(etUserPhone.text.trim().length < 9 || etUserPassword.text.trim().length < 6)
     }
 
     override fun onClick(v: View?) {
@@ -115,19 +115,19 @@ class LoginFragment : Fragment(), View.OnClickListener {
             .signInApi(
                 authToken,
                 Constant.GRANT_TYPE_PASSWORD,
-                pickerCountryCode.selectedCountryCode + etUserPhone.text.toString(),
+                pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim(),
                 etUserPassword.text.toString().trim()
             )
         call.enqueue(object : Callback<SignIn> {
 
             override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
+                CommonUtils.toggleLoading(fragmentView, false)
                 if (response.code() == 200) {
                     sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
                     activity!!.setResult(Activity.RESULT_OK)
                     activity!!.finish()
 
-                } else if (response.code() == 400) {
-                    CommonUtils.toggleLoading(fragmentView, false)
+                } else {
                     tvWarning.text = response.message()
                     tvWarning.visibility = View.VISIBLE
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())

@@ -197,15 +197,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun notifyUserLogin() {
-//        tvUserName.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
-//        tvUserAddress.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
-//
-//        val qrCode = CommonUtils.generateQrCode(this, 1.0,
-//                                                sharedPref.getCredentials(Constant.USER_CREDENTIALS).address)
-//
-//        if (qrCode != null) {
-//            ivQrAddress.setImageBitmap(qrCode)
-//        }
+        val userInfo = sharedPref.getUser(Constant.LOGIN_USER)
+        tvUserName.text = userInfo?.user?.username
+        tvUserAddress.text = userInfo?.user?.eosName
+
+        val qrCode = CommonUtils.generateQrCode(this, 1.0,
+            userInfo?.user?.eosName!!)
+
+        if (qrCode != null) {
+            ivQrAddress.setImageBitmap(qrCode)
+        }
 
         ivAddressNonLogin.visibility = View.GONE
         lnNavigationItemUnLogin.visibility = View.GONE

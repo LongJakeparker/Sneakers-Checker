@@ -91,6 +91,9 @@ dependencies {
     //Country code picker
     implementation 'com.hbb20:ccp:2.3.4'
 
+    //Firebase auth
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
