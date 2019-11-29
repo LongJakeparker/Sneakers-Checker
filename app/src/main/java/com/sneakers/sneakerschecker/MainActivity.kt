@@ -283,6 +283,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         isExpanded = true
         expandMenu()
 
+        tvUserName.text = getString(R.string.text_user_name_non_login)
+
         ivAddressNonLogin.visibility = View.VISIBLE
         lnNavigationItemUnLogin.visibility = View.VISIBLE
 

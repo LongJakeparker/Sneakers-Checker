@@ -1,16 +1,16 @@
-package com.sneakers.sneakerschecker.screens.fragment
+package com.sneakers.sneakerschecker.screens.activity
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -21,14 +21,13 @@ import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.utils.CommonUtils
-import kotlinx.android.synthetic.main.fragment_verify_phone.*
+import kotlinx.android.synthetic.main.activity_verify_phone.*
 import java.util.concurrent.TimeUnit
 
 
-class VerifyPhoneFragment : Fragment(), View.OnClickListener {
 
-    private var fragmentView: View? = null
 
+class VerifyPhoneActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var listTvOTPCode: Array<TextView>
     private lateinit var sharedPref: SharedPref
     private var countDown: CountDownTimer? = null
@@ -38,25 +37,30 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
 
     private lateinit var fireAuth: FirebaseAuth
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        fragmentView = inflater.inflate(R.layout.fragment_verify_phone, container, false)
+    companion object {
+        fun start(
+            activity: Activity,
+            verificationId: String,
+            token: PhoneAuthProvider.ForceResendingToken
+        ) {
+            val intent = Intent(activity, VerifyPhoneActivity::class.java)
+            intent.putExtra(Constant.EXTRA_VERIFICATION_ID, verificationId)
+            intent.putExtra(Constant.EXTRA_RESEND_TOKEN, token)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            activity.startActivity(intent)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_verify_phone)
 
         fireAuth = FirebaseAuth.getInstance()
 
-        verificationId = arguments?.getString(Constant.EXTRA_VERIFICATION_ID)
-        resendToken = arguments?.getParcelable(Constant.EXTRA_RESEND_TOKEN)
+        verificationId = intent?.getStringExtra(Constant.EXTRA_VERIFICATION_ID)
+        resendToken = intent?.getParcelableExtra(Constant.EXTRA_RESEND_TOKEN)
 
-        sharedPref = context?.let { SharedPref(it) }!!
-
-        return fragmentView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        sharedPref = SharedPref(this)
 
         listTvOTPCode = arrayOf(tvNumber1, tvNumber2, tvNumber3, tvNumber4, tvNumber5, tvNumber6)
 
@@ -66,7 +70,7 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
 
         etInputCode.requestFocus()
         val keyboard =
-            activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         keyboard.showSoftInput(etInputCode, 0)
 
         startCountDown()
@@ -126,20 +130,24 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tvResend ->  {
+            tvResend -> {
                 PhoneAuthProvider.getInstance().verifyPhoneNumber(
                     phoneNumber!!,        // Phone number to verify
-                    60,                 // Timeout duration
-                    TimeUnit.SECONDS,   // Unit of timeout
-                    activity!!,               // Activity (for callback binding)
-                    callbacks,         // OnVerificationStateChangedCallbacks
-                    resendToken)              // ForceResendingToken from callbacks
+                    60,                   // Timeout duration
+                    TimeUnit.SECONDS,     // Unit of timeout
+                    this,                 // Activity (for callback binding)
+                    callbacks,            // OnVerificationStateChangedCallbacks
+                    resendToken           // ForceResendingToken from callbacks
+                )
                 startCountDown()
             }
 
             tvVerify -> {
-                CommonUtils.toggleLoading(fragmentView, true)
-                val credential = PhoneAuthProvider.getCredential(verificationId!!, etInputCode.text.toString().trim())
+                CommonUtils.toggleLoading(window.decorView.rootView, true)
+                val credential = PhoneAuthProvider.getCredential(
+                    verificationId!!,
+                    etInputCode.text.toString().trim()
+                )
 
                 signInWithPhoneAuthCredential(credential)
             }
@@ -148,8 +156,8 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         fireAuth.signInWithCredential(credential)
-            .addOnCompleteListener(activity!!) { task ->
-                CommonUtils.toggleLoading(fragmentView, false)
+            .addOnCompleteListener(this) { task ->
+                CommonUtils.toggleLoading(window.decorView.rootView, false)
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     val user = task.result?.user
@@ -158,9 +166,7 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
                         countDown?.cancel()
                     }
 
-                    val transaction = activity!!.supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.fl_create_content, FinishVerifyFragment())
-                        .commit()
+                    FinishVerifyActivity.start(this)
                 } else {
                     // Sign in failed, display a message and update the UI
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
@@ -211,7 +217,7 @@ class VerifyPhoneFragment : Fragment(), View.OnClickListener {
             // by combining the code with a verification ID.
 
             // Save verification ID and resending token so we can use them later
-            this@VerifyPhoneFragment.verificationId = verificationId
+            this@VerifyPhoneActivity.verificationId = verificationId
             resendToken = token
 
             // ...

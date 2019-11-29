@@ -153,5 +153,6 @@
     <string name="text_didnt_receive_code">I didn’t receive code.</string>
     <string name="text_title_finish_verify">CONGRATULATIONS</string>
     <string name="text_content_finish_verify">Your account has been registered successfully.\nLet’s experience!</string>
+    <string name="text_user_name_non_login">Welcome Sneakerhead</string>
 
 </resources>

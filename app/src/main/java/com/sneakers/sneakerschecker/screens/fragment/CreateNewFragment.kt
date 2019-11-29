@@ -1,5 +1,6 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,6 +23,8 @@ import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.eosCommander.crypto.ec.EosPrivateKey
 import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.screens.activity.FinishVerifyActivity
+import com.sneakers.sneakerschecker.screens.activity.VerifyPhoneActivity
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_new.*
 import retrofit2.Call
@@ -140,6 +143,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     }
 
     private fun userRegister(publicKey: String, encryptedPrivateKey: String) {
+        CommonUtils.hideKeyboard(activity)
         var data = HashMap<String, String>()
         data[Constant.API_FIELD_USER_EMAIL] =
             "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}"
@@ -202,8 +206,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         call.enqueue(object : Callback<SignIn> {
 
             override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
-                CommonUtils.toggleLoading(fragmentView, false)
-
                 if (response.code() == 200) {
                     sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
 
@@ -214,7 +216,10 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                         activity!!, // Activity (for callback binding)
                         callbacks) // OnVerificationStateChangedCallbacks
 
-                } else if (response.code() == 400) {
+                } else {
+                    CommonUtils.toggleLoading(fragmentView, false)
+                    Toast.makeText(context, response.errorBody()!!.string(), Toast.LENGTH_SHORT)
+                        .show()
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 }
             }
@@ -274,20 +279,8 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             // by combining the code with a verification ID.
             Log.d(TAG, "onCodeSent:$verificationId")
 
-            val verifyFragment = VerifyPhoneFragment()
-            val bundle = Bundle()
-            bundle.putString(Constant.EXTRA_VERIFICATION_ID, verificationId)
-            bundle.putParcelable(Constant.EXTRA_RESEND_TOKEN, token)
-            verifyFragment.arguments = bundle
-
-            val transaction = activity!!.supportFragmentManager.beginTransaction()
-            transaction.setCustomAnimations(
-                R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left,
-                R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right
-            )
-                .replace(R.id.fl_create_content, verifyFragment)
-                .commit()
-
+            CommonUtils.toggleLoading(fragmentView, false)
+            VerifyPhoneActivity.start(activity!!, verificationId, token)
             // ...
         }
     }
@@ -301,13 +294,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
                     val user = task.result?.user
 
-                    val transaction = activity!!.supportFragmentManager.beginTransaction()
-                    transaction.setCustomAnimations(
-                        R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left,
-                        R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right
-                    )
-                        .replace(R.id.fl_create_content, FinishVerifyFragment())
-                        .commit()
+                    FinishVerifyActivity.start(activity!!)
                 } else {
                     // Sign in failed, display a message and update the UI
                     Log.w(TAG, "signInWithCredential:failure", task.exception)

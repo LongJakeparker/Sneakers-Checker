@@ -19,14 +19,17 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".screens.activity.CustomScanActivity"/>
-        <activity android:name=".screens.activity.ConfirmRegisterActivity"/>
+        <activity android:name=".screens.activity.FinishVerifyActivity"/>
+        <activity android:name=".screens.activity.VerifyPhoneActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
+        <activity android:name=".screens.activity.CustomScanActivity" />
+        <activity android:name=".screens.activity.ConfirmRegisterActivity" />
         <activity
             android:name=".screens.activity.LoginActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".screens.activity.CreateNewActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
 
         <service
             android:name=".service.MyFirebaseMessagingService"
@@ -36,9 +39,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".screens.activity.TransferActivity"/>
-        <activity android:name=".screens.activity.CollectionActivity"/>
-        <activity android:name=".screens.activity.SneakerInfoActivity"/>
+        <activity android:name=".screens.activity.TransferActivity" />
+        <activity android:name=".screens.activity.CollectionActivity" />
+        <activity android:name=".screens.activity.SneakerInfoActivity" />
         <activity android:name=".screens.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,7 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
