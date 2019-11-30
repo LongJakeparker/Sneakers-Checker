@@ -1,6 +1,5 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -97,7 +96,16 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            btnRegister -> createNewAccount()
+            btnRegister -> {
+                CommonUtils.toggleLoading(fragmentView, true)
+                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}", // Phone number to verify
+                    60, // Timeout duration
+                    TimeUnit.SECONDS, // Unit of timeout
+                    activity!!, // Activity (for callback binding)
+                    callbacks
+                ) // OnVerificationStateChangedCallbacks
+            }
 
             ibBack -> activity?.onBackPressed()
 
@@ -127,112 +135,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         return !(etUserPhone.text.trim().length < 9 || etUserPassword.text.trim().length < 6)
     }
 
-    private fun createNewAccount() {
-        try {
-            val generatePrivateKey = EosPrivateKey()
-            val publicKey = generatePrivateKey.publicKey.toString()
-            val encryptedPrivateKey = AESCrypt.encrypt(
-                generatePrivateKey.toWif(),
-                getString(R.string.format_eascrypt_password, etUserPassword.text.toString())
-            )
-
-            userRegister(publicKey, encryptedPrivateKey)
-        } catch (e: Exception) {
-            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun userRegister(publicKey: String, encryptedPrivateKey: String) {
-        CommonUtils.hideKeyboard(activity)
-        var data = HashMap<String, String>()
-        data[Constant.API_FIELD_USER_EMAIL] =
-            "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}"
-        data[Constant.API_FIELD_USER_PASSWORD] = etUserPassword.text.toString()
-        data[Constant.API_FIELD_USER_ADDRESS] = "New York"
-        data[Constant.API_FIELD_PUBLIC_KEY] = publicKey
-        data[Constant.API_FIELD_ENCRYPTED_PRIVATE_KEY] = encryptedPrivateKey
-        data[Constant.API_FIELD_USER_ROLE] = Constant.USER_ROLE_COLLECTOR
-        data[Constant.API_FIELD_USER_NAME] = "Test Mobile"
-        data[Constant.API_FIELD_EOS_NAME] = CommonUtils.generateEOSAccountName()
-//        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
-
-        CommonUtils.toggleLoading(fragmentView, true)
-
-        /*Create handle for the RetrofitInstance interface*/
-        val call = service.create(AuthenticationApi::class.java).signUpApi(data)
-        call.enqueue(object : Callback<SignUp> {
-
-            override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
-                when {
-                    response.code() == 201 ->
-                        requestLogIn()
-                    response.code() == 400 -> {
-                        CommonUtils.toggleLoading(fragmentView, false)
-                        visibleWarning("Phone has been used")
-                    }
-                    else -> {
-                        CommonUtils.toggleLoading(fragmentView, false)
-                        Toast.makeText(
-                            context,
-                            "Response Code ${response.code()}: ${response.message()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<SignUp>, t: Throwable) {
-                CommonUtils.toggleLoading(fragmentView, false)
-                Toast.makeText(
-                    context,
-                    "Something went wrong...Please try later!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
-    }
-
-    private fun requestLogIn() {
-
-        val authToken =
-            okhttp3.Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
-        val call = service.create(AuthenticationApi::class.java)
-            .signInApi(
-                authToken,
-                Constant.GRANT_TYPE_PASSWORD,
-                "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
-                etUserPassword.text.toString().trim()
-            )
-        call.enqueue(object : Callback<SignIn> {
-
-            override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
-                if (response.code() == 200) {
-                    sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
-
-                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                        "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}", // Phone number to verify
-                        60, // Timeout duration
-                        TimeUnit.SECONDS, // Unit of timeout
-                        activity!!, // Activity (for callback binding)
-                        callbacks) // OnVerificationStateChangedCallbacks
-
-                } else {
-                    CommonUtils.toggleLoading(fragmentView, false)
-                    Toast.makeText(context, response.errorBody()!!.string(), Toast.LENGTH_SHORT)
-                        .show()
-                    Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
-                }
-            }
-
-            override fun onFailure(call: Call<SignIn>, t: Throwable) {
-                CommonUtils.toggleLoading(fragmentView, false)
-                Toast.makeText(context, "Something went wrong when login", Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-        })
-    }
-
     fun visibleWarning(message: String) {
         tvWarning.text = "Oops!\n$message"
         tvWarning.visibility = VISIBLE
@@ -249,7 +151,11 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             //     user action.
             Log.d(TAG, "onVerificationCompleted:$credential")
 
-            signInWithPhoneAuthCredential(credential)
+            CommonUtils.toggleLoading(fragmentView, false)
+            VerifyPhoneActivity.start(activity!!,
+                "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
+                etUserPassword.text.toString().trim(),
+                credential)
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
@@ -267,6 +173,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
             // Show a message and update the UI
             // ...
+            CommonUtils.toggleLoading(fragmentView, false)
             visibleWarning(e.message!!)
         }
 
@@ -280,28 +187,10 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             Log.d(TAG, "onCodeSent:$verificationId")
 
             CommonUtils.toggleLoading(fragmentView, false)
-            VerifyPhoneActivity.start(activity!!, verificationId, token)
+            VerifyPhoneActivity.start(activity!!,
+                "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
+                etUserPassword.text.toString().trim(), verificationId, token)
             // ...
         }
-    }
-
-    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-        fireAuth.signInWithCredential(credential)
-            .addOnCompleteListener(activity!!) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success")
-
-                    val user = task.result?.user
-
-                    FinishVerifyActivity.start(activity!!)
-                } else {
-                    // Sign in failed, display a message and update the UI
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        Toast.makeText(context, "Invalid verify code", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
     }
 }

@@ -66,8 +66,11 @@
     <string name="label_Copied">Copied</string>
     <string name="label_Collection">Grail collection</string>
     <string name="label_verify_phone">Verification</string>
+    <string name="label_update_info">Update profile</string>
 
-    <string name="text_holder_user_name">Your name</string>
+    <string name="text_holder_user_name">Your name (*)</string>
+    <string name="text_holder_user_email">Your email</string>
+    <string name="text_holder_user_address">Your address (*)</string>
     <string name="text_holder_user_phone">Your phone</string>
     <string name="text_holder_user_password">Your password (6 digits)</string>
     <string name="text_holder_private_key">Paste your private key</string>
@@ -85,6 +88,7 @@
     <string name="label_button_resend_code_count_down">Resend (%d)</string>
     <string name="label_button_resend_code">Resend</string>
     <string name="label_button_start">Start</string>
+    <string name="label_button_update">Update</string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>

@@ -28,6 +28,9 @@ object Constant {
     const val EXTRA_SCAN_TYPE = "EXTRA_SCAN_TYPE"
     const val EXTRA_VERIFICATION_ID = "EXTRA_VERIFICATION_ID"
     const val EXTRA_RESEND_TOKEN = "EXTRA_RESEND_TOKEN"
+    const val EXTRA_USER_PHONE = "EXTRA_USER_PHONE"
+    const val EXTRA_USER_PASSWORD = "EXTRA_USER_PASSWORD"
+    const val EXTRA_USER_PHONE_AUTH_CREDENTIAL = "EXTRA_USER_PHONE_AUTH_CREDENTIAL"
 
 
 
@@ -41,6 +44,7 @@ object Constant {
     const val API_FIELD_USER_ROLE = "role"
     const val API_FIELD_USER_ADDRESS = "address"
     const val API_FIELD_EOS_NAME = "eosName"
+    const val API_FIELD_USER_IDENTITY = "userIdentity"
 
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"

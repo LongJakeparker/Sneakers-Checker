@@ -190,25 +190,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvVerify"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/drawable_btn_green_gradient_selector"
-        android:text="@string/label_button_verify"
-        android:layout_marginBottom="@dimen/activity_margin_24dp"
-        android:textColor="@color/colorWhite"
-        android:enabled="false"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_size_xlarge"
-        android:padding="@dimen/activity_margin_16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="@dimen/activity_margin_24dp"
-        />
-
-    <TextView
         android:id="@+id/tvWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName
 
 class User {
 
+    @SerializedName("id")
+    @Expose
+    var id: Int
+
     @SerializedName("eosName")
     @Expose
     var eosName: String
@@ -30,6 +34,7 @@ class User {
     var address: String
 
     constructor(
+        id: Int,
         eosName: String,
         username: String,
         email: String,
@@ -37,6 +42,7 @@ class User {
         role: String,
         address: String
     ) {
+        this.id = id
         this.eosName = eosName
         this.username = username
         this.email = email

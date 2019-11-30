@@ -14,7 +14,7 @@ interface AuthenticationApi {
     @POST("/user/signin/")
     fun signInApi(@Header("Authorization") token:String,
                   @Field("grant_type") grant_type: String,
-                  @Field("username") username: String,
+                  @Field("username") userIdentity: String,
                   @Field("password") password: String): Call<SignIn>
 
     @FormUrlEncoded
