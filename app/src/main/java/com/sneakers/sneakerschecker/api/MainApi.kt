@@ -20,9 +20,8 @@ interface MainApi {
                         @Field("sneakerId") sneakerId: String,
                         @Field("newAddress") newAddress: String): Call<ResponseBody>
 
-    @FormUrlEncoded
     @PATCH("user/collector/{userId}/")
     fun updateUser(@Header("Authorization") token:String,
                    @Path("userId") userId: Int,
-                   @Body param: Map<String, String>): Call<ResponseBody>
+                   @Body param: HashMap<String, Any>): Call<ResponseBody>
 }

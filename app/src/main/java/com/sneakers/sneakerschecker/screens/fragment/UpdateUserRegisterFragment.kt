@@ -17,6 +17,7 @@ import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_update_user_register.*
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,18 +53,19 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
         etUserName.addTextChangedListener(textWatcher)
         etUserAddress.addTextChangedListener(textWatcher)
         btnUpdate.setOnClickListener(this)
+        root.setOnClickListener(this)
     }
 
     private fun updateUser() {
         CommonUtils.toggleLoading(fragmentView, true)
         val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
-        val userInfo = sharedPref.getUser(Constant.LOGIN_USER)?.user
-        val params = HashMap<String, String>()
+        val userInfo = sharedPref.getUser(Constant.LOGIN_USER)
+        val params = HashMap<String, Any>()
         params[Constant.API_FIELD_USER_NAME] = etUserName.text.toString().trim()
-        params[Constant.API_FIELD_USER_ADDRESS] = etUserName.text.toString().trim()
+        params[Constant.API_FIELD_USER_ADDRESS] = etUserAddress.text.toString().trim()
 
         val call = service.create(MainApi::class.java)
-            .updateUser(accessToken, userInfo?.id!!, params)
+            .updateUser(accessToken, userInfo?.user?.id!!, params)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 CommonUtils.toggleLoading(fragmentView, false)
@@ -77,6 +79,10 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
             ) {
                 CommonUtils.toggleLoading(fragmentView, false)
                 if (response.code() == 204) {
+                    userInfo.user.username = etUserName.text.toString().trim()
+                    userInfo.user.address = etUserAddress.text.toString().trim()
+                    sharedPref.setUser(userInfo, Constant.LOGIN_USER)
+
                     val intent = Intent(activity, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
@@ -93,6 +99,8 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             btnUpdate -> updateUser()
+
+            root -> CommonUtils.hideKeyboard(activity)
         }
     }
 

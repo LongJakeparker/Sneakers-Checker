@@ -8,7 +8,7 @@ import retrofit2.http.*
 
 interface AuthenticationApi {
     @POST("/user/")
-    fun signUpApi(@Body param: Map<String, String>): Call<SignUp>
+    fun signUpApi(@Body param: HashMap<String, String>): Call<SignUp>
 
     @FormUrlEncoded
     @POST("/user/signin/")

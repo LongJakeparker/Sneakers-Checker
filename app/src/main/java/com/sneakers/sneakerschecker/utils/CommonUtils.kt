@@ -19,6 +19,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
+import okhttp3.MediaType
+import okhttp3.RequestBody
+
 
 class CommonUtils {
     companion object {
@@ -125,5 +128,9 @@ class CommonUtils {
 //                mProgressDialog?.dismiss()
 //            }
 //        }
+
+        fun toRequestBody(value: String): RequestBody {
+            return RequestBody.create(MediaType.parse("text/plain"), value)
+        }
     }
 }

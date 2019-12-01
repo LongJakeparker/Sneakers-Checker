@@ -14,6 +14,7 @@ class UpdateUserRegisterActivity : AppCompatActivity() {
         fun start(activity: Activity) {
             val intent = Intent(activity, UpdateUserRegisterActivity::class.java)
             activity.startActivity(intent)
+            activity.finish()
         }
     }
 
