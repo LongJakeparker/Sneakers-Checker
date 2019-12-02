@@ -67,6 +67,7 @@
     <string name="label_Collection">Grail collection</string>
     <string name="label_verify_phone">Verification</string>
     <string name="label_update_info">Update profile</string>
+    <string name="label_manage_credit_card">My credit cards</string>
 
     <string name="text_holder_user_name">Your name (*)</string>
     <string name="text_holder_user_email">Your email</string>
@@ -158,5 +159,8 @@
     <string name="text_title_finish_verify">CONGRATULATIONS</string>
     <string name="text_content_finish_verify">Your account has been registered successfully.\nLet’s experience!</string>
     <string name="text_user_name_non_login">Welcome Sneakerhead</string>
+    <string name="msg_no_data_card">Oops! Still no have credit card</string>
+    <string name="msg_detail_no_data_card">Please add a new credit card to continue your\npayment processing</string>
+    <string name="text_add_new_credit_card">Add a new credit card</string>
 
 </resources>

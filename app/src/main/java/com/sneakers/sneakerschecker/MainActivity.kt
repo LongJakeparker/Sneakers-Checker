@@ -84,6 +84,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnScanToken.setOnClickListener(this)
         tvCollection.setOnClickListener(this)
         ivCollection.setOnClickListener(this)
+        tvCardManage.setOnClickListener(this)
+        ivCardManage.setOnClickListener(this)
 
         Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
     }
@@ -152,31 +154,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.btnMenuMain -> drawer_layout.openDrawer(GravityCompat.END)
+        when (v) {
+            btnMenuMain -> drawer_layout.openDrawer(GravityCompat.END)
 
-            R.id.tvLogin -> {
+            tvLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_START_LOGIN_ACTIVITY)
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
 
-            R.id.tvCreateNew -> {
+            tvCreateNew -> {
                 val intent = Intent(this, CreateNewActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_START_CREATE_ACTIVITY)
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
-            R.id.rlUserAddress -> {
+            rlUserAddress -> {
                 CommonUtils.copyToClipboard(this, tvUserAddress.text.toString())
                 tvCopied.visibility = View.VISIBLE
             }
 
-            R.id.tvCollection, R.id.ivCollection -> {
-                drawer_layout.closeDrawer(GravityCompat.END)
+            tvCollection, ivCollection -> {
                 CollectionActivity.start(this@MainActivity)
+                drawer_layout.closeDrawer(GravityCompat.END)
             }
 
-            R.id.tvLogout, R.id.ivLogout -> {
+            tvLogout, ivLogout -> {
                 val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_logout),
                     resources.getString(R.string.msg_logout), true)
                 confirmDialogFragment.setListener(object : IDialogListener {
@@ -192,7 +194,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 confirmDialogFragment.show(supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
             }
 
-            R.id.btnScanToken -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
+            btnScanToken -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
+
+            tvCardManage, ivCardManage -> {
+                ManageCardActivity.start(this)
+                drawer_layout.closeDrawer(GravityCompat.END)
+            }
         }
     }
 
