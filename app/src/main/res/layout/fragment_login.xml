@@ -22,99 +22,98 @@
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/ibBack"/>
 
-    <RelativeLayout
-        android:id="@+id/layout_title"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/label_log_in"
+        android:textSize="@dimen/text_size_big"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_margin_24dp"
         app:layout_constraintTop_toBottomOf="@+id/ibBack"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="@dimen/activity_margin_24dp">
-
-        <TextView
-            android:id="@+id/tvUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Harmen Porter"
-            android:textSize="@dimen/text_size_big"
-            android:textColor="@color/colorBlack"
-            android:textStyle="bold"
-            android:layout_alignParentStart="true"/>
-    </RelativeLayout>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <LinearLayout
-        android:id="@+id/layout_confirm_email"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/layout_title"
-        android:layout_marginTop="@dimen/activity_margin_24dp"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="@dimen/activity_margin_24dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="@dimen/activity_margin_24dp"
+        android:id="@+id/linearLayout">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_large"
-            android:textColor="@color/colorPutty"
-            android:text="@string/text_message_confirm_email_login_1"
-        />
+            android:background="@drawable/bubble_background"
+            android:paddingHorizontal="@dimen/activity_margin_16dp"
+            android:layout_marginBottom="@dimen/activity_margin_16dp"
+            android:paddingVertical="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tvConfirmEmail"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_phone"/>
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/pickerCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ccp_defaultNameCode="VN"
+                app:ccp_textSize="@dimen/text_size_large"
+                app:ccp_showFlag="false"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:textSize="@dimen/text_size_large"
+                android:id="@+id/etUserPhone"
+                android:hint="@string/hint_phone"
+                android:background="@android:color/transparent"
+                android:maxLength="9"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_large"
-            android:textColor="@color/colorPutty"
-            android:text="exa****@mail.com?"
-            android:textStyle="bold"
-        />
+            android:background="@drawable/bubble_background">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_large"
-            android:textColor="@color/colorPutty"
-            android:layout_marginTop="6dp"
-            android:text="@string/text_message_confirm_email_login_2"
-        />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberPassword"
+                android:textSize="@dimen/text_size_large"
+                android:maxLength="6"
+                android:hint="@string/text_holder_user_password"
+                android:id="@+id/etUserPassword"
+                android:drawableLeft="@drawable/ic_password"
+                android:drawablePadding="@dimen/activity_margin_12dp"
+                android:paddingVertical="@dimen/activity_margin_12dp"
+                android:paddingHorizontal="@dimen/activity_margin_16dp"
+                android:background="@android:color/transparent"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/btnShowPassword"/>
+
+            <ImageView
+                android:id="@+id/btnShowPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_show_password"
+                android:paddingHorizontal="@dimen/activity_margin_16dp"
+                android:paddingVertical="@dimen/activity_margin_12dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_input_key"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/layout_confirm_email"
-        android:layout_marginTop="@dimen/activity_margin_18dp"
-        android:background="@drawable/bubble_background"
-        android:layout_marginHorizontal="@dimen/activity_margin_24dp">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberPassword"
-            android:textSize="@dimen/text_size_large"
-            android:maxLength="6"
-            android:hint="@string/text_holder_user_password"
-            android:id="@+id/etUserPassword"
-            android:drawableLeft="@drawable/ic_password"
-            android:drawablePadding="@dimen/activity_margin_12dp"
-            android:paddingVertical="@dimen/activity_margin_12dp"
-            android:paddingHorizontal="@dimen/activity_margin_16dp"
-            android:background="@android:color/transparent"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/btnShowPassword"/>
-
-        <ImageView
-            android:id="@+id/btnShowPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_show_password"
-            android:paddingHorizontal="@dimen/activity_margin_16dp"
-            android:paddingVertical="@dimen/activity_margin_12dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
-
-    </RelativeLayout>
 
     <TextView
         android:id="@+id/btnLogin"
@@ -145,7 +144,7 @@
         android:textColor="@color/colorOrangish"
         android:lineSpacingExtra="4dp"
         android:textSize="@dimen/text_size_large"
-        app:layout_constraintTop_toBottomOf="@+id/layout_input_key"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         android:background="@drawable/warning_background"
         android:layout_marginHorizontal="@dimen/activity_margin_24dp"
         android:visibility="gone"

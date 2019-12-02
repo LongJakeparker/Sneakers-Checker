@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
-import com.sneakers.sneakerschecker.model.CommonUtils
+import com.sneakers.sneakerschecker.utils.CommonUtils
 
 class ConfirmDialogFragment : DialogFragment() {
     private var mMessage: CharSequence? = null

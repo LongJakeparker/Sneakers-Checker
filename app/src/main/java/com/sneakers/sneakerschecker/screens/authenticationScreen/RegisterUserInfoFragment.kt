@@ -181,7 +181,7 @@ class RegisterUserInfoFragment : Fragment(), View.OnClickListener {
                 dialog.dismiss()
 
                 if (response.code() == 200) {
-                    sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
+                    sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
 
                     activity!!.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 

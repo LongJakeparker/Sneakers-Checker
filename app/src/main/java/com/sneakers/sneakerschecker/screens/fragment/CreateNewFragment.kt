@@ -1,6 +1,5 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,24 +7,30 @@ import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.eosCommander.crypto.ec.EosPrivateKey
 import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.screens.activity.FinishVerifyActivity
+import com.sneakers.sneakerschecker.screens.activity.VerifyPhoneActivity
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_new.*
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.web3j.crypto.Credentials
-import org.web3j.crypto.Keys
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.security.Security
+import java.util.concurrent.TimeUnit
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,14 +40,16 @@ import java.security.Security
  *
  */
 class CreateNewFragment : Fragment(), View.OnClickListener {
+    private val TAG = "PhoneAuth"
 
     private var fragmentView: View? = null
 
     private lateinit var service: Retrofit
     private lateinit var sharedPref: SharedPref
-    private lateinit var credentials: Credentials
 
     private var isShowingPassword: Boolean = false
+
+    private lateinit var fireAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +58,9 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_create_new, container, false)
 
-        sharedPref = context?.let { SharedPref(it) }!!
+        fireAuth = FirebaseAuth.getInstance()
 
-        setupBouncyCastle()
+        sharedPref = context?.let { SharedPref(it) }!!
 
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
@@ -64,30 +71,14 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        etUserName.addTextChangedListener(textWatcher)
-        etUserEmail.addTextChangedListener(textWatcher)
+        etUserPhone.addTextChangedListener(textWatcher)
         etUserPassword.addTextChangedListener(textWatcher)
         btnRegister.setOnClickListener(this)
         ibBack.setOnClickListener(this)
-        btnShowPassword.setOnClickListener(this)
         root.setOnClickListener(this)
+        btnShowPassword.setOnClickListener(this)
     }
 
-    private fun setupBouncyCastle() {
-        val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)
-            ?: // Web3j will set up the provider lazily when it's first used.
-            return
-        if (provider.javaClass == BouncyCastleProvider::class.java) {
-            // BC with same package name, shouldn't happen in real life.
-            return
-        }
-        // Android registers its own BC provider. As it might be outdated and might not include
-        // all needed ciphers, we substitute it with a known BC bundled in the app.
-        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
-        // of that it's possible to have another BC implementation loaded in VM.
-        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
-        Security.insertProviderAt(BouncyCastleProvider(), 1)
-    }
 
     private val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -104,14 +95,23 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnRegister -> createNewAccount()
+        when (v) {
+            btnRegister -> {
+                CommonUtils.toggleLoading(fragmentView, true)
+                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}", // Phone number to verify
+                    60, // Timeout duration
+                    TimeUnit.SECONDS, // Unit of timeout
+                    activity!!, // Activity (for callback binding)
+                    callbacks
+                ) // OnVerificationStateChangedCallbacks
+            }
 
-            R.id.ibBack -> activity?.onBackPressed()
+            ibBack -> activity?.onBackPressed()
 
-            R.id.btnShowPassword -> showPassword()
+            btnShowPassword -> showPassword()
 
-            R.id.root -> CommonUtils.hideKeyboard(activity)
+            root -> CommonUtils.hideKeyboard(activity)
         }
     }
 
@@ -131,108 +131,66 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun callValidateEmail() {
-        val email = etUserEmail.text.toString()
-
-        if (!Validation.validateEmail(email)!!) {
-            visibleWarning(getString(R.string.text_message_input_valid_email))
-        } else {
-            tvWarning.visibility = GONE
-        }
-    }
-
     fun validateData(): Boolean {
-        return if (etUserName.text.isEmpty() || etUserEmail.text.isEmpty() || etUserPassword.text.isEmpty()) {
-            false
-        } else {
-            callValidateEmail()
-            Validation.validateEmail(etUserEmail.text.toString())!!
-        }
-    }
-
-    private fun createNewAccount() {
-        try {
-            val keyPair = Keys.createEcKeyPair()
-            credentials = Credentials.create(keyPair)
-
-            userRegister()
-        } catch (e: Exception) {
-            Log.e("Error: ", e.message)
-        }
-    }
-
-    private fun userRegister() {
-        var data = HashMap<String, String>()
-        data[Constant.API_FIELD_USER_NAME] = etUserName.text.toString()
-        data[Constant.API_FIELD_USER_EMAIL] = etUserEmail.text.toString()
-        data[Constant.API_FIELD_USER_PASSWORD] = etUserPassword.text.toString()
-        data[Constant.API_FIELD_NETWORK_ADDRESS] = credentials.address
-        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
-
-        CommonUtils.toggleLoading(fragmentView, true)
-
-        /*Create handle for the RetrofitInstance interface*/
-        val call = service.create(AuthenticationApi::class.java).signUpApi(data)
-        call.enqueue(object : Callback<SignUp> {
-
-            override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
-                when {
-                    response.code() == 201 -> //newAccount(response.body()!!.passwordHash)
-                        requestLogIn()
-                    response.code() == 400 -> {
-                        CommonUtils.toggleLoading(fragmentView, false)
-                        visibleWarning("Email has been used")
-                    }
-                    else -> {
-                        CommonUtils.toggleLoading(fragmentView, false)
-                        Toast.makeText(context, "Response Code: " + response.code(), Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<SignUp>, t: Throwable) {
-                CommonUtils.toggleLoading(fragmentView, false)
-                Toast.makeText(context, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun requestLogIn() {
-
-        val authToken = okhttp3.Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
-        val call = service.create(AuthenticationApi::class.java)
-            .signInApi(
-                authToken,
-                Constant.GRANT_TYPE_PASSWORD,
-                etUserEmail.text.toString(),
-                etUserPassword.text.toString()
-            )
-        call.enqueue(object : Callback<SignIn> {
-
-            override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
-                CommonUtils.toggleLoading(fragmentView, false)
-
-                if (response.code() == 200) {
-                    sharedPref.setUser(response.body()!!, Constant.WALLET_USER)
-                    sharedPref.setCredentials(credentials, Constant.USER_CREDENTIALS)
-
-                    activity?.setResult(Activity.RESULT_OK)
-                    activity?.finish()
-                } else if (response.code() == 400) {
-                    Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
-                }
-            }
-
-            override fun onFailure(call: Call<SignIn>, t: Throwable) {
-                CommonUtils.toggleLoading(fragmentView, false)
-                Toast.makeText(context, "Something went wrong when login", Toast.LENGTH_SHORT).show()
-            }
-
-        })
+        return !(etUserPhone.text.trim().length < 9 || etUserPassword.text.trim().length < 6)
     }
 
     fun visibleWarning(message: String) {
         tvWarning.text = "Oops!\n$message"
         tvWarning.visibility = VISIBLE
+    }
+
+    val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+            // This callback will be invoked in two situations:
+            // 1 - Instant verification. In some cases the phone number can be instantly
+            //     verified without needing to send or enter a verification code.
+            // 2 - Auto-retrieval. On some devices Google Play services can automatically
+            //     detect the incoming verification SMS and perform verification without
+            //     user action.
+            Log.d(TAG, "onVerificationCompleted:$credential")
+
+            CommonUtils.toggleLoading(fragmentView, false)
+            VerifyPhoneActivity.start(activity!!,
+                "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
+                etUserPassword.text.toString().trim(),
+                credential)
+        }
+
+        override fun onVerificationFailed(e: FirebaseException) {
+            // This callback is invoked in an invalid request for verification is made,
+            // for instance if the the phone number format is not valid.
+            Log.w(TAG, "onVerificationFailed", e)
+
+            if (e is FirebaseAuthInvalidCredentialsException) {
+                // Invalid request
+                // ...
+            } else if (e is FirebaseTooManyRequestsException) {
+                // The SMS quota for the project has been exceeded
+                // ...
+            }
+
+            // Show a message and update the UI
+            // ...
+            CommonUtils.toggleLoading(fragmentView, false)
+            visibleWarning(e.message!!)
+        }
+
+        override fun onCodeSent(
+            verificationId: String,
+            token: PhoneAuthProvider.ForceResendingToken
+        ) {
+            // The SMS verification code has been sent to the provided phone number, we
+            // now need to ask the user to enter the code and then construct a credential
+            // by combining the code with a verification ID.
+            Log.d(TAG, "onCodeSent:$verificationId")
+
+            CommonUtils.toggleLoading(fragmentView, false)
+            VerifyPhoneActivity.start(activity!!,
+                "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
+                etUserPassword.text.toString().trim(), verificationId, token)
+            // ...
+        }
     }
 }

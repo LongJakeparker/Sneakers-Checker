@@ -8,13 +8,13 @@ import retrofit2.http.*
 
 interface AuthenticationApi {
     @POST("/user/")
-    fun signUpApi(@Body param: Map<String, String>): Call<SignUp>
+    fun signUpApi(@Body param: HashMap<String, String>): Call<SignUp>
 
     @FormUrlEncoded
-    @POST("/oauth/token")
+    @POST("/user/signin/")
     fun signInApi(@Header("Authorization") token:String,
                   @Field("grant_type") grant_type: String,
-                  @Field("username") username: String,
+                  @Field("username") userIdentity: String,
                   @Field("password") password: String): Call<SignIn>
 
     @FormUrlEncoded

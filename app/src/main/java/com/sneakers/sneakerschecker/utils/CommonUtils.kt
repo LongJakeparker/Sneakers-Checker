@@ -1,6 +1,7 @@
-package com.sneakers.sneakerschecker.model
+package com.sneakers.sneakerschecker.utils
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -17,9 +18,15 @@ import com.google.zxing.WriterException
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.SharedPref
+import okhttp3.MediaType
+import okhttp3.RequestBody
+
 
 class CommonUtils {
     companion object {
+        private var mProgressDialog: ProgressDialog? = null
+
         fun toggleLoading(loadingParent: View?, show: Boolean) {
             if (loadingParent == null) {
                 return
@@ -86,10 +93,44 @@ class CommonUtils {
         fun isNonLoginUser(context: Context): Boolean {
             val sharedPref = SharedPref(context)
 
-            if (sharedPref.getString(Constant.USER_CREDENTIALS) != "") {
+            if (sharedPref.getUser(Constant.LOGIN_USER) != null) {
                 return false
             }
             return true
+        }
+
+        fun generateEOSAccountName(): String {
+            var result = ""
+            val length = 12
+            val characters = "12345abcdefghijklmnopqrstuvwxyz"
+            for (i in 1..length) {
+                val randomIndex = Math.floor(Math.random() * length).toInt()
+                result += characters[randomIndex]
+            }
+            return result
+        }
+
+//        fun showProgressDialog(context: Context) {
+//            if (mProgressDialog == null) {
+//                mProgressDialog = ProgressDialog(context)
+//                mProgressDialog?.setMessage(context.getString(R.string.common_loading))
+//                mProgressDialog?.setCanceledOnTouchOutside(false)
+//                mProgressDialog?.setCancelable(false)
+//            }
+//
+//            if (!mProgressDialog?.isShowing!!) {
+//                mProgressDialog?.show()
+//            }
+//        }
+//
+//        fun dismissProgressDialog() {
+//            if (mProgressDialog != null && mProgressDialog?.isShowing!!) {
+//                mProgressDialog?.dismiss()
+//            }
+//        }
+
+        fun toRequestBody(value: String): RequestBody {
+            return RequestBody.create(MediaType.parse("text/plain"), value)
         }
     }
 }

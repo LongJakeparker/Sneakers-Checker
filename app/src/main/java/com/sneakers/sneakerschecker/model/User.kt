@@ -5,21 +5,49 @@ import com.google.gson.annotations.SerializedName
 
 class User {
 
-    @SerializedName("firstName")
+    @SerializedName("id")
     @Expose
-    var firstName: String
+    var id: Int
 
-    @SerializedName("lastName")
+    @SerializedName("eosName")
     @Expose
-    var lastName: String
+    var eosName: String
+
+    @SerializedName("username")
+    @Expose
+    var username: String
 
     @SerializedName("email")
     @Expose
     var email: String
 
-    constructor(firstName: String, lastName: String, email: String) {
-        this.firstName = firstName
-        this.lastName = lastName
+    @SerializedName("encryptedPrivateKey")
+    @Expose
+    var encryptedPrivateKey: String
+
+    @SerializedName("role")
+    @Expose
+    var role: String
+
+    @SerializedName("address")
+    @Expose
+    var address: String
+
+    constructor(
+        id: Int,
+        eosName: String,
+        username: String,
+        email: String,
+        encryptedPrivateKey: String,
+        role: String,
+        address: String
+    ) {
+        this.id = id
+        this.eosName = eosName
+        this.username = username
         this.email = email
+        this.encryptedPrivateKey = encryptedPrivateKey
+        this.role = role
+        this.address = address
     }
 }

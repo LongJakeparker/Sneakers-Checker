@@ -13,6 +13,7 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.Contract
 import com.sneakers.sneakerschecker.contract.TrueGrailToken
 import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_collection.*
@@ -49,24 +50,24 @@ class CollectionActivity : AppCompatActivity() {
         contract = web3?.let {
             Contract.getInstance(
                 it,
-                sharedPref.getCredentials(Constant.USER_CREDENTIALS)
+                sharedPref.getCredentials(Constant.APP_CREDENTIALS)
             )
         }!!
 
-//        listCollection.add(SneakerModel())
-//        listCollection.add(SneakerModel())
-//        listCollection.add(SneakerModel())
-//
-//        viewPagerCollection.adapter = CollectionAdapter(listCollection, this)
+        listCollection.add(SneakerModel())
+        listCollection.add(SneakerModel())
+        listCollection.add(SneakerModel())
 
-        getCollection()
+        viewPagerCollection.adapter = CollectionAdapter(listCollection, this)
+
+//        getCollection()
 
         btnBack.setOnClickListener { onBackPressed() }
     }
 
     private fun getCollection() {
         CommonUtils.toggleLoading(window.decorView.rootView, true)
-        val accessToken = "Bearer " + sharedPref.getUser(Constant.WALLET_USER).accessToken
+        val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
         val userAddress = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
         val call = service.create(MainApi::class.java)
             .getCollection(accessToken, userAddress)

@@ -127,7 +127,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun callApi() {
-        val accessToken = "Bearer " + sharedPref.getUser(Constant.WALLET_USER).accessToken
+        val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
         val call = service.create(MainApi::class.java)
             .changeOwnership(accessToken, sellItem.id.toString(), etTransferAddress.text.toString().toLowerCase())
         call.enqueue(object : Callback<ResponseBody> {

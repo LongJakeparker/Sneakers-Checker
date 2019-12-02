@@ -132,7 +132,11 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 MY_PERMISSIONS_REQUEST_CAMERA
             )
 
-            Toast.makeText(this, resources.getText(R.string.msg_grant_permission_camera), Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                resources.getText(R.string.msg_grant_permission_camera),
+                Toast.LENGTH_LONG
+            ).show()
 
         }
 
@@ -158,21 +162,28 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
                 val web3 = Web3Instance.getInstance()
 
-                if (CommonUtils.isNonLoginUser(this)) {
-                    contract = web3?.let {
-                        Contract.getInstance(
-                            it,
-                            sharedPref.getCredentials(Constant.APP_CREDENTIALS)
-                        )
-                    }!!
-                } else {
-                    contract = web3?.let {
-                        Contract.getInstance(
-                            it,
-                            sharedPref.getCredentials(Constant.USER_CREDENTIALS)
-                        )
-                    }!!
-                }
+//                if (CommonUtils.isNonLoginUser(this)) {
+//                    contract = web3?.let {
+//                        Contract.getInstance(
+//                            it,
+//                            sharedPref.getCredentials(Constant.APP_CREDENTIALS)
+//                        )
+//                    }!!
+//                } else {
+//                    contract = web3?.let {
+//                        Contract.getInstance(
+//                            it,
+//                            sharedPref.getCredentials(Constant.USER_CREDENTIALS)
+//                        )
+//                    }!!
+//                }
+
+                contract = web3?.let {
+                    Contract.getInstance(
+                        it,
+                        sharedPref.getCredentials(Constant.APP_CREDENTIALS)
+                    )
+                }!!
             }
 
             ScanType.SCAN_PRIVATE_KEY -> {
@@ -315,7 +326,10 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             .validateSneaker(scanResult)
         call.enqueue(object : Callback<ValidateModel> {
             override fun onFailure(call: Call<ValidateModel>, t: Throwable) {
-                showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
+                showMessageScanFail(
+                    this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                    true
+                )
             }
 
             override fun onResponse(call: Call<ValidateModel>, response: Response<ValidateModel>) {
@@ -336,10 +350,16 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
                         validateItem(responseHash)
                     } else {
-                        showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
+                        showMessageScanFail(
+                            this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                            true
+                        )
                     }
                 } else {
-                    showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
+                    showMessageScanFail(
+                        this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                        true
+                    )
                 }
             }
 
@@ -357,7 +377,10 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 }
             ) {
                 if (blockchainHash.isNullOrEmpty()) {
-                    showMessageScanFail(this@CustomScanActivity.resources.getString(R.string.msg_scan_fail), true)
+                    showMessageScanFail(
+                        this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                        true
+                    )
                 } else {
                     if (responseHash == blockchainHash) {
                         loadItemInfo()

@@ -11,6 +11,7 @@ import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_splash.*
 
 
@@ -49,6 +50,13 @@ class SplashActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(animation: Animation) {
+                if (!CommonUtils.isNonLoginUser(this@SplashActivity)) {
+                    if (sharedPref.getUser(Constant.LOGIN_USER)?.user?.username.isNullOrEmpty()) {
+                        UpdateUserRegisterActivity.start(this@SplashActivity)
+                        return
+                    }
+                }
+
                 val intent = Intent(baseContext, MainActivity::class.java)
                 startActivity(intent)
                 finish()

@@ -39,6 +39,11 @@ android {
             languageVersion = '1.1'
         }
     }
+    packagingOptions {
+        exclude 'lib/x86_64/darwin/libscrypt.dylib'
+        exclude 'lib/x86_64/freebsd/libscrypt.so'
+        exclude 'lib/x86_64/linux/libscrypt.so'
+    }
 }
 
 dependencies {
@@ -75,6 +80,20 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-beta01'
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
     implementation 'com.wajahatkarim3.EasyFlipView:EasyFlipView:2.1.2'
+
+    //EOS IO Sdk Java
+    implementation 'one.block:eosiojava:0.1.0'
+    implementation 'one.block:eosiojavasoftkeysignatureprovider:0.1.0'
+    implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.0'
+    implementation 'one.block:eosiojavarpcprovider:0.1.0'
+    implementation 'one.block:eosioandroidkeystoresignatureprovider:0.1.0'
+
+    //Country code picker
+    implementation 'com.hbb20:ccp:2.3.4'
+
+    //Firebase auth
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

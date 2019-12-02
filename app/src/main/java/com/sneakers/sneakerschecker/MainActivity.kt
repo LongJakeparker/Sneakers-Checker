@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -28,8 +27,7 @@ import android.animation.LayoutTransition
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
-import android.view.WindowManager
-import android.os.Build
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.Keys
@@ -199,11 +197,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun notifyUserLogin() {
-//        tvUserName.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
-        tvUserAddress.text = sharedPref.getCredentials(Constant.USER_CREDENTIALS).address
+        val userInfo = sharedPref.getUser(Constant.LOGIN_USER)
+        tvUserName.text = userInfo?.user?.username
+        tvUserAddress.text = userInfo?.user?.eosName
 
         val qrCode = CommonUtils.generateQrCode(this, 1.0,
-                                                sharedPref.getCredentials(Constant.USER_CREDENTIALS).address)
+            userInfo?.user?.eosName!!)
 
         if (qrCode != null) {
             ivQrAddress.setImageBitmap(qrCode)
@@ -284,6 +283,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         isExpanded = true
         expandMenu()
 
+        tvUserName.text = getString(R.string.text_user_name_non_login)
+
         ivAddressNonLogin.visibility = View.VISIBLE
         lnNavigationItemUnLogin.visibility = View.VISIBLE
 
@@ -305,14 +306,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         when {
-            requestCode == REQUEST_CODE_START_CREATE_ACTIVITY && resultCode == Activity.RESULT_OK -> {
-                Handler().postDelayed({
-                    ConfirmRegisterActivity.start(this)
-                }, 500)
-                notifyUserLogin()
-            }
-
-            requestCode == REQUEST_CODE_START_LOGIN_ACTIVITY && resultCode == Activity.RESULT_OK -> {
+            (requestCode == REQUEST_CODE_START_CREATE_ACTIVITY || requestCode == REQUEST_CODE_START_LOGIN_ACTIVITY) &&
+                    resultCode == Activity.RESULT_OK -> {
                 notifyUserLogin()
             }
         }
