@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".screens.activity.ManageCardActivity"></activity>
+        <activity android:name=".screens.activity.GrailsTradingActivity"/>
+        <activity android:name=".screens.activity.ManageCardActivity" />
         <activity android:name=".screens.activity.UpdateUserRegisterActivity" />
         <activity android:name=".screens.activity.FinishVerifyActivity" />
         <activity

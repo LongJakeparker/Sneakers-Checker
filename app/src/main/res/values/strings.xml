@@ -68,6 +68,7 @@
     <string name="label_verify_phone">Verification</string>
     <string name="label_update_info">Update profile</string>
     <string name="label_manage_credit_card">My credit cards</string>
+    <string name="label_transfer">Grails trading</string>
 
     <string name="text_holder_user_name">Your name (*)</string>
     <string name="text_holder_user_email">Your email</string>
@@ -90,6 +91,7 @@
     <string name="label_button_resend_code">Resend</string>
     <string name="label_button_start">Start</string>
     <string name="label_button_update">Update</string>
+    <string name="label_button_continue">Continue</string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>
@@ -124,6 +126,8 @@
     <string name="common_cancel">Cancel</string>
     <string name="msg_logout">Do you want to logout?</string>
     <string name="dialog_title_logout">Log Out</string>
+    <string name="dialog_title_invalid_eos_name">Invalid Name</string>
+    <string name="dialog_msg_invalid_eos_name">Receiver\'s EOS name is wrong format</string>
     <string name="dialog_title_close_private_key_confirm">Do you want to close?</string>
     <string name="dialog_msg_close_private_key_confirm">Please copy or write down your private key before close this screen.\nYou can\'t regain if you lost your private key.</string>
 
@@ -137,10 +141,10 @@
     <string name="title_guide_scan_private_key">WHAT IS PRIVATE KEY?</string>
     <string name="content_guide_scan_private_key">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
 
-    <string name="activity_title_scan_address">Scan Buyer QR</string>
-    <string name="header_guide_scan_address">What is buyer QR mean?</string>
-    <string name="title_guide_scan_address">WHAT IS BUYER QR?</string>
-    <string name="content_guide_scan_address">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="activity_title_scan_eos_name">Scan EOS Name</string>
+    <string name="header_guide_scan_eos_name">What is EOS name?</string>
+    <string name="title_guide_scan_eos_name">WHAT IS EOS NAME?</string>
+    <string name="content_guide_scan_eos_name">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
 
     <string name="label_color">Color</string>
     <string name="label_size">Size (U.S)</string>
@@ -162,5 +166,10 @@
     <string name="msg_no_data_card">Oops! Still no have credit card</string>
     <string name="msg_detail_no_data_card">Please add a new credit card to continue your\npayment processing</string>
     <string name="text_add_new_credit_card">Add a new credit card</string>
+    <string name="text_receiver">Receiver</string>
+    <string name="hint_receiver_eos_name">Input receiver EOS name</string>
+    <string name="text_transaction_fee">Transaction fee</string>
+    <string name="text_des_transaction_fee">This is the extra fee you have to pay for this transaction by your credit card.</string>
+    <string name="text_add_payment">Add a payment method</string>
 
 </resources>

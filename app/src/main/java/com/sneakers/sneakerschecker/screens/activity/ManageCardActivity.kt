@@ -29,6 +29,10 @@ class ManageCardActivity : AppCompatActivity(), View.OnClickListener {
         cardList.add(null)
         cardList.add(null)
         cardList.add(null)
+        cardList.add(null)
+        cardList.add(null)
+        cardList.add(null)
+        cardList.add(null)
 
         setUpCardList()
 

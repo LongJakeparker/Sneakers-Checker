@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
 import com.google.zxing.BarcodeFormat
@@ -23,11 +24,13 @@ import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.Contract
 import com.sneakers.sneakerschecker.contract.TrueGrailToken
 import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_custom_scan.*
@@ -45,7 +48,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         companion object {
             val SCAN_GRAIL = 1
             val SCAN_PRIVATE_KEY = 2
-            val SCAN_ADDRESS = 3
+            val SCAN_EOS_NAME = 3
             val SCAN_CLAIM_TOKEN = 4
         }
     }
@@ -76,6 +79,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
             scanResult = result.text
             beepManager!!.playBeepSoundAndVibrate()
+            lastText = result.text
 
             when (scanType) {
                 ScanType.SCAN_PRIVATE_KEY -> {
@@ -83,6 +87,31 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     returnIntent.putExtra(Constant.EXTRA_PRIVATE_KEY, scanResult)
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
+                }
+
+                ScanType.SCAN_EOS_NAME -> {
+                    if (scanResult.length == 12) {
+                        val returnIntent = Intent()
+                        returnIntent.putExtra(Constant.EXTRA_USER_EOS_NAME, scanResult)
+                        setResult(Activity.RESULT_OK, returnIntent)
+                        finish()
+                    } else {
+                        barcodeView?.pause()
+                        val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_invalid_eos_name),
+                            resources.getString(R.string.dialog_msg_invalid_eos_name), true)
+                        confirmDialogFragment.setListener(object : IDialogListener {
+                            override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
+                                if (ok) {
+                                    barcodeView?.resume()
+                                    lastText = ""
+                                }
+                            }
+                            override fun onDialogCancel(tag: String) {
+
+                            }
+                        })
+                        confirmDialogFragment.show(supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
+                    }
                 }
 
                 ScanType.SCAN_GRAIL -> scanGrail()
@@ -103,6 +132,12 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             val intent = Intent(activity, CustomScanActivity::class.java)
             intent.putExtra(Constant.EXTRA_SCAN_TYPE, scanType)
             activity.startActivityForResult(intent, requestCode)
+        }
+
+        fun startForResult(fragment: Fragment, scanType: Int, requestCode: Int) {
+            val intent = Intent(fragment.context, CustomScanActivity::class.java)
+            intent.putExtra(Constant.EXTRA_SCAN_TYPE, scanType)
+            fragment.startActivityForResult(intent, requestCode)
         }
     }
 
@@ -193,6 +228,16 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     R.drawable.ic_guideline_scan_private_key,
                     R.string.title_guide_scan_private_key,
                     R.string.content_guide_scan_private_key
+                )
+            }
+
+            ScanType.SCAN_EOS_NAME -> {
+                setContentBottomView(
+                    R.string.activity_title_scan_eos_name,
+                    R.string.header_guide_scan_eos_name,
+                    R.drawable.ic_guideline_scan_eos_name,
+                    R.string.title_guide_scan_eos_name,
+                    R.string.content_guide_scan_eos_name
                 )
             }
         }

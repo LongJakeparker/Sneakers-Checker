@@ -86,6 +86,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         ivCollection.setOnClickListener(this)
         tvCardManage.setOnClickListener(this)
         ivCardManage.setOnClickListener(this)
+        tvSetting.setOnClickListener(this)
+        ivSetting.setOnClickListener(this)
 
         Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
     }
@@ -198,6 +200,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             tvCardManage, ivCardManage -> {
                 ManageCardActivity.start(this)
+                drawer_layout.closeDrawer(GravityCompat.END)
+            }
+
+            tvSetting, ivSetting -> {
+                GrailsTradingActivity.start(this)
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
         }
