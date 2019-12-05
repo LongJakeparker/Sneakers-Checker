@@ -348,7 +348,7 @@ class VerifyPhoneActivity : AppCompatActivity(), View.OnClickListener {
                 if (response.code() == 200) {
                     sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
 
-                    FinishVerifyActivity.start(this@VerifyPhoneActivity)
+                    FinishVerifyActivity.start(this@VerifyPhoneActivity, password!!)
 
                 } else {
                     Toast.makeText(this@VerifyPhoneActivity, response.errorBody()!!.string(), Toast.LENGTH_SHORT)

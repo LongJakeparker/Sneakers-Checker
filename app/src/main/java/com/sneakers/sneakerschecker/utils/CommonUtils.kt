@@ -128,9 +128,5 @@ class CommonUtils {
 //                mProgressDialog?.dismiss()
 //            }
 //        }
-
-        fun toRequestBody(value: String): RequestBody {
-            return RequestBody.create(MediaType.parse("text/plain"), value)
-        }
     }
 }

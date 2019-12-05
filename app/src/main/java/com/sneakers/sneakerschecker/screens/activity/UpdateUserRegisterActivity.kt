@@ -5,14 +5,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.screens.fragment.LoginFragment
 import com.sneakers.sneakerschecker.screens.fragment.UpdateUserRegisterFragment
 
 class UpdateUserRegisterActivity : AppCompatActivity() {
 
     companion object {
-        fun start(activity: Activity) {
+        fun start(activity: Activity, password: String?) {
             val intent = Intent(activity, UpdateUserRegisterActivity::class.java)
+            intent.putExtra(Constant.EXTRA_USER_PASSWORD, password)
             activity.startActivity(intent)
             activity.finish()
         }

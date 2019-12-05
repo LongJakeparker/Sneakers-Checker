@@ -52,7 +52,7 @@ class SplashActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: Animation) {
                 if (!CommonUtils.isNonLoginUser(this@SplashActivity)) {
                     if (sharedPref.getUser(Constant.LOGIN_USER)?.user?.username.isNullOrEmpty()) {
-                        UpdateUserRegisterActivity.start(this@SplashActivity)
+                        UpdateUserRegisterActivity.start(this@SplashActivity, null)
                         return
                     }
                 }
