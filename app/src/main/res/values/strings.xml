@@ -158,5 +158,8 @@
     <string name="text_title_finish_verify">CONGRATULATIONS</string>
     <string name="text_content_finish_verify">Your account has been registered successfully.\nLet’s experience!</string>
     <string name="text_user_name_non_login">Welcome Sneakerhead</string>
+    <string name="dialog_title_input_password">Enter Passcode</string>
+    <string name="dialog_des_input_password">Enter your passcode</string>
+    <string name="msg_phone_existing">Oops!\nThis number has been used already!</string>
 
 </resources>

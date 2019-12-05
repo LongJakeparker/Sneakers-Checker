@@ -17,15 +17,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.gson.Gson
 import com.sneakers.sneakerschecker.R
-import com.sneakers.sneakerschecker.api.AuthenticationApi
-import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.eosCommander.crypto.ec.EosPrivateKey
-import com.sneakers.sneakerschecker.model.*
-import com.sneakers.sneakerschecker.screens.activity.FinishVerifyActivity
+import com.sneakers.sneakerschecker.api.MainApi
+import com.sneakers.sneakerschecker.model.RetrofitClientInstance
+import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.screens.activity.VerifyPhoneActivity
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_new.*
+import okhttp3.ResponseBody
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,13 +100,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         when (v) {
             btnRegister -> {
                 CommonUtils.toggleLoading(fragmentView, true)
-                PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                    "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}", // Phone number to verify
-                    60, // Timeout duration
-                    TimeUnit.SECONDS, // Unit of timeout
-                    activity!!, // Activity (for callback binding)
-                    callbacks
-                ) // OnVerificationStateChangedCallbacks
+                checkDuplicatePhone()
             }
 
             ibBack -> activity?.onBackPressed()
@@ -113,6 +109,58 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
             root -> CommonUtils.hideKeyboard(activity)
         }
+    }
+
+    private fun checkDuplicatePhone() {
+        val call = service.create(MainApi::class.java).checkDuplicatePhone(
+            "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}"
+        )
+        call.enqueue(object : Callback<ResponseBody> {
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when {
+                    response.isSuccessful -> {
+                        try {
+                            val jsonObject = JSONObject(response.body()?.string())
+                            val isExisting = jsonObject.getBoolean("isExisting")
+                            if (!isExisting) {
+                                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                                    "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}", // Phone number to verify
+                                    60, // Timeout duration
+                                    TimeUnit.SECONDS, // Unit of timeout
+                                    activity!!, // Activity (for callback binding)
+                                    callbacks
+                                ) // OnVerificationStateChangedCallbacks
+                            } else {
+                                CommonUtils.toggleLoading(fragmentView, false)
+                                tvWarning.text = getString(R.string.msg_phone_existing)
+                                tvWarning.visibility = VISIBLE
+                            }
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    else -> {
+                        CommonUtils.toggleLoading(fragmentView, false)
+                        Toast.makeText(
+                            context,
+                            "Response Code ${response.code()}: ${response.message()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                CommonUtils.toggleLoading(fragmentView, false)
+                Toast.makeText(
+                    context,
+                    t.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     private fun showPassword() {
@@ -152,10 +200,12 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             Log.d(TAG, "onVerificationCompleted:$credential")
 
             CommonUtils.toggleLoading(fragmentView, false)
-            VerifyPhoneActivity.start(activity!!,
+            VerifyPhoneActivity.start(
+                activity!!,
                 "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
                 etUserPassword.text.toString().trim(),
-                credential)
+                credential
+            )
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
@@ -187,9 +237,11 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             Log.d(TAG, "onCodeSent:$verificationId")
 
             CommonUtils.toggleLoading(fragmentView, false)
-            VerifyPhoneActivity.start(activity!!,
+            VerifyPhoneActivity.start(
+                activity!!,
                 "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
-                etUserPassword.text.toString().trim(), verificationId, token)
+                etUserPassword.text.toString().trim(), verificationId, token
+            )
             // ...
         }
     }

@@ -46,6 +46,8 @@ object Constant {
     const val API_FIELD_EOS_NAME = "eosName"
     const val API_FIELD_USER_IDENTITY = "userIdentity"
 
+    const val DIALOG_REQUEST_CODE = 1004
+
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"
 

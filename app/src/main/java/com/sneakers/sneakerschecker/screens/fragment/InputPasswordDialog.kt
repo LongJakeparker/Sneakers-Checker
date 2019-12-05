@@ -6,16 +6,20 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import android.app.Activity
+import android.content.Intent
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.utils.CommonUtils
 
-class InputPasswordDialog : DialogFragment(), View.OnClickListener {
-    private lateinit var etFeedback: EditText
-    private lateinit var btnSend: TextView
+
+class InputPasswordDialog : DialogFragment() {
+    private lateinit var etInputCode: EditText
+    private lateinit var listIvPassCode: Array<ImageView>
 
     companion object {
         fun show(fragmentManager: FragmentManager) {
@@ -29,58 +33,59 @@ class InputPasswordDialog : DialogFragment(), View.OnClickListener {
         val builder = AlertDialog.Builder(activity!!)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_input_password, null, false)
 
-//        etFeedback = view.findViewById(R.id.etFeedback)
+        etInputCode = view.findViewById(R.id.etInputCode)
 //        btnSend = view.findViewById(R.id.tvSend)
+
+        listIvPassCode = arrayOf(
+            view.findViewById(R.id.tvNumber1),
+            view.findViewById(R.id.tvNumber2),
+            view.findViewById(R.id.tvNumber3),
+            view.findViewById(R.id.tvNumber4),
+            view.findViewById(R.id.tvNumber5),
+            view.findViewById(R.id.tvNumber6)
+        )
 //
-//        etFeedback.addTextChangedListener(object : TextWatcher {
-//
-//            override fun afterTextChanged(s: Editable) {}
-//
-//            override fun beforeTextChanged(s: CharSequence, start: Int,
-//                                           count: Int, after: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence, start: Int,
-//                                       before: Int, count: Int) {
-//                btnSend.isEnabled = s.isNotEmpty()
-//                if (s.isNotEmpty()) {
-//                    context?.resources?.getColor(R.color.blue_0F99FA)?.let { btnSend.setTextColor(it) }
-//                } else {
-//                    context?.resources?.getColor(R.color.gray_a6a6a6)?.let { btnSend.setTextColor(it) }
-//                }
-//            }
-//        })
-//
-//        btnSend.setOnClickListener(this)
-//        view.findViewById<View>(R.id.tvCancel).setOnClickListener(this)
-//
+        etInputCode.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                if (s.isNotEmpty()) {
+                    listIvPassCode[s.length - 1].setImageResource(R.drawable.drawable_bg_pass_code_black)
+                    if (s.length < 6) {
+                        listIvPassCode[s.length].setImageResource(R.drawable.drawable_bg_pass_code)
+                    } else {
+                        returnPasscode()
+                    }
+                } else {
+                    listIvPassCode[0].setImageResource(R.drawable.drawable_bg_pass_code)
+                }
+            }
+        })
+
+        etInputCode.requestFocus()
+
         builder.setView(view)
         return builder.create()
     }
 
-    override fun onClick(view: View?) {
-        when (view?.id) {
-//            R.id.tvCancel -> {
-//                SharePrefManager.setDateValue(SharePrefManager.LAST_APP_RATING, Date())
-//                dismiss()
-//            }
-//
-//            R.id.tvSend -> {
-//                progressBar.visibility = View.VISIBLE
-//                NailieRequest.sendFeedback2NailieSupport(etFeedback.text.toString().trim()) { result: Boolean?, e: ParseException? ->
-//                    progressBar.visibility = View.GONE
-//                    if (e == null && result!!) {
-//                        SharePrefManager.setDateValue(SharePrefManager.LAST_APP_RATING, Date())
-//                        (activity as  BaseActivity).showMessage(R.string.msg_thanks_for_feedback)
-//                        dismiss()
-//                    }
-//                    else if (e != null) {
-//                        if (e.code == 9001) {
-//                            Toast.makeText(context, "Something failed", Toast.LENGTH_LONG).show()
-//                        }
-//                    }
-//                }
-//            }
-        }
+    private fun returnPasscode() {
+        val bundle = Bundle()
+        bundle.putString(Constant.EXTRA_USER_PASSWORD, etInputCode.text.toString().trim())
+
+        val intent = Intent().putExtras(bundle)
+
+        targetFragment!!.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+
+        dismiss()
     }
 }

@@ -19,13 +19,16 @@ import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_update_user_register.*
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.nio.charset.StandardCharsets
+import android.app.Activity
+
+
+
 
 class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
@@ -70,6 +73,7 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
         val params = HashMap<String, Any>()
         params[Constant.API_FIELD_USER_NAME] = etUserName.text.toString().trim()
         params[Constant.API_FIELD_USER_ADDRESS] = etUserAddress.text.toString().trim()
+        params[Constant.API_FIELD_USER_EMAIL] = etUserEmail.text.toString().trim()
 
         val call = service.create(MainApi::class.java)
             .updateUser(accessToken, userInfo?.user?.id!!, params)
@@ -103,7 +107,10 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
     fun updateSmartContract() {
         if (password == null) {
-
+            CommonUtils.toggleLoading(fragmentView, false)
+            val passcodeDialog = InputPasswordDialog()
+            passcodeDialog.setTargetFragment(this, Constant.DIALOG_REQUEST_CODE)
+            passcodeDialog.show(fragmentManager!!, InputPasswordDialog::class.java.simpleName)
         }
 
         val gson =
@@ -113,14 +120,18 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
         val updateHash =
             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
 
-        val jsonData = ContractRequest.updateUserJson(userInfo?.user?.eosName!!, userInfo?.user?.id!!, updateHash)
+        val jsonData = ContractRequest.updateUserJson(
+            userInfo?.user?.eosName!!,
+            userInfo?.user?.id!!,
+            updateHash
+        )
 
         ContractRequest.callEosApi(context!!, userInfo?.user?.eosName!!,
             ContractRequest.METHOD_UPDATE_USER,
             jsonData,
             getString(R.string.format_eascrypt_password, password),
             userInfo?.user?.encryptedPrivateKey,
-            object: ContractRequest.Companion.EOSCallBack {
+            object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     CommonUtils.toggleLoading(fragmentView, false)
                     if (e == null) {
@@ -159,5 +170,17 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
     fun validateData(): Boolean {
         return !(etUserName.text.toString().trim().isEmpty() || etUserAddress.text.toString().trim().isEmpty())
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.DIALOG_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            if (data?.extras?.containsKey(Constant.EXTRA_USER_PASSWORD)!!) {
+
+                CommonUtils.toggleLoading(fragmentView, true)
+                password = data.extras?.getString(Constant.EXTRA_USER_PASSWORD)
+            }
+        }
     }
 }

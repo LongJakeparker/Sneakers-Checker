@@ -100,4 +100,6 @@
 
     <dimen name="dimen_radius_button_8dp">8dp</dimen>
 
+    <dimen name="passcode_dot_size">30dp</dimen>
+
 </resources>
