@@ -1,11 +1,8 @@
 package com.sneakers.sneakerschecker.model
 
-import android.os.Parcel
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
-
 class ValidateModel {
     var detail: SneakerModel? = null
+    var factory: FactoryModel? = null
 //    override fun describeContents(): Int {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }

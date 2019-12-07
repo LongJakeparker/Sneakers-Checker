@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.common.hash.Hashing
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
@@ -391,12 +392,128 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun validateItem(responseHash: String) {
         ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_SNEAKER,
-            scanResult,
+            scanResult.toLong(),
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        sneakerContractModel = result as SneakerContractModel
+                        sneakerContractModel = Gson().fromJson(result as String, SneakerContractModel::class.java)
                         val blockchainHash = sneakerContractModel.info_hash
+                        if (blockchainHash.isNullOrEmpty()) {
+                            showMessageScanFail(
+                                this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                                true
+                            )
+                        } else {
+                            if (responseHash == blockchainHash) {
+                                validateFactory()
+                            } else {
+                                showMessageScanFail("Information not match with blockchain", true)
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("Scan error: ", e.localizedMessage)
+                    }
+                }
+            })
+    }
+
+    private fun validateFactory() {
+        val gson =
+            GsonBuilder().registerTypeAdapter(
+                FactoryModel::class.java,
+                FactoryModelJsonSerializer()
+            )
+                .create()
+        val strResponseHash = gson.toJson(validatedItem.factory)
+        val responseHash =
+            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
+                .toString()
+
+        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_USERS,
+            validatedItem.detail?.factoryId!!.toLong(),
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        val factoryContractModel = Gson().fromJson(result as String, UserContractModel::class.java)
+                        val blockchainHash = factoryContractModel.info_hash
+                        if (blockchainHash.isNullOrEmpty()) {
+                            showMessageScanFail(
+                                this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                                true
+                            )
+                        } else {
+                            if (responseHash == blockchainHash) {
+                                if (sneakerContractModel.owner_id != 0) {
+                                    getUserInfor()
+                                } else {
+                                    loadItemInfo()
+                                }
+                            } else {
+                                showMessageScanFail("Information not match with blockchain", true)
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("Scan error: ", e.localizedMessage)
+                    }
+                }
+            })
+    }
+
+    private fun getUserInfor() {
+        val call = service.create(MainApi::class.java)
+            .getUserInformation(sneakerContractModel.owner_id!!)
+        call.enqueue(object : Callback<UserUpdateModel> {
+            override fun onFailure(call: Call<UserUpdateModel>, t: Throwable) {
+                showMessageScanFail(
+                    this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                    true
+                )
+            }
+
+            override fun onResponse(call: Call<UserUpdateModel>, response: Response<UserUpdateModel>) {
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        val userInfor = response.body()!!
+
+                        val gson =
+                            GsonBuilder().registerTypeAdapter(
+                                UserUpdateModel::class.java,
+                                UserModelJsonSerializer()
+                            )
+                                .create()
+                        val strResponseHash = gson.toJson(userInfor)
+                        val responseHash =
+                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
+                                .toString()
+
+                        validateUser(responseHash)
+                    } else {
+                        showMessageScanFail(
+                            this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                            true
+                        )
+                    }
+                } else {
+                    showMessageScanFail(
+                        this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                        true
+                    )
+                }
+            }
+
+        })
+    }
+
+    private fun validateUser(responseHash: String) {
+        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_USERS,
+            sneakerContractModel.owner_id!!.toLong(),
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        val userContractModel = Gson().fromJson(result as String, UserContractModel::class.java)
+                        val blockchainHash = userContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
                                 this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),

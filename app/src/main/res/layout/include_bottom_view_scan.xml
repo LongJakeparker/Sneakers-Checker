@@ -247,7 +247,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingVertical="@dimen/activity_margin_8dp"
+                    android:paddingTop="@dimen/activity_margin_8dp"
+                    android:paddingBottom="@dimen/activity_margin_10dp"
                     android:gravity="center_vertical"
                     android:visibility="gone">
 

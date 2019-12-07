@@ -159,7 +159,7 @@ class ContractRequest {
             }
         }
 
-        fun getTableRowObservable(tableName: String, temId: String, eosCallBack: EOSCallBack) {
+        fun getTableRowObservable(tableName: String, temId: Long, eosCallBack: EOSCallBack) {
             val callable = Callable<String> {
                 val rpcProvider: EosioJavaRpcProviderImpl
                 try {
@@ -169,7 +169,7 @@ class ContractRequest {
                             "\"code\": \"" + contractName + "\",\n" +
                             "\"scope\": \"" + contractName + "\",\n" +
                             "\"table\": \"" + tableName + "\",\n" +
-                            "\"lower_bound\": \"" + temId + "\",\n" +
+                            "\"lower_bound\": " + temId + ",\n" +
                             "\"limit\": " + 1 + ",\n" +
                             "\"reverse\": " + false + ",\n" +
                             "\"show_payer\": " + false + "\n" +
@@ -218,9 +218,7 @@ class ContractRequest {
                 .subscribe({response ->
                     val responseObj = JSONObject(response)
                     val rows = responseObj.getJSONArray("rows")
-                    val sneakerContractModel =
-                        Gson().fromJson(rows.getJSONObject(0).toString(), SneakerContractModel::class.java)
-                    eosCallBack.onDone(sneakerContractModel as SneakerContractModel, null)
+                    eosCallBack.onDone(rows.getJSONObject(0).toString(), null)
                 },
                     {
                             e -> eosCallBack.onDone(null, e)
