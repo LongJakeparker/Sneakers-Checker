@@ -293,7 +293,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setItemStatus(icon: Int, label: Int) {
-        tvItemStatus.setCompoundDrawablesWithIntrinsicBounds( icon, 0, 0, 0);
+        tvItemStatus.setCompoundDrawablesWithIntrinsicBounds( icon, 0, 0, 0)
         tvItemStatus.text = getString(label)
     }
 
@@ -416,8 +416,6 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 }
             })
     }
-
-    
 
     private fun loadItemInfo() {
         hadScanResult = true
