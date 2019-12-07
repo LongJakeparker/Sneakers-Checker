@@ -168,5 +168,10 @@
     <string name="msg_phone_existing">Oops!\nThis number has been used already!</string>
     <string name="msg_login_failed">Oops!\nPhone or password not correct.</string>
     <string name="msg_sneaker_not_exist">Sneaker not exist</string>
+    <string name="label_button_sell">Sale item</string>
+    <string name="label_button_stolen">Stolen</string>
+    <string name="label_button_found">Found it</string>
+    <string name="label_button_scan_now">Scan now</string>
+    <string name="text_item_was_stolen">(Was stolen)</string>
 
 </resources>
