@@ -9,20 +9,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.common.hash.Hashing
+import com.google.gson.GsonBuilder
 import com.sneakers.sneakerschecker.MainActivity
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.model.RetrofitClientInstance
-import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.contract.ContractRequest
+import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_update_user_register.*
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.nio.charset.StandardCharsets
+import android.app.Activity
+
+
+
 
 class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
@@ -31,6 +37,8 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
     private lateinit var service: Retrofit
 
     private lateinit var sharedPref: SharedPref
+    private var userInfo: SignIn? = null
+    private var password: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +51,10 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
+
+        password = activity?.intent?.getStringExtra(Constant.EXTRA_USER_PASSWORD)
+
+        userInfo = sharedPref.getUser(Constant.LOGIN_USER)
 
         return fragmentView
     }
@@ -59,10 +71,10 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
     private fun updateUser() {
         CommonUtils.toggleLoading(fragmentView, true)
         val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
-        val userInfo = sharedPref.getUser(Constant.LOGIN_USER)
         val params = HashMap<String, Any>()
         params[Constant.API_FIELD_USER_NAME] = etUserName.text.toString().trim()
         params[Constant.API_FIELD_USER_ADDRESS] = etUserAddress.text.toString().trim()
+        params[Constant.API_FIELD_USER_EMAIL] = etUserEmail.text.toString().trim()
 
         val call = service.create(MainApi::class.java)
             .updateUser(accessToken, userInfo?.user?.id!!, params)
@@ -79,9 +91,9 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
             ) {
                 CommonUtils.toggleLoading(fragmentView, false)
                 if (response.code() == 204) {
-                    userInfo.user.username = etUserName.text.toString().trim()
-                    userInfo.user.address = etUserAddress.text.toString().trim()
-                    sharedPref.setUser(userInfo, Constant.LOGIN_USER)
+                    userInfo?.user?.username = etUserName.text.toString().trim()
+                    userInfo?.user?.address = etUserAddress.text.toString().trim()
+                    sharedPref.setUser(userInfo!!, Constant.LOGIN_USER)
 
                     val intent = Intent(activity, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -96,9 +108,56 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
     }
 
+    fun updateSmartContract() {
+        CommonUtils.toggleLoading(fragmentView, true)
+        if (password.isNullOrEmpty()) {
+            CommonUtils.toggleLoading(fragmentView, false)
+            val passcodeDialog = InputPasswordDialog()
+            passcodeDialog.setTargetFragment(this, Constant.DIALOG_REQUEST_CODE)
+            passcodeDialog.show(fragmentManager!!, InputPasswordDialog::class.java.simpleName)
+        } else {
+            callSmartContractApi()
+        }
+    }
+
+    private fun callSmartContractApi() {
+        CommonUtils.toggleLoading(fragmentView, true)
+        val gson =
+            GsonBuilder().registerTypeAdapter(SneakerModel::class.java, UserModelJsonSerializer())
+                .create()
+        val strResponseHash = gson.toJson(userInfo?.user)
+        val updateHash =
+            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
+
+        val jsonData = ContractRequest.updateUserJson(
+            userInfo?.user?.eosName!!,
+            userInfo?.user?.id!!,
+            updateHash
+        )
+
+        ContractRequest.callEosApi(userInfo?.user?.eosName!!,
+            ContractRequest.METHOD_UPDATE_USER,
+            jsonData,
+            getString(R.string.format_eascrypt_password, password),
+            userInfo?.user?.encryptedPrivateKey,
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
+                        updateUser()
+                    } else {
+                        CommonUtils.toggleLoading(fragmentView, false)
+                        Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                        password = ""
+                        updateSmartContract()
+                    }
+                }
+            })
+    }
+
     override fun onClick(v: View?) {
         when (v) {
-            btnUpdate -> updateUser()
+            btnUpdate -> updateSmartContract()
 
             root -> CommonUtils.hideKeyboard(activity)
         }
@@ -120,5 +179,16 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
     fun validateData(): Boolean {
         return !(etUserName.text.toString().trim().isEmpty() || etUserAddress.text.toString().trim().isEmpty())
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.DIALOG_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            if (data?.extras?.containsKey(Constant.EXTRA_USER_PASSWORD)!!) {
+                password = data.extras?.getString(Constant.EXTRA_USER_PASSWORD)
+                callSmartContractApi()
+            }
+        }
     }
 }

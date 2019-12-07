@@ -46,6 +46,11 @@ object Constant {
     const val API_FIELD_EOS_NAME = "eosName"
     const val API_FIELD_USER_IDENTITY = "userIdentity"
 
+    const val DIALOG_REQUEST_CODE = 1004
+
+    const val CONTRACT_TABLE_SNEAKER = "sneakers"
+    const val CONTRACT_TABLE_USERS = "users"
+
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"
 
@@ -57,8 +62,10 @@ object Constant {
 
     class ItemCondition {
         companion object {
-            val ISSUED = "issued"
+            val NEW = "new"
+            val NOT_NEW = "not new"
             val STOLEN = "stolen"
+            val FRAUD = "fraud"
         }
     }
 }

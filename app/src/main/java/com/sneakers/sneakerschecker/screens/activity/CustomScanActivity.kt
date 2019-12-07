@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.common.hash.Hashing
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
@@ -26,6 +27,7 @@ import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.Contract
+import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.contract.TrueGrailToken
 import com.sneakers.sneakerschecker.model.*
 import io.reactivex.disposables.CompositeDisposable
@@ -59,7 +61,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     private var hadScanResult: Boolean = false
     private var isExpanded: Boolean = false
     private lateinit var validatedItem: ValidateModel
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private lateinit var sneakerContractModel: SneakerContractModel
 
     private var scanResult: String = ""
 
@@ -76,6 +78,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
             scanResult = result.text
             beepManager!!.playBeepSoundAndVibrate()
+            lastText = result.text
 
             when (scanType) {
                 ScanType.SCAN_PRIVATE_KEY -> {
@@ -263,6 +266,14 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             if (!isExpanded) {
                 llScanResultDetail.visibility = View.VISIBLE
 
+                when (sneakerContractModel.status) {
+                    Constant.ItemCondition.NEW -> {
+                        llItemStatus.visibility = View.VISIBLE
+                        setItemStatus(R.drawable.ic_no_owner, R.string.text_item_is_new)
+                        tvClaim.visibility = View.VISIBLE
+                    }
+                }
+
                 blurView.visibility = View.VISIBLE
                 blurView.isClickable = true
                 blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_view))
@@ -282,7 +293,13 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun setItemStatus(icon: Int, label: Int) {
+        tvItemStatus.setCompoundDrawablesWithIntrinsicBounds( icon, 0, 0, 0)
+        tvItemStatus.text = getString(label)
+    }
+
     private fun scanGrail() {
+        lastText = ""
         progressBar.visibility = View.VISIBLE
         tvHeaderGuide.visibility = View.GONE
 
@@ -297,7 +314,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         barcodeView?.pause()
         isExpanded = false
 
-        callApi()
+        startVerifySneaker()
     }
 
     private fun showMessageScanFail(isShow: Boolean) {
@@ -321,7 +338,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun callApi() {
+    private fun startVerifySneaker() {
         val call = service.create(MainApi::class.java)
             .validateSneaker(scanResult)
         call.enqueue(object : Callback<ValidateModel> {
@@ -333,7 +350,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             override fun onResponse(call: Call<ValidateModel>, response: Response<ValidateModel>) {
-                if (response.code() == 200) {
+                if (response.isSuccessful) {
                     if (response.body() != null) {
                         validatedItem = response.body()!!
 
@@ -356,6 +373,129 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                         )
                     }
                 } else {
+                    if (response.code() == 404) {
+                        showMessageScanFail(
+                            this@CustomScanActivity.resources.getString(R.string.msg_sneaker_not_exist),
+                            true
+                        )
+                    } else {
+                        showMessageScanFail(
+                            this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                            true
+                        )
+                    }
+                }
+            }
+
+        })
+    }
+
+    private fun validateItem(responseHash: String) {
+        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_SNEAKER,
+            scanResult.toLong(),
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        sneakerContractModel = Gson().fromJson(result as String, SneakerContractModel::class.java)
+                        val blockchainHash = sneakerContractModel.info_hash
+                        if (blockchainHash.isNullOrEmpty()) {
+                            showMessageScanFail(
+                                this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                                true
+                            )
+                        } else {
+                            if (responseHash == blockchainHash) {
+                                validateFactory()
+                            } else {
+                                showMessageScanFail("Information not match with blockchain", true)
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("Scan error: ", e.localizedMessage)
+                    }
+                }
+            })
+    }
+
+    private fun validateFactory() {
+        val gson =
+            GsonBuilder().registerTypeAdapter(
+                FactoryModel::class.java,
+                FactoryModelJsonSerializer()
+            )
+                .create()
+        val strResponseHash = gson.toJson(validatedItem.factory)
+        val responseHash =
+            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
+                .toString()
+
+        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_USERS,
+            validatedItem.detail?.factoryId!!.toLong(),
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        val factoryContractModel = Gson().fromJson(result as String, UserContractModel::class.java)
+                        val blockchainHash = factoryContractModel.info_hash
+                        if (blockchainHash.isNullOrEmpty()) {
+                            showMessageScanFail(
+                                this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                                true
+                            )
+                        } else {
+                            if (responseHash == blockchainHash) {
+                                if (sneakerContractModel.owner_id != 0) {
+                                    getUserInfor()
+                                } else {
+                                    loadItemInfo()
+                                }
+                            } else {
+                                showMessageScanFail("Information not match with blockchain", true)
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("Scan error: ", e.localizedMessage)
+                    }
+                }
+            })
+    }
+
+    private fun getUserInfor() {
+        val call = service.create(MainApi::class.java)
+            .getUserInformation(sneakerContractModel.owner_id!!)
+        call.enqueue(object : Callback<UserUpdateModel> {
+            override fun onFailure(call: Call<UserUpdateModel>, t: Throwable) {
+                showMessageScanFail(
+                    this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                    true
+                )
+            }
+
+            override fun onResponse(call: Call<UserUpdateModel>, response: Response<UserUpdateModel>) {
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        val userInfor = response.body()!!
+
+                        val gson =
+                            GsonBuilder().registerTypeAdapter(
+                                UserUpdateModel::class.java,
+                                UserModelJsonSerializer()
+                            )
+                                .create()
+                        val strResponseHash = gson.toJson(userInfor)
+                        val responseHash =
+                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
+                                .toString()
+
+                        validateUser(responseHash)
+                    } else {
+                        showMessageScanFail(
+                            this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                            true
+                        )
+                    }
+                } else {
                     showMessageScanFail(
                         this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
                         true
@@ -366,41 +506,42 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    private fun validateItem(responseHash: String) {
-        var blockchainHash: String? = ""
-        val rxGetSneakerHash = contract.tokenMetadata(BigInteger(scanResult))
-            .flowable()
-            .subscribeOn(Schedulers.io())
-            .subscribe({ response -> blockchainHash = response },
-                { throwable ->
-                    Log.e("TAG", "Throwable " + throwable.message)
-                }
-            ) {
-                if (blockchainHash.isNullOrEmpty()) {
-                    showMessageScanFail(
-                        this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
-                        true
-                    )
-                } else {
-                    if (responseHash == blockchainHash) {
-                        loadItemInfo()
-                    } else {
-                        showMessageScanFail("Validate with blockchain failed", true)
+    private fun validateUser(responseHash: String) {
+        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_USERS,
+            sneakerContractModel.owner_id!!.toLong(),
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        val userContractModel = Gson().fromJson(result as String, UserContractModel::class.java)
+                        val blockchainHash = userContractModel.info_hash
+                        if (blockchainHash.isNullOrEmpty()) {
+                            showMessageScanFail(
+                                this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
+                                true
+                            )
+                        } else {
+                            if (responseHash == blockchainHash) {
+                                loadItemInfo()
+                            } else {
+                                showMessageScanFail("Information not match with blockchain", true)
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("Scan error: ", e.localizedMessage)
                     }
                 }
-            }
-
-        compositeDisposable.add(rxGetSneakerHash)
+            })
     }
 
     private fun loadItemInfo() {
         hadScanResult = true
         barcodeView?.resume()
 
-        tvItemName.text = validatedItem.detail.model
-        tvItemBrand.text = validatedItem.detail.brand
-        tvItemSize.text = validatedItem.detail.size.toString()
-        tvItemReleaseDate.text = validatedItem.detail.releaseDate
+        tvItemName.text = validatedItem.detail?.model
+        tvItemBrand.text = validatedItem.detail?.brand
+        tvItemSize.text = validatedItem.detail?.size.toString()
+        tvItemReleaseDate.text = validatedItem.detail?.releaseDate
 
         progressBar.visibility = View.GONE
 

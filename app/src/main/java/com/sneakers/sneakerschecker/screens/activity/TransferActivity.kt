@@ -59,9 +59,9 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
         val web3 = Web3Instance.getInstance()
         contract = web3?.let { Contract.getInstance(it, sharedPref.getCredentials(Constant.USER_CREDENTIALS)) }!!
 
-        if (intent.getParcelableExtra<SneakerModel>(Constant.EXTRA_SNEAKER) != null) {
-            sellItem = intent.getParcelableExtra(Constant.EXTRA_SNEAKER)
-        }
+//        if (intent.getParcelableExtra<SneakerModel>(Constant.EXTRA_SNEAKER) != null) {
+//            sellItem = intent.getParcelableExtra(Constant.EXTRA_SNEAKER)
+//        }
 
         builder = AlertDialog.Builder(this)
         builder.setCancelable(false) // if you want user to wait for some process to finish,
@@ -75,7 +75,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadItemInfo() {
-        if (sellItem.limitedEdition) {
+        if (sellItem.limitedEdition!!) {
             tvIsLimited.visibility = View.VISIBLE
         }
 
@@ -85,8 +85,6 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
         tvItemColorWay.text = sellItem.colorway
         tvItemReleaseDate.text = sellItem.releaseDate
         tvItemSize.text = sellItem.size.toString()
-        tvItemCondition.text = sellItem.condition
-        tvItemOwnerAddress.text = sellItem.ownerAddress
     }
 
     override fun onClick(v: View?) {
@@ -104,25 +102,25 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun commitItem() {
         dialog.show()
-        sellItem.ownerAddress = etTransferAddress.text.toString().trim().toLowerCase()
+//        sellItem.ownerAddress = etTransferAddress.text.toString().trim().toLowerCase()
 
         val gson = GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer()).create()
         val strSellItem = gson.toJson(sellItem)
         val newHash = Hashing.sha256().hashString(strSellItem, StandardCharsets.UTF_8).toString()
 
-        val sneakerReceipt = contract.transfer(
-            etTransferAddress.text.toString().trim(),
-            sellItem.id,
-            newHash
-        )
-            .flowable()
-            .subscribeOn(Schedulers.io())
-            .subscribe({ response -> },
-                { throwable ->
-                    Log.e("TAG", "Throwable " + throwable.message)
-                })
-
-        compositeDisposable.add(sneakerReceipt)
+//        val sneakerReceipt = contract.transfer(
+//            etTransferAddress.text.toString().trim(),
+//            sellItem.id,
+//            newHash
+//        )
+//            .flowable()
+//            .subscribeOn(Schedulers.io())
+//            .subscribe({ response -> },
+//                { throwable ->
+//                    Log.e("TAG", "Throwable " + throwable.message)
+//                })
+//
+//        compositeDisposable.add(sneakerReceipt)
 
     }
 

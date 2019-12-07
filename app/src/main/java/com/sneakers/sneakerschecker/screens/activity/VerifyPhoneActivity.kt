@@ -293,8 +293,6 @@ class VerifyPhoneActivity : AppCompatActivity(), View.OnClickListener {
         data[Constant.API_FIELD_ENCRYPTED_PRIVATE_KEY] = encryptedPrivateKey
         data[Constant.API_FIELD_USER_ROLE] = Constant.USER_ROLE_COLLECTOR
         data[Constant.API_FIELD_EOS_NAME] = CommonUtils.generateEOSAccountName()
-        data[Constant.API_FIELD_USER_NAME] = "Thomas Johnson"
-        data[Constant.API_FIELD_USER_ADDRESS] = "Thomas Johnson"
 //        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
 
         CommonUtils.toggleLoading(window.decorView.rootView, true)
@@ -348,7 +346,7 @@ class VerifyPhoneActivity : AppCompatActivity(), View.OnClickListener {
                 if (response.code() == 200) {
                     sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
 
-                    FinishVerifyActivity.start(this@VerifyPhoneActivity)
+                    FinishVerifyActivity.start(this@VerifyPhoneActivity, password!!)
 
                 } else {
                     Toast.makeText(this@VerifyPhoneActivity, response.errorBody()!!.string(), Toast.LENGTH_SHORT)

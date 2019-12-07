@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
@@ -34,6 +35,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     private var isShowingPassword: Boolean = false
 
+    private lateinit var listIvPassCode: Array<ImageView>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,10 +55,19 @@ class LoginFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        etUserPassword.addTextChangedListener(textWatcher)
+        listIvPassCode = arrayOf(
+            ivNumber1,
+            ivNumber2,
+            ivNumber3,
+            ivNumber4,
+            ivNumber5,
+            ivNumber6
+        )
+
         etUserPhone.addTextChangedListener(textWatcher)
+        etUserPassword.addTextChangedListener(passwordTextWatcher)
         btnLogin.setOnClickListener(this)
-        btnShowPassword.setOnClickListener(this)
+//        btnShowPassword.setOnClickListener(this)
         root.setOnClickListener(this)
         ibBack.setOnClickListener(this)
     }
@@ -74,6 +86,29 @@ class LoginFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private val passwordTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable) {
+            if (s.isNotEmpty()) {
+                listIvPassCode[s.length - 1].setImageResource(R.drawable.drawable_bg_pass_code_black)
+                if (s.length < 6) {
+                    listIvPassCode[s.length].setImageResource(R.drawable.drawable_bg_pass_code)
+                } else {
+                    btnLogin.isEnabled = validateData()
+                }
+            } else {
+                listIvPassCode[0].setImageResource(R.drawable.drawable_bg_pass_code)
+            }
+        }
+    }
+
     fun validateData(): Boolean {
         return !(etUserPhone.text.trim().length < 9 || etUserPassword.text.trim().length < 6)
     }
@@ -83,7 +118,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
             R.id.btnLogin -> requestLogIn()
 
-            R.id.btnShowPassword -> showPassword()
+//            R.id.btnShowPassword -> showPassword()
 
             R.id.root -> CommonUtils.hideKeyboard(activity)
 
@@ -91,21 +126,21 @@ class LoginFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun showPassword() {
-        val cursorStart = etUserPassword.selectionStart
-        val cursorEnd = etUserPassword.selectionEnd
-        if (!isShowingPassword) {
-            etUserPassword.transformationMethod = null
-            isShowingPassword = true
-            etUserPassword.setSelection(cursorStart, cursorEnd)
-            btnShowPassword.setImageResource(R.drawable.ic_hide_password)
-        } else {
-            etUserPassword.transformationMethod = PasswordTransformationMethod()
-            isShowingPassword = false
-            etUserPassword.setSelection(cursorStart, cursorEnd)
-            btnShowPassword.setImageResource(R.drawable.ic_show_password)
-        }
-    }
+//    private fun showPassword() {
+//        val cursorStart = etUserPassword.selectionStart
+//        val cursorEnd = etUserPassword.selectionEnd
+//        if (!isShowingPassword) {
+//            etUserPassword.transformationMethod = null
+//            isShowingPassword = true
+//            etUserPassword.setSelection(cursorStart, cursorEnd)
+//            btnShowPassword.setImageResource(R.drawable.ic_hide_password)
+//        } else {
+//            etUserPassword.transformationMethod = PasswordTransformationMethod()
+//            isShowingPassword = false
+//            etUserPassword.setSelection(cursorStart, cursorEnd)
+//            btnShowPassword.setImageResource(R.drawable.ic_show_password)
+//        }
+//    }
 
     private fun requestLogIn() {
         CommonUtils.toggleLoading(fragmentView, true)
@@ -115,18 +150,22 @@ class LoginFragment : Fragment(), View.OnClickListener {
             .signInApi(
                 authToken,
                 Constant.GRANT_TYPE_PASSWORD,
-                pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim(),
+                "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
                 etUserPassword.text.toString().trim()
             )
         call.enqueue(object : Callback<SignIn> {
 
             override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
                 CommonUtils.toggleLoading(fragmentView, false)
-                if (response.code() == 200) {
+                if (response.isSuccessful) {
                     sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
                     activity!!.setResult(Activity.RESULT_OK)
                     activity!!.finish()
 
+                } else if (response.code() == 503) {
+                    tvWarning.text = getString(R.string.msg_login_failed)
+                    tvWarning.visibility = View.VISIBLE
+                    Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 } else {
                     tvWarning.text = response.message()
                     tvWarning.visibility = View.VISIBLE
