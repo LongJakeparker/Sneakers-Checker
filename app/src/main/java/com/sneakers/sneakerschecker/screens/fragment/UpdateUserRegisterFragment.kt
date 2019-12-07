@@ -140,6 +140,7 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
             jsonData,
             getString(R.string.format_eascrypt_password, password),
             userInfo?.user?.encryptedPrivateKey,
+            null,
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {

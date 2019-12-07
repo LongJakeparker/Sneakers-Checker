@@ -30,6 +30,7 @@ import com.sneakers.sneakerschecker.contract.Contract
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.contract.TrueGrailToken
 import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_custom_scan.*
@@ -46,14 +47,14 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     class ScanType {
         companion object {
             val SCAN_GRAIL = 1
-            val SCAN_PRIVATE_KEY = 2
-            val SCAN_ADDRESS = 3
-            val SCAN_CLAIM_TOKEN = 4
+            val SCAN_ADDRESS = 2
+            val SCAN_CLAIM_TOKEN = 3
         }
     }
 
     private val TAG = CustomScanActivity::class.java.simpleName
     private val MY_PERMISSIONS_REQUEST_CAMERA = 101
+    private val REQUEST_CODE_CLAIM= 1005
     private var barcodeView: DecoratedBarcodeView? = null
     private var beepManager: BeepManager? = null
     private var lastText: String? = null
@@ -62,6 +63,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     private var isExpanded: Boolean = false
     private lateinit var validatedItem: ValidateModel
     private lateinit var sneakerContractModel: SneakerContractModel
+    private lateinit var userInfo: User
 
     private var scanResult: String = ""
 
@@ -81,14 +83,10 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             lastText = result.text
 
             when (scanType) {
-                ScanType.SCAN_PRIVATE_KEY -> {
-                    val returnIntent = Intent()
-                    returnIntent.putExtra(Constant.EXTRA_PRIVATE_KEY, scanResult)
-                    setResult(Activity.RESULT_OK, returnIntent)
-                    finish()
-                }
 
                 ScanType.SCAN_GRAIL -> scanGrail()
+
+                ScanType.SCAN_CLAIM_TOKEN -> scanClaimToken()
             }
         }
 
@@ -102,8 +100,9 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             activity.startActivity(intent)
         }
 
-        fun startForResult(activity: Activity, scanType: Int, requestCode: Int) {
+        fun startForResult(activity: Activity, sneakerContractModel: SneakerContractModel, scanType: Int, requestCode: Int) {
             val intent = Intent(activity, CustomScanActivity::class.java)
+            intent.putExtra(Constant.EXTRA_SNEAKER, sneakerContractModel)
             intent.putExtra(Constant.EXTRA_SCAN_TYPE, scanType)
             activity.startActivityForResult(intent, requestCode)
         }
@@ -116,7 +115,15 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
         scanType = intent?.getIntExtra(Constant.EXTRA_SCAN_TYPE, 0)
 
+        if (intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) != null) {
+            sneakerContractModel = intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerContractModel
+        }
+
         sharedPref = SharedPref(this)
+
+        userInfo = sharedPref.getUser(Constant.LOGIN_USER)?.user!!
+
+        service = RetrofitClientInstance().getRetrofitInstance()!!
 
         barcodeView = findViewById<View>(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
         val formats = listOf(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
@@ -149,6 +156,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         btnCloseBottomView.setOnClickListener(this)
         blurView.setOnClickListener(this)
         btnClose.setOnClickListener(this)
+        tvClaim.setOnClickListener(this)
     }
 
     private fun setupBottomView() {
@@ -159,43 +167,15 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     R.drawable.ic_guideline_scan_grail, R.string.title_guide_scan_grail,
                     R.string.content_guide_scan_grail
                 )
-
-                //Get instant retrofit
-                service = RetrofitClientInstance().getRetrofitInstance()!!
-
-                val web3 = Web3Instance.getInstance()
-
-//                if (CommonUtils.isNonLoginUser(this)) {
-//                    contract = web3?.let {
-//                        Contract.getInstance(
-//                            it,
-//                            sharedPref.getCredentials(Constant.APP_CREDENTIALS)
-//                        )
-//                    }!!
-//                } else {
-//                    contract = web3?.let {
-//                        Contract.getInstance(
-//                            it,
-//                            sharedPref.getCredentials(Constant.USER_CREDENTIALS)
-//                        )
-//                    }!!
-//                }
-
-                contract = web3?.let {
-                    Contract.getInstance(
-                        it,
-                        sharedPref.getCredentials(Constant.APP_CREDENTIALS)
-                    )
-                }!!
             }
 
-            ScanType.SCAN_PRIVATE_KEY -> {
+            ScanType.SCAN_CLAIM_TOKEN -> {
                 setContentBottomView(
-                    R.string.activity_title_scan_private_key,
-                    R.string.header_guide_scan_private_key,
-                    R.drawable.ic_guideline_scan_private_key,
-                    R.string.title_guide_scan_private_key,
-                    R.string.content_guide_scan_private_key
+                    R.string.activity_title_scan_claim,
+                    R.string.header_guide_scan_claim,
+                    R.drawable.ic_guideline_scan_claim,
+                    R.string.title_guide_scan_claim,
+                    R.string.content_guide_scan_claim
                 )
             }
         }
@@ -216,15 +196,17 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.rlRootBottomView -> {
+        when (v) {
+            rlRootBottomView -> {
                 if (!isExpanded) {
                     expandBottomView()
                 }
             }
-            R.id.btnCloseBottomView, R.id.blurView -> expandBottomView()
+            btnCloseBottomView, blurView -> expandBottomView()
 
-            R.id.btnClose -> finish()
+            btnClose -> finish()
+
+            tvClaim -> startForResult(this, sneakerContractModel, ScanType.SCAN_CLAIM_TOKEN, REQUEST_CODE_CLAIM)
         }
     }
 
@@ -298,7 +280,31 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         tvItemStatus.text = getString(label)
     }
 
-    private fun scanGrail() {
+    private fun scanClaimToken() {
+        startProgress()
+        val jsonData = ContractRequest.ClaimSneakerJson(
+            sneakerContractModel.id!!,
+            userInfo.id!!
+        )
+
+        ContractRequest.callEosApi(sneakerContractModel.owner!!,
+            ContractRequest.METHOD_TRANSFER,
+            jsonData,
+            null,
+            null,
+            scanResult,
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        Toast.makeText(this@CustomScanActivity, "Transaction id: $result", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this@CustomScanActivity, e.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+    }
+
+    private fun startProgress() {
         lastText = ""
         progressBar.visibility = View.VISIBLE
         tvHeaderGuide.visibility = View.GONE
@@ -313,7 +319,10 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
         barcodeView?.pause()
         isExpanded = false
+    }
 
+    private fun scanGrail() {
+        startProgress()
         startVerifySneaker()
     }
 

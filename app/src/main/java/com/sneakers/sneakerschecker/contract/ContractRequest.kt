@@ -1,12 +1,7 @@
 package com.sneakers.sneakerschecker.contract
 
-import android.content.Context
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.sneakers.sneakerschecker.model.AESCrypt
-import com.sneakers.sneakerschecker.model.SneakerContractModel
-import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.utils.ErrorUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -37,6 +32,7 @@ class ContractRequest {
         val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
         val METHOD_UPDATE_USER = "updateuser"
+        val METHOD_TRANSFER = "transfer"
 
         fun updateUserJson(eosName: String, id: Int, infoHash: String): String {
             return "{\n" +
@@ -46,12 +42,20 @@ class ContractRequest {
                     "}"
         }
 
+        fun ClaimSneakerJson(sneakerId: Long, newOwnerId: Int): String {
+            return "{\n" +
+                    "\"sneaker_id\": " + sneakerId + ",\n" +
+                    "\"new_owner_id\": " + newOwnerId + "\n" +
+                    "}"
+        }
+
         fun callEosApi(
             eosName: String,
             methodName: String,
             jsonData: String,
             password: String?,
             encryptedPrivateKey: String?,
+            claimPrivatekey: String?,
             eosCallBack: EOSCallBack
         ) {
             val callable = Callable<PushTransactionResponse> {
@@ -76,7 +80,13 @@ class ContractRequest {
                         signatureProvider.importKey(privateKey)
                     } catch (importKeyError: ImportKeyError) {
                         importKeyError.printStackTrace()
-                        //                    this.publishProgress(java.lang.Boolean.toString(false), importKeyError.message)
+                        null
+                    }
+                } else if (claimPrivatekey != null) {
+                    try {
+                        signatureProvider.importKey(claimPrivatekey)
+                    } catch (importKeyError: ImportKeyError) {
+                        importKeyError.printStackTrace()
                         null
                     }
                 }
@@ -183,7 +193,10 @@ class ContractRequest {
                 } catch (eosioJavaRpcProviderInitializerError: EosioJavaRpcProviderInitializerError) {
                     // Happens if creating EosioJavaRpcProviderImpl unsuccessful
 //                    eosioJavaRpcProviderInitializerError.printStackTrace();
-                    Log.d("EosioJavaRpcProviderInitializerError: ", eosioJavaRpcProviderInitializerError.localizedMessage)
+                    Log.d(
+                        "EosioJavaRpcProviderInitializerError: ",
+                        eosioJavaRpcProviderInitializerError.localizedMessage
+                    )
 
 //                    this.publishProgress(Boolean.toString(false), eosioJavaRpcProviderInitializerError.asJsonString());
                     null
@@ -199,8 +212,7 @@ class ContractRequest {
 //                        this.publishProgress(Boolean.toString(false), backendErrorMessage);
                         Log.d("RpcProviderError: ", backendErrorMessage)
                         null
-                    }
-                    else null
+                    } else null
 
 //                    this.publishProgress(Boolean.toString(false), rpcProviderError.getMessage());
                 } catch (e: JSONException) {
@@ -215,13 +227,13 @@ class ContractRequest {
             val callObservable = Observable.fromCallable(callable)
             val disposable = callObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({response ->
+                .subscribe({ response ->
                     val responseObj = JSONObject(response)
                     val rows = responseObj.getJSONArray("rows")
                     eosCallBack.onDone(rows.getJSONObject(0).toString(), null)
                 },
-                    {
-                            e -> eosCallBack.onDone(null, e)
+                    { e ->
+                        eosCallBack.onDone(null, e)
                     })
 
             compositeDisposable.add(disposable)

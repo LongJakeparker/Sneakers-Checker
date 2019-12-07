@@ -36,10 +36,10 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
             view.ivLimitedBack.visibility = GONE
         }
 
-        if (item.condition == Constant.ItemCondition.STOLEN) {
-            view.rlViewItemStolenFront.visibility = VISIBLE
-            view.clViewItemStolenBack.visibility = VISIBLE
-        }
+//        if (item.condition == Constant.ItemCondition.STOLEN) {
+//            view.rlViewItemStolenFront.visibility = VISIBLE
+//            view.clViewItemStolenBack.visibility = VISIBLE
+//        }
 
         view.flipCard.setOnClickListener {
             view.flipCard.flipTheView()

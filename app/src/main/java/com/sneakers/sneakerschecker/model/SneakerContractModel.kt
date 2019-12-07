@@ -1,6 +1,8 @@
 package com.sneakers.sneakerschecker.model
 
-class SneakerContractModel {
+import java.io.Serializable
+
+class SneakerContractModel : Serializable{
     var id: Long? = 0
     var info_hash: String? = ""
     var owner_id: Int? = 0
