@@ -2,12 +2,18 @@ package com.sneakers.sneakerschecker.contract
 
 import android.content.Context
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.sneakers.sneakerschecker.model.AESCrypt
+import com.sneakers.sneakerschecker.model.SneakerContractModel
+import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.utils.ErrorUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.RequestBody
+import one.block.eosiojava.error.rpcProvider.RpcProviderError
 import one.block.eosiojava.error.session.TransactionPrepareError
 import one.block.eosiojava.error.session.TransactionSignAndBroadCastError
 import one.block.eosiojava.implementations.ABIProviderImpl
@@ -16,9 +22,12 @@ import one.block.eosiojava.models.rpcProvider.Authorization
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse
 import one.block.eosiojava.session.TransactionSession
 import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl
+import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderInitializerError
 import one.block.eosiojavarpcprovider.implementations.EosioJavaRpcProviderImpl
 import one.block.eosiosoftkeysignatureprovider.SoftKeySignatureProviderImpl
 import one.block.eosiosoftkeysignatureprovider.error.ImportKeyError
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.concurrent.Callable
 
 class ContractRequest {
@@ -38,7 +47,6 @@ class ContractRequest {
         }
 
         fun callEosApi(
-            context: Context,
             eosName: String,
             methodName: String,
             jsonData: String,
@@ -149,6 +157,76 @@ class ContractRequest {
 
                 compositeDisposable.add(disposable)
             }
+        }
+
+        fun getTableRowObservable(tableName: String, temId: String, eosCallBack: EOSCallBack) {
+            val callable = Callable<String> {
+                val rpcProvider: EosioJavaRpcProviderImpl
+                try {
+                    rpcProvider = EosioJavaRpcProviderImpl(nodeUrl)
+                    val getTableRowsByIndex = "{\n" +
+                            "\"json\" : " + true + "\n" +
+                            "\"code\": \"" + contractName + "\",\n" +
+                            "\"scope\": \"" + contractName + "\",\n" +
+                            "\"table\": \"" + tableName + "\",\n" +
+                            "\"lower_bound\": \"" + temId + "\",\n" +
+                            "\"limit\": " + 1 + ",\n" +
+                            "\"reverse\": " + false + ",\n" +
+                            "\"show_payer\": " + false + "\n" +
+                            "}"
+
+                    val requestBody = RequestBody.create(
+                        okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                        getTableRowsByIndex
+                    )
+                    rpcProvider.getTableRows(requestBody)
+                } catch (eosioJavaRpcProviderInitializerError: EosioJavaRpcProviderInitializerError) {
+                    // Happens if creating EosioJavaRpcProviderImpl unsuccessful
+//                    eosioJavaRpcProviderInitializerError.printStackTrace();
+                    Log.d("EosioJavaRpcProviderInitializerError: ", eosioJavaRpcProviderInitializerError.localizedMessage)
+
+//                    this.publishProgress(Boolean.toString(false), eosioJavaRpcProviderInitializerError.asJsonString());
+                    null
+                } catch (rpcProviderError: RpcProviderError) {
+                    // Happens if calling getCurrentBalance unsuccessful
+                    rpcProviderError.printStackTrace()
+
+                    // try to get response from backend if the process fail from backend
+                    val rpcResponseError = ErrorUtils.getBackendError(rpcProviderError)
+                    if (rpcResponseError != null) {
+                        val backendErrorMessage =
+                            ErrorUtils.getBackendErrorMessageFromResponse(rpcResponseError)
+//                        this.publishProgress(Boolean.toString(false), backendErrorMessage);
+                        Log.d("RpcProviderError: ", backendErrorMessage)
+                        null
+                    }
+                    else null
+
+//                    this.publishProgress(Boolean.toString(false), rpcProviderError.getMessage());
+                } catch (e: JSONException) {
+                    // Happens if parsing JSON response unsuccessful
+                    Log.d("JSONException: ", e.localizedMessage)
+
+                    null
+//                    this.publishProgress(Boolean.toString(false), e.getMessage());
+                }
+            }
+
+            val callObservable = Observable.fromCallable(callable)
+            val disposable = callObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({response ->
+                    val responseObj = JSONObject(response)
+                    val rows = responseObj.getJSONArray("rows")
+                    val sneakerContractModel =
+                        Gson().fromJson(rows.getJSONObject(0).toString(), SneakerContractModel::class.java)
+                    eosCallBack.onDone(sneakerContractModel as SneakerContractModel, null)
+                },
+                    {
+                            e -> eosCallBack.onDone(null, e)
+                    })
+
+            compositeDisposable.add(disposable)
         }
 
         interface EOSCallBack {

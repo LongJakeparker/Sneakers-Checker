@@ -54,6 +54,8 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
         password = activity?.intent?.getStringExtra(Constant.EXTRA_USER_PASSWORD)
 
+        userInfo = sharedPref.getUser(Constant.LOGIN_USER)
+
         return fragmentView
     }
 
@@ -69,7 +71,6 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
     private fun updateUser() {
         CommonUtils.toggleLoading(fragmentView, true)
         val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
-        userInfo = sharedPref.getUser(Constant.LOGIN_USER)
         val params = HashMap<String, Any>()
         params[Constant.API_FIELD_USER_NAME] = etUserName.text.toString().trim()
         params[Constant.API_FIELD_USER_ADDRESS] = etUserAddress.text.toString().trim()
@@ -88,14 +89,16 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
                 call: Call<ResponseBody>,
                 response: Response<ResponseBody>
             ) {
+                CommonUtils.toggleLoading(fragmentView, false)
                 if (response.code() == 204) {
                     userInfo?.user?.username = etUserName.text.toString().trim()
                     userInfo?.user?.address = etUserAddress.text.toString().trim()
                     sharedPref.setUser(userInfo!!, Constant.LOGIN_USER)
 
-                    updateSmartContract()
+                    val intent = Intent(activity, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    startActivity(intent)
                 } else {
-                    CommonUtils.toggleLoading(fragmentView, false)
                     Toast.makeText(context, response.message(), Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -106,13 +109,19 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
     }
 
     fun updateSmartContract() {
-        if (password == null) {
+        CommonUtils.toggleLoading(fragmentView, true)
+        if (password.isNullOrEmpty()) {
             CommonUtils.toggleLoading(fragmentView, false)
             val passcodeDialog = InputPasswordDialog()
             passcodeDialog.setTargetFragment(this, Constant.DIALOG_REQUEST_CODE)
             passcodeDialog.show(fragmentManager!!, InputPasswordDialog::class.java.simpleName)
+        } else {
+            callSmartContractApi()
         }
+    }
 
+    private fun callSmartContractApi() {
+        CommonUtils.toggleLoading(fragmentView, true)
         val gson =
             GsonBuilder().registerTypeAdapter(SneakerModel::class.java, UserModelJsonSerializer())
                 .create()
@@ -126,21 +135,21 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
             updateHash
         )
 
-        ContractRequest.callEosApi(context!!, userInfo?.user?.eosName!!,
+        ContractRequest.callEosApi(userInfo?.user?.eosName!!,
             ContractRequest.METHOD_UPDATE_USER,
             jsonData,
             getString(R.string.format_eascrypt_password, password),
             userInfo?.user?.encryptedPrivateKey,
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
-                    CommonUtils.toggleLoading(fragmentView, false)
                     if (e == null) {
                         Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
-                        val intent = Intent(activity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        startActivity(intent)
+                        updateUser()
                     } else {
+                        CommonUtils.toggleLoading(fragmentView, false)
                         Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                        password = ""
+                        updateSmartContract()
                     }
                 }
             })
@@ -148,7 +157,7 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            btnUpdate -> updateUser()
+            btnUpdate -> updateSmartContract()
 
             root -> CommonUtils.hideKeyboard(activity)
         }
@@ -177,9 +186,8 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
         if (requestCode == Constant.DIALOG_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
 
             if (data?.extras?.containsKey(Constant.EXTRA_USER_PASSWORD)!!) {
-
-                CommonUtils.toggleLoading(fragmentView, true)
                 password = data.extras?.getString(Constant.EXTRA_USER_PASSWORD)
+                callSmartContractApi()
             }
         }
     }

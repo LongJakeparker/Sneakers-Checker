@@ -1,20 +1,21 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import android.app.Activity
-import android.content.Intent
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.utils.CommonUtils
 
 
 class InputPasswordDialog : DialogFragment() {
@@ -73,6 +74,9 @@ class InputPasswordDialog : DialogFragment() {
         })
 
         etInputCode.requestFocus()
+        val keyboard =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        keyboard.showSoftInput(etInputCode, 0)
 
         builder.setView(view)
         return builder.create()

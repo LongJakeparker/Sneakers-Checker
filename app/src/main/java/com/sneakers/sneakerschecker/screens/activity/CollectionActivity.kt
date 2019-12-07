@@ -85,25 +85,25 @@ class CollectionActivity : AppCompatActivity() {
                 CommonUtils.toggleLoading(window.decorView.rootView, false)
                 if (response.code() == 200) {
                     response.body()?.forEach { item ->
-                        val rxCheckOwner = contract.ownerOf(item.id)
-                            .flowable()
-                            .subscribeOn(Schedulers.io())
-                            .subscribe({ response ->
-                                if (response == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
-                                    listCollection.add(item)
-                                }
-                            },
-                                { throwable ->
-                                    Log.e("TAG", "Throwable " + throwable.message)
-                                })
-                            {
-                                runOnUiThread {
-                                    viewPagerCollection.adapter =
-                                        CollectionAdapter(listCollection, this@CollectionActivity)
-                                }
-                            }
-
-                        compositeDisposable.add(rxCheckOwner)
+//                        val rxCheckOwner = contract.ownerOf(item.id)
+//                            .flowable()
+//                            .subscribeOn(Schedulers.io())
+//                            .subscribe({ response ->
+//                                if (response == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
+//                                    listCollection.add(item)
+//                                }
+//                            },
+//                                { throwable ->
+//                                    Log.e("TAG", "Throwable " + throwable.message)
+//                                })
+//                            {
+//                                runOnUiThread {
+//                                    viewPagerCollection.adapter =
+//                                        CollectionAdapter(listCollection, this@CollectionActivity)
+//                                }
+//                            }
+//
+//                        compositeDisposable.add(rxCheckOwner)
                     }
                 } else {
                     Toast.makeText(this@CollectionActivity, response.message(), Toast.LENGTH_SHORT)

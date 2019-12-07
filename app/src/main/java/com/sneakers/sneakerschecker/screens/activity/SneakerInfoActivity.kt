@@ -104,7 +104,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
                         movePagerNext()
                         object : CountDownTimer(500, 500) {
                             override fun onFinish() {
-                                callApi()
+//                                callApi()
                             }
 
                             override fun onTick(millisUntilFinished: Long) {}
@@ -155,130 +155,130 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         viewPagerValidateProgress.currentItem = current
     }
 
-    private fun callApi() {
-        val call = service.create(MainApi::class.java)
-            .validateSneaker(itemToken)
-        call.enqueue(object : Callback<ValidateModel> {
-            override fun onFailure(call: Call<ValidateModel>, t: Throwable) {
-                validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
-                setTextValidateFail()
-                Toast.makeText(
-                    this@SneakerInfoActivity,
-                    "Something went wrong when validate",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onResponse(call: Call<ValidateModel>, response: Response<ValidateModel>) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        validatedItem = response.body()!!
-                        validatedItem.detail.ownerAddress = validatedItem.detail.ownerAddress.toLowerCase()
-
-                        val gson =
-                            GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer())
-                                .create()
-                        val strResponseHash = gson.toJson(validatedItem.detail)
-                        val responseHash =
-                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
-
-                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, true)
-                        object : CountDownTimer(500, 500) {
-                            override fun onFinish() {
-                                movePagerNext()
-                                object : CountDownTimer(500, 500) {
-                                    override fun onFinish() {
-                                        validateItem(responseHash)
-                                    }
-
-                                    override fun onTick(millisUntilFinished: Long) {}
-                                }.start()
-                            }
-
-                            override fun onTick(millisUntilFinished: Long) {}
-                        }.start()
-                    } else {
-                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
-                        setTextValidateFail()
-                    }
-                } else {
-                    validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
-                    setTextValidateFail()
-                }
-            }
-
-        })
-    }
-
-    private fun validateItem(responseHash: String) {
-        var blockchainHash: String? = ""
-        val rxGetSneakerHash = contract.tokenMetadata(BigInteger(itemToken))
-            .flowable()
-            .subscribeOn(Schedulers.io())
-            .subscribe({ response -> blockchainHash = response },
-                { throwable ->
-                    Log.e("TAG", "Throwable " + throwable.message)
-                    validatePagerAdapter.updatePager(this, 2, false)
-                    setTextValidateFail()
-                }
-            ) {
-                if (blockchainHash.isNullOrEmpty()) {
-                    validatePagerAdapter.updatePager(this, 2, false)
-                    setTextValidateFail()
-                } else {
-                    if (responseHash == blockchainHash) {
-                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, true)
-                        loadItemInfo()
-                    } else {
-                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, false)
-                        setTextValidateFail()
-                    }
-                }
-            }
-
-        compositeDisposable.add(rxGetSneakerHash)
-    }
-
-    private fun loadItemInfo() {
-        runOnUiThread {
-            object : CountDownTimer(500, 500) {
-                override fun onFinish() {
-                    tvIsValidated.visibility = VISIBLE
-                    layoutItemInfo.visibility = VISIBLE
-
-                    if (validatedItem.detail.limitedEdition) {
-                        tvIsLimited.visibility = VISIBLE
-                    }
-
-                    tvItemId.text = validatedItem.detail.id.toString()
-                    tvItemBrand.text = validatedItem.detail.brand
-                    tvItemModelName.text = validatedItem.detail.model
-                    tvItemColorWay.text = validatedItem.detail.colorway
-                    tvItemReleaseDate.text = validatedItem.detail.releaseDate
-                    tvItemSize.text = validatedItem.detail.size.toString()
-                    tvItemCondition.text = validatedItem.detail.condition
-                    tvItemOwnerAddress.text = validatedItem.detail.ownerAddress
-
-                    tvOwnerBrand.text = validatedItem.owner?.brand
-                    tvOwnerPhysicalAddress.text = validatedItem.owner?.physicalAddress
-
-                    if (!intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
-                        if (validatedItem.detail.ownerAddress == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
-                            btnSellValidate.visibility = VISIBLE
-                        } else if (validatedItem.detail.condition == Constant.ItemCondition.ISSUED) {
-                            btnClaim.visibility = VISIBLE
-                        } else {
-                            btnDoneValidate.visibility = VISIBLE
-                        }
-                    } else {
-                        btnDoneValidate.visibility = VISIBLE
-                    }
-                }
-
-                override fun onTick(millisUntilFinished: Long) {}
-            }.start()
-        }
-    }
+//    private fun callApi() {
+//        val call = service.create(MainApi::class.java)
+//            .validateSneaker(itemToken)
+//        call.enqueue(object : Callback<ValidateModel> {
+//            override fun onFailure(call: Call<ValidateModel>, t: Throwable) {
+//                validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
+//                setTextValidateFail()
+//                Toast.makeText(
+//                    this@SneakerInfoActivity,
+//                    "Something went wrong when validate",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//
+//            override fun onResponse(call: Call<ValidateModel>, response: Response<ValidateModel>) {
+//                if (response.code() == 200) {
+//                    if (response.body() != null) {
+//                        validatedItem = response.body()!!
+//                        validatedItem.detail.ownerAddress = validatedItem.detail.ownerAddress.toLowerCase()
+//
+//                        val gson =
+//                            GsonBuilder().registerTypeAdapter(SneakerModel::class.java, SneakerModelJsonSerializer())
+//                                .create()
+//                        val strResponseHash = gson.toJson(validatedItem.detail)
+//                        val responseHash =
+//                            Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
+//
+//                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, true)
+//                        object : CountDownTimer(500, 500) {
+//                            override fun onFinish() {
+//                                movePagerNext()
+//                                object : CountDownTimer(500, 500) {
+//                                    override fun onFinish() {
+//                                        validateItem(responseHash)
+//                                    }
+//
+//                                    override fun onTick(millisUntilFinished: Long) {}
+//                                }.start()
+//                            }
+//
+//                            override fun onTick(millisUntilFinished: Long) {}
+//                        }.start()
+//                    } else {
+//                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
+//                        setTextValidateFail()
+//                    }
+//                } else {
+//                    validatePagerAdapter.updatePager(this@SneakerInfoActivity, 1, false)
+//                    setTextValidateFail()
+//                }
+//            }
+//
+//        })
+//    }
+//
+//    private fun validateItem(responseHash: String) {
+//        var blockchainHash: String? = ""
+//        val rxGetSneakerHash = contract.tokenMetadata(BigInteger(itemToken))
+//            .flowable()
+//            .subscribeOn(Schedulers.io())
+//            .subscribe({ response -> blockchainHash = response },
+//                { throwable ->
+//                    Log.e("TAG", "Throwable " + throwable.message)
+//                    validatePagerAdapter.updatePager(this, 2, false)
+//                    setTextValidateFail()
+//                }
+//            ) {
+//                if (blockchainHash.isNullOrEmpty()) {
+//                    validatePagerAdapter.updatePager(this, 2, false)
+//                    setTextValidateFail()
+//                } else {
+//                    if (responseHash == blockchainHash) {
+//                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, true)
+//                        loadItemInfo()
+//                    } else {
+//                        validatePagerAdapter.updatePager(this@SneakerInfoActivity, 2, false)
+//                        setTextValidateFail()
+//                    }
+//                }
+//            }
+//
+//        compositeDisposable.add(rxGetSneakerHash)
+//    }
+//
+//    private fun loadItemInfo() {
+//        runOnUiThread {
+//            object : CountDownTimer(500, 500) {
+//                override fun onFinish() {
+//                    tvIsValidated.visibility = VISIBLE
+//                    layoutItemInfo.visibility = VISIBLE
+//
+//                    if (validatedItem.detail.limitedEdition) {
+//                        tvIsLimited.visibility = VISIBLE
+//                    }
+//
+//                    tvItemId.text = validatedItem.detail.id.toString()
+//                    tvItemBrand.text = validatedItem.detail.brand
+//                    tvItemModelName.text = validatedItem.detail.model
+//                    tvItemColorWay.text = validatedItem.detail.colorway
+//                    tvItemReleaseDate.text = validatedItem.detail.releaseDate
+//                    tvItemSize.text = validatedItem.detail.size.toString()
+//                    tvItemCondition.text = validatedItem.detail.condition
+//                    tvItemOwnerAddress.text = validatedItem.detail.ownerAddress
+//
+//                    tvOwnerBrand.text = validatedItem.owner?.brand
+//                    tvOwnerPhysicalAddress.text = validatedItem.owner?.physicalAddress
+//
+//                    if (!intent.getBooleanExtra(Constant.EXTRA_IS_FROM_AUTHEN, false)) {
+//                        if (validatedItem.detail.ownerAddress == sharedPref.getCredentials(Constant.USER_CREDENTIALS).address) {
+//                            btnSellValidate.visibility = VISIBLE
+//                        } else if (validatedItem.detail.condition == Constant.ItemCondition.ISSUED) {
+//                            btnClaim.visibility = VISIBLE
+//                        } else {
+//                            btnDoneValidate.visibility = VISIBLE
+//                        }
+//                    } else {
+//                        btnDoneValidate.visibility = VISIBLE
+//                    }
+//                }
+//
+//                override fun onTick(millisUntilFinished: Long) {}
+//            }.start()
+//        }
+//    }
 
     private fun setTextValidateFail() {
         runOnUiThread {
@@ -299,7 +299,7 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.btnDoneValidate, R.id.btnBackValidate -> onBackPressed()
 
-            R.id.btnSellValidate -> TransferActivity.start(this@SneakerInfoActivity, validatedItem.detail)
+//            R.id.btnSellValidate -> TransferActivity.start(this@SneakerInfoActivity, validatedItem.detail)
 
             R.id.btnClaim -> goToScan()
         }

@@ -145,8 +145,13 @@
     <string name="label_size">Size (U.S)</string>
     <string name="label_release_date">Released at</string>
     <string name="label_sale">Sale</string>
+    <string name="label_claim">Let’s own</string>
     <string name="label_item_found">Found it</string>
     <string name="text_item_stolen">This item has been stolen</string>
+    <string name="text_item_own_by">Owned by</string>
+    <string name="text_item_is_your">It’s your!</string>
+    <string name="text_item_is_new">Haven’t had owner</string>
+    <string name="text_careful">BE CAREFUL!</string>
 
     <string name="msg_grant_permission_camera">Please grant camera permission to scan</string>
     <string name="msg_scan_fail">Something went wrong when validate</string>
@@ -161,5 +166,7 @@
     <string name="dialog_title_input_password">Enter Passcode</string>
     <string name="dialog_des_input_password">Enter your passcode</string>
     <string name="msg_phone_existing">Oops!\nThis number has been used already!</string>
+    <string name="msg_login_failed">Oops!\nPhone or password not correct.</string>
+    <string name="msg_sneaker_not_exist">Sneaker not exist</string>
 
 </resources>

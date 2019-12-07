@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface MainApi {
-    @GET("sneaker/{sneakerId}")
+    @GET("sneaker/{sneakerId}/")
     fun validateSneaker(@Path("sneakerId") sneakerId: String): Call<ValidateModel>
 
     @GET("user/ownership/{address}")

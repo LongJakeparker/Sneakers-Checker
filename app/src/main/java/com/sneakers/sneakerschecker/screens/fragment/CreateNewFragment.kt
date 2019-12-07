@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.FirebaseException
@@ -48,6 +49,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
     private lateinit var service: Retrofit
     private lateinit var sharedPref: SharedPref
+    private lateinit var listIvPassCode: Array<ImageView>
 
     private var isShowingPassword: Boolean = false
 
@@ -73,12 +75,21 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listIvPassCode = arrayOf(
+            ivNumber1,
+            ivNumber2,
+            ivNumber3,
+            ivNumber4,
+            ivNumber5,
+            ivNumber6
+        )
+
         etUserPhone.addTextChangedListener(textWatcher)
-        etUserPassword.addTextChangedListener(textWatcher)
+        etUserPassword.addTextChangedListener(passwordTextWatcher)
         btnRegister.setOnClickListener(this)
         ibBack.setOnClickListener(this)
         root.setOnClickListener(this)
-        btnShowPassword.setOnClickListener(this)
+//        btnShowPassword.setOnClickListener(this)
     }
 
 
@@ -96,6 +107,29 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private val passwordTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable) {
+            if (s.isNotEmpty()) {
+                listIvPassCode[s.length - 1].setImageResource(R.drawable.drawable_bg_pass_code_black)
+                if (s.length < 6) {
+                    listIvPassCode[s.length].setImageResource(R.drawable.drawable_bg_pass_code)
+                } else {
+                    btnRegister.isEnabled = validateData()
+                }
+            } else {
+                listIvPassCode[0].setImageResource(R.drawable.drawable_bg_pass_code)
+            }
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             btnRegister -> {
@@ -105,7 +139,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
             ibBack -> activity?.onBackPressed()
 
-            btnShowPassword -> showPassword()
+//            btnShowPassword -> showPassword()
 
             root -> CommonUtils.hideKeyboard(activity)
         }
@@ -163,21 +197,21 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun showPassword() {
-        val cursorStart = etUserPassword.selectionStart
-        val cursorEnd = etUserPassword.selectionEnd
-        if (!isShowingPassword) {
-            etUserPassword.transformationMethod = null
-            isShowingPassword = true
-            etUserPassword.setSelection(cursorStart, cursorEnd)
-            btnShowPassword.setImageResource(R.drawable.ic_hide_password)
-        } else {
-            etUserPassword.transformationMethod = PasswordTransformationMethod()
-            isShowingPassword = false
-            etUserPassword.setSelection(cursorStart, cursorEnd)
-            btnShowPassword.setImageResource(R.drawable.ic_show_password)
-        }
-    }
+//    private fun showPassword() {
+//        val cursorStart = etUserPassword.selectionStart
+//        val cursorEnd = etUserPassword.selectionEnd
+//        if (!isShowingPassword) {
+//            etUserPassword.transformationMethod = null
+//            isShowingPassword = true
+//            etUserPassword.setSelection(cursorStart, cursorEnd)
+//            btnShowPassword.setImageResource(R.drawable.ic_hide_password)
+//        } else {
+//            etUserPassword.transformationMethod = PasswordTransformationMethod()
+//            isShowingPassword = false
+//            etUserPassword.setSelection(cursorStart, cursorEnd)
+//            btnShowPassword.setImageResource(R.drawable.ic_show_password)
+//        }
+//    }
 
     fun validateData(): Boolean {
         return !(etUserPhone.text.trim().length < 9 || etUserPassword.text.trim().length < 6)
