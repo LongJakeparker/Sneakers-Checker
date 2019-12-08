@@ -1,9 +1,8 @@
 package com.sneakers.sneakerschecker.model
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-open class UserUpdateModel {
+open class UserUpdateModel : Serializable {
 
     var userIdentity: String? = ""
     var publicKey: String? = ""

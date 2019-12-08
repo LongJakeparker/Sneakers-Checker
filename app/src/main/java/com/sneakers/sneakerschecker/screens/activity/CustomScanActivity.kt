@@ -26,20 +26,15 @@ import com.journeyapps.barcodescanner.DefaultDecoderFactory
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.contract.Contract
 import com.sneakers.sneakerschecker.contract.ContractRequest
-import com.sneakers.sneakerschecker.contract.TrueGrailToken
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 
 
@@ -54,7 +49,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
     private val TAG = CustomScanActivity::class.java.simpleName
     private val MY_PERMISSIONS_REQUEST_CAMERA = 101
-    private val REQUEST_CODE_CLAIM= 1005
+    private val REQUEST_CODE_CLAIM = 1005
+    private val REQUEST_CODE_START_LOGIN_ACTIVITY = 1009
     private var barcodeView: DecoratedBarcodeView? = null
     private var beepManager: BeepManager? = null
     private var lastText: String? = null
@@ -67,7 +63,6 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
     private var scanResult: String = ""
 
-    private lateinit var contract: TrueGrailToken
     private lateinit var sharedPref: SharedPref
     private lateinit var service: Retrofit
 
@@ -100,9 +95,16 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             activity.startActivity(intent)
         }
 
-        fun startForResult(activity: Activity, sneakerContractModel: SneakerContractModel, scanType: Int, requestCode: Int) {
+        fun startForResult(
+            activity: Activity,
+            sneakerContractModel: SneakerContractModel,
+            validateItem: ValidateModel,
+            scanType: Int,
+            requestCode: Int
+        ) {
             val intent = Intent(activity, CustomScanActivity::class.java)
             intent.putExtra(Constant.EXTRA_SNEAKER, sneakerContractModel)
+            intent.putExtra(Constant.EXTRA_VALIDATE_SNEAKER, validateItem)
             intent.putExtra(Constant.EXTRA_SCAN_TYPE, scanType)
             activity.startActivityForResult(intent, requestCode)
         }
@@ -116,12 +118,13 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         scanType = intent?.getIntExtra(Constant.EXTRA_SCAN_TYPE, 0)
 
         if (intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) != null) {
-            sneakerContractModel = intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerContractModel
+            sneakerContractModel =
+                intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerContractModel
+            validatedItem =
+                intent?.getSerializableExtra(Constant.EXTRA_VALIDATE_SNEAKER) as ValidateModel
         }
 
         sharedPref = SharedPref(this)
-
-        userInfo = sharedPref.getUser(Constant.LOGIN_USER)?.user!!
 
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
@@ -170,6 +173,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             ScanType.SCAN_CLAIM_TOKEN -> {
+                userInfo = sharedPref.getUser(Constant.LOGIN_USER)?.user!!
                 setContentBottomView(
                     R.string.activity_title_scan_claim,
                     R.string.header_guide_scan_claim,
@@ -206,7 +210,20 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
             btnClose -> finish()
 
-            tvClaim -> startForResult(this, sneakerContractModel, ScanType.SCAN_CLAIM_TOKEN, REQUEST_CODE_CLAIM)
+            tvClaim -> {
+                if (CommonUtils.isNonLoginUser(this@CustomScanActivity)) {
+                    val intent = Intent(this@CustomScanActivity, LoginActivity::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_START_LOGIN_ACTIVITY)
+                } else {
+                    startForResult(
+                        this,
+                        sneakerContractModel,
+                        validatedItem,
+                        ScanType.SCAN_CLAIM_TOKEN,
+                        REQUEST_CODE_CLAIM
+                    )
+                }
+            }
         }
     }
 
@@ -247,12 +264,30 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             if (!isExpanded) {
                 llScanResultDetail.visibility = View.VISIBLE
+                llItemStatus.visibility = View.GONE
+                tvSale.visibility = View.GONE
+                tvClaim.visibility = View.GONE
+                tvItemOwner.visibility = View.GONE
+                llItemStolen.visibility = View.GONE
 
                 when (sneakerContractModel.status) {
                     Constant.ItemCondition.NEW -> {
                         llItemStatus.visibility = View.VISIBLE
                         setItemStatus(R.drawable.ic_no_owner, R.string.text_item_is_new)
                         tvClaim.visibility = View.VISIBLE
+                    }
+
+                    Constant.ItemCondition.NOT_NEW -> {
+                        llItemStatus.visibility = View.VISIBLE
+                        if (!CommonUtils.isNonLoginUser(this) &&
+                            sneakerContractModel.owner_id == sharedPref.getUser(Constant.LOGIN_USER)?.user?.id) {
+                            setItemStatus(R.drawable.ic_is_your, R.string.text_item_is_your)
+                            tvSale.visibility = View.VISIBLE
+                        } else {
+                            setItemStatus(R.drawable.ic_own_by, R.string.text_item_own_by)
+                            tvItemOwner.visibility = View.VISIBLE
+                            tvItemOwner.text = userInfo.username
+                        }
                     }
                 }
 
@@ -276,7 +311,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setItemStatus(icon: Int, label: Int) {
-        tvItemStatus.setCompoundDrawablesWithIntrinsicBounds( icon, 0, 0, 0)
+        tvItemStatus.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0)
         tvItemStatus.text = getString(label)
     }
 
@@ -296,7 +331,16 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        Toast.makeText(this@CustomScanActivity, "Transaction id: $result", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@CustomScanActivity,
+                            "Transaction id: $result",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        ObtainGrailActivity.start(this@CustomScanActivity, validatedItem)
+
+                        val returnIntent = Intent()
+                        setResult(Activity.RESULT_OK, returnIntent)
+                        finish()
                     } else {
                         Toast.makeText(this@CustomScanActivity, e.message, Toast.LENGTH_LONG).show()
                     }
@@ -405,7 +449,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        sneakerContractModel = Gson().fromJson(result as String, SneakerContractModel::class.java)
+                        sneakerContractModel =
+                            Gson().fromJson(result as String, SneakerContractModel::class.java)
                         val blockchainHash = sneakerContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
@@ -416,11 +461,13 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                             if (responseHash == blockchainHash) {
                                 validateFactory()
                             } else {
-                                showMessageScanFail("Information not match with blockchain", true)
+                                showMessageScanFail(
+                                    "Sneaker information not match with blockchain",
+                                    true
+                                )
                             }
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("Scan error: ", e.localizedMessage)
                     }
                 }
@@ -444,7 +491,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        val factoryContractModel = Gson().fromJson(result as String, UserContractModel::class.java)
+                        val factoryContractModel =
+                            Gson().fromJson(result as String, UserContractModel::class.java)
                         val blockchainHash = factoryContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
@@ -459,11 +507,13 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                                     loadItemInfo()
                                 }
                             } else {
-                                showMessageScanFail("Information not match with blockchain", true)
+                                showMessageScanFail(
+                                    "Factory information not match with blockchain",
+                                    true
+                                )
                             }
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("Scan error: ", e.localizedMessage)
                     }
                 }
@@ -473,18 +523,29 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     private fun getUserInfor() {
         val call = service.create(MainApi::class.java)
             .getUserInformation(sneakerContractModel.owner_id!!)
-        call.enqueue(object : Callback<UserUpdateModel> {
-            override fun onFailure(call: Call<UserUpdateModel>, t: Throwable) {
+        call.enqueue(object : Callback<CollectorModel> {
+            override fun onFailure(call: Call<CollectorModel>, t: Throwable) {
                 showMessageScanFail(
                     this@CustomScanActivity.resources.getString(R.string.msg_scan_fail),
                     true
                 )
             }
 
-            override fun onResponse(call: Call<UserUpdateModel>, response: Response<UserUpdateModel>) {
+            override fun onResponse(
+                call: Call<CollectorModel>,
+                response: Response<CollectorModel>
+            ) {
                 if (response.isSuccessful) {
                     if (response.body() != null) {
-                        val userInfor = response.body()!!
+                        userInfo = response.body()!!.collector!!
+
+                        val hashUserModel = UserUpdateModel()
+                        hashUserModel.userIdentity = userInfo.userIdentity
+                        hashUserModel.username = userInfo.username
+                        hashUserModel.eosName = userInfo.eosName
+                        hashUserModel.publicKey = userInfo.publicKey
+                        hashUserModel.role = userInfo.role
+                        hashUserModel.address = userInfo.address
 
                         val gson =
                             GsonBuilder().registerTypeAdapter(
@@ -492,7 +553,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                                 UserModelJsonSerializer()
                             )
                                 .create()
-                        val strResponseHash = gson.toJson(userInfor)
+                        val strResponseHash = gson.toJson(hashUserModel)
                         val responseHash =
                             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
                                 .toString()
@@ -521,7 +582,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        val userContractModel = Gson().fromJson(result as String, UserContractModel::class.java)
+                        val userContractModel =
+                            Gson().fromJson(result as String, UserContractModel::class.java)
                         val blockchainHash = userContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
@@ -532,11 +594,13 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                             if (responseHash == blockchainHash) {
                                 loadItemInfo()
                             } else {
-                                showMessageScanFail("Information not match with blockchain", true)
+                                showMessageScanFail(
+                                    "Owner information not match with blockchain",
+                                    true
+                                )
                             }
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("Scan error: ", e.localizedMessage)
                     }
                 }
@@ -572,5 +636,16 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         return barcodeView!!.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when {
+            requestCode == REQUEST_CODE_CLAIM &&
+                    resultCode == Activity.RESULT_OK -> {
+                finish()
+            }
+        }
     }
 }

@@ -112,9 +112,7 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
         CommonUtils.toggleLoading(fragmentView, true)
         if (password.isNullOrEmpty()) {
             CommonUtils.toggleLoading(fragmentView, false)
-            val passcodeDialog = InputPasswordDialog()
-            passcodeDialog.setTargetFragment(this, Constant.DIALOG_REQUEST_CODE)
-            passcodeDialog.show(fragmentManager!!, InputPasswordDialog::class.java.simpleName)
+            InputPasswordDialog.show(this, fragmentManager!!)
         } else {
             callSmartContractApi()
         }
@@ -123,9 +121,16 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
     private fun callSmartContractApi() {
         CommonUtils.toggleLoading(fragmentView, true)
         val gson =
-            GsonBuilder().registerTypeAdapter(SneakerModel::class.java, UserModelJsonSerializer())
+            GsonBuilder().registerTypeAdapter(UserUpdateModel::class.java, UserModelJsonSerializer())
                 .create()
-        val strResponseHash = gson.toJson(userInfo?.user)
+        val userContractModel = UserUpdateModel()
+        userContractModel.userIdentity = userInfo?.user?.userIdentity
+        userContractModel.username = etUserName.text.toString().trim()
+        userContractModel.eosName = userInfo?.user?.eosName
+        userContractModel.publicKey = userInfo?.user?.publicKey
+        userContractModel.role = userInfo?.user?.role
+        userContractModel.address = etUserAddress.text.toString().trim()
+        val strResponseHash = gson.toJson(userContractModel)
         val updateHash =
             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
 
@@ -147,8 +152,12 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
                         Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
                         updateUser()
                     } else {
+                        if (e.message == "pad block corrupted") {
+                            Toast.makeText(context, getString(R.string.msg_wrong_password), Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                        }
                         CommonUtils.toggleLoading(fragmentView, false)
-                        Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                         password = ""
                         updateSmartContract()
                     }

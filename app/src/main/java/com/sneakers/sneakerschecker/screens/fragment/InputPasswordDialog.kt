@@ -6,13 +6,17 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
@@ -23,11 +27,20 @@ class InputPasswordDialog : DialogFragment() {
     private lateinit var listIvPassCode: Array<ImageView>
 
     companion object {
-        fun show(fragmentManager: FragmentManager) {
+        fun show(fragment: Fragment, fragmentManager: FragmentManager) {
             val dialog = InputPasswordDialog()
-            dialog.isCancelable = false
+            dialog.setTargetFragment(fragment, Constant.DIALOG_REQUEST_CODE)
             dialog.show(fragmentManager, InputPasswordDialog::class.java.simpleName)
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        dialog?.setCanceledOnTouchOutside(false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -65,7 +78,9 @@ class InputPasswordDialog : DialogFragment() {
                     if (s.length < 6) {
                         listIvPassCode[s.length].setImageResource(R.drawable.drawable_bg_pass_code)
                     } else {
-                        returnPasscode()
+                        Handler().postDelayed({
+                            returnPasscode()
+                        }, 200)
                     }
                 } else {
                     listIvPassCode[0].setImageResource(R.drawable.drawable_bg_pass_code)

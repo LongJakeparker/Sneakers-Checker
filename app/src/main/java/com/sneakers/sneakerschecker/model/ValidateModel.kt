@@ -1,6 +1,8 @@
 package com.sneakers.sneakerschecker.model
 
-class ValidateModel {
+import java.io.Serializable
+
+class ValidateModel : Serializable {
     var detail: SneakerModel? = null
     var factory: FactoryModel? = null
 //    override fun describeContents(): Int {

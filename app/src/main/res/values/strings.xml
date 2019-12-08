@@ -89,6 +89,7 @@
     <string name="label_button_resend_code">Resend</string>
     <string name="label_button_start">Start</string>
     <string name="label_button_update">Update</string>
+    <string name="label_button_done">Done</string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>
@@ -178,5 +179,8 @@
     <string name="label_button_found">Found it</string>
     <string name="label_button_scan_now">Scan now</string>
     <string name="text_item_was_stolen">(Was stolen)</string>
+    <string name="text_congrats">CONGRATULATION</string>
+    <string name="text_des_obtain_grail">You have just obtained a new Grails item.\nIt was been moved to your collections.</string>
+    <string name="msg_wrong_password">Password not correct</string>
 
 </resources>

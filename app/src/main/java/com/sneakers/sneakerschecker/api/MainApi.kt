@@ -1,7 +1,7 @@
 package com.sneakers.sneakerschecker.api
 
+import com.sneakers.sneakerschecker.model.CollectorModel
 import com.sneakers.sneakerschecker.model.SneakerModel
-import com.sneakers.sneakerschecker.model.UserUpdateModel
 import com.sneakers.sneakerschecker.model.ValidateModel
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -36,5 +36,5 @@ interface MainApi {
     fun checkDuplicatePhone(@Query("userIdentity") userIdentity: String): Call<ResponseBody>
 
     @GET("user/collector/{userId}/")
-    fun getUserInformation(@Path("userId") userId: Int): Call<UserUpdateModel>
+    fun getUserInformation(@Path("userId") userId: Int): Call<CollectorModel>
 }
