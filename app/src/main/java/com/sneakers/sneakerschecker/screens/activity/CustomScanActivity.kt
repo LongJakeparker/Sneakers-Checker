@@ -31,6 +31,7 @@ import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
+import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -450,7 +451,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         sneakerContractModel =
-                            Gson().fromJson(result as String, SneakerContractModel::class.java)
+                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), SneakerContractModel::class.java)
                         val blockchainHash = sneakerContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
@@ -492,7 +493,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         val factoryContractModel =
-                            Gson().fromJson(result as String, UserContractModel::class.java)
+                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), UserContractModel::class.java)
                         val blockchainHash = factoryContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
@@ -583,7 +584,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         val userContractModel =
-                            Gson().fromJson(result as String, UserContractModel::class.java)
+                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), UserContractModel::class.java)
                         val blockchainHash = userContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(

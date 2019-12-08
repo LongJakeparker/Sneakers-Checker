@@ -169,21 +169,41 @@ class ContractRequest {
             }
         }
 
-        fun getTableRowObservable(tableName: String, temId: Long, eosCallBack: EOSCallBack) {
+        fun getTableRowObservable(tableName: String, itemId: Long, eosCallBack: EOSCallBack) {
+            getTableRowObservable(tableName, itemId, false, eosCallBack)
+        }
+
+        fun getTableRowObservable(tableName: String, itemId: Long, isSecondaryIndex: Boolean, eosCallBack: EOSCallBack) {
             val callable = Callable<String> {
                 val rpcProvider: EosioJavaRpcProviderImpl
                 try {
                     rpcProvider = EosioJavaRpcProviderImpl(nodeUrl)
-                    val getTableRowsByIndex = "{\n" +
-                            "\"json\" : " + true + "\n" +
-                            "\"code\": \"" + contractName + "\",\n" +
-                            "\"scope\": \"" + contractName + "\",\n" +
-                            "\"table\": \"" + tableName + "\",\n" +
-                            "\"lower_bound\": " + temId + ",\n" +
-                            "\"limit\": " + 1 + ",\n" +
-                            "\"reverse\": " + false + ",\n" +
-                            "\"show_payer\": " + false + "\n" +
-                            "}"
+
+                    val getTableRowsByIndex = if (isSecondaryIndex) {
+                                "{\n" +
+                                "\"json\" : " + true + "\n" +
+                                "\"code\": \"" + contractName + "\",\n" +
+                                "\"scope\": \"" + contractName + "\",\n" +
+                                "\"table\": \"" + tableName + "\",\n" +
+                                "\"index_position\": \"" + "secondary" + "\",\n" +
+                                "\"key_type\": \"" + "i64" + "\",\n" +
+                                "\"lower_bound\": " + itemId + ",\n" +
+                                "\"upper_bound\": " + itemId + ",\n" +
+                                "\"reverse\": " + false + ",\n" +
+                                "\"show_payer\": " + false + "\n" +
+                                "}"
+                    } else {
+                        "{\n" +
+                                "\"json\" : " + true + "\n" +
+                                "\"code\": \"" + contractName + "\",\n" +
+                                "\"scope\": \"" + contractName + "\",\n" +
+                                "\"table\": \"" + tableName + "\",\n" +
+                                "\"lower_bound\": " + itemId + ",\n" +
+                                "\"limit\": " + 1 + ",\n" +
+                                "\"reverse\": " + false + ",\n" +
+                                "\"show_payer\": " + false + "\n" +
+                                "}"
+                    }
 
                     val requestBody = RequestBody.create(
                         okhttp3.MediaType.parse("application/json; charset=utf-8"),
@@ -230,7 +250,7 @@ class ContractRequest {
                 .subscribe({ response ->
                     val responseObj = JSONObject(response)
                     val rows = responseObj.getJSONArray("rows")
-                    eosCallBack.onDone(rows.getJSONObject(0).toString(), null)
+                    eosCallBack.onDone(rows, null)
                 },
                     { e ->
                         eosCallBack.onDone(null, e)

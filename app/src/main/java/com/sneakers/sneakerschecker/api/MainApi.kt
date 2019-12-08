@@ -1,7 +1,7 @@
 package com.sneakers.sneakerschecker.api
 
+import com.sneakers.sneakerschecker.model.CollectionModel
 import com.sneakers.sneakerschecker.model.CollectorModel
-import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.model.ValidateModel
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -11,11 +11,12 @@ interface MainApi {
     @GET("sneaker/{sneakerId}/")
     fun validateSneaker(@Path("sneakerId") sneakerId: String): Call<ValidateModel>
 
-    @GET("user/ownership/{address}")
+    @POST("sneaker/collection/{ownerId}/")
     fun getCollection(
         @Header("Authorization") token: String,
-        @Path("address") userAddress: String
-    ): Call<ArrayList<SneakerModel>>
+        @Path("ownerId") ownerId: Int,
+        @Body param: HashMap<String, Any>
+    ): Call<CollectionModel>
 
     @FormUrlEncoded
     @PATCH("sneaker/ownership")
