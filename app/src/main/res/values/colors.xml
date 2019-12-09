@@ -37,5 +37,6 @@
     <color name="brick">#c92525</color>
     <color name="darkRed">#8d0101</color>
     <color name="warmGrey">#9b9b9b</color>
+    <color name="gray_f4f4f4">#f4f4f4</color>
 
 </resources>

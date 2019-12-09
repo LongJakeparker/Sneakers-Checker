@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".screens.activity.ManageCardActivity"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:background="@android:color/transparent"
+        android:paddingVertical="@dimen/activity_margin_12dp"
+        android:paddingHorizontal="@dimen/activity_margin_12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="@dimen/activity_margin_4dp"
+        android:id="@+id/ibBack"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_manage_credit_card"
+        android:textSize="@dimen/text_size_big"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_margin_24dp"/>
+
+    <LinearLayout
+        android:id="@+id/llViewData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_credit_card"
+            android:layout_marginHorizontal="@dimen/activity_margin_8dp"
+            android:layout_marginTop="@dimen/activity_margin_20dp"
+            android:paddingBottom="@dimen/activity_margin_40dp">
+
+            <ImageView
+                android:id="@+id/ivCardLogo"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/logo_master_card"
+                android:layout_marginTop="@dimen/activity_margin_24dp"
+                android:layout_marginRight="@dimen/activity_margin_40dp"/>
+
+            <LinearLayout
+                android:id="@+id/llCardId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/ivCardLogo"
+                android:layout_marginHorizontal="@dimen/activity_margin_40dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_sim"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:gravity="end"
+                    android:text="✱✱✱✱ ✱✱✱✱ ✱✱✱✱"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:gravity="end"
+                    android:text="4011"
+                    android:layout_marginLeft="@dimen/activity_margin_8dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llCardId"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="@dimen/activity_margin_40dp"
+                android:layout_marginTop="@dimen/activity_margin_40dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Placeholder"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_large"/>
+
+                    <TextView
+                        android:id="@+id/tvOwnerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lucas Pacheco"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_xlarge"
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Valid until"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_large"/>
+
+                    <TextView
+                        android:id="@+id/tvValidDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="08/23"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_xlarge"
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCreditCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_margin_8dp"/>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_margin_8dp"
+                    android:layout_marginHorizontal="@dimen/activity_margin_24dp"
+                    android:layout_marginBottom="@dimen/activity_margin_24dp"
+                    app:cardCornerRadius="@dimen/activity_margin_8dp"
+                    app:cardElevation="3dp">
+
+                    <TextView
+                        android:id="@+id/tvAddCreditCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_add_new_credit_card"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large"
+                        android:drawableLeft="@drawable/ic_add"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/activity_margin_16dp"
+                        android:layout_marginHorizontal="@dimen/activity_margin_16dp"
+                        android:layout_marginVertical="@dimen/activity_margin_12dp"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/view_no_data_credit_card"
+        android:layout_marginTop="@dimen/activity_margin_28dp"
+        android:visibility="gone"/>
+
+</LinearLayout>

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.common.hash.Hashing
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -24,11 +25,15 @@ import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
+import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
 import org.json.JSONArray
@@ -43,7 +48,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     class ScanType {
         companion object {
             val SCAN_GRAIL = 1
-            val SCAN_ADDRESS = 2
+            val SCAN_EOS_NAME = 2
             val SCAN_CLAIM_TOKEN = 3
         }
     }
@@ -80,6 +85,31 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
             when (scanType) {
 
+                ScanType.SCAN_EOS_NAME -> {
+                    if (scanResult.length == 12) {
+                        val returnIntent = Intent()
+                        returnIntent.putExtra(Constant.EXTRA_USER_EOS_NAME, scanResult)
+                        setResult(Activity.RESULT_OK, returnIntent)
+                        finish()
+                    } else {
+                        barcodeView?.pause()
+                        val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_invalid_eos_name),
+                            resources.getString(R.string.dialog_msg_invalid_eos_name), true)
+                        confirmDialogFragment.setListener(object : IDialogListener {
+                            override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
+                                if (ok) {
+                                    barcodeView?.resume()
+                                    lastText = ""
+                                }
+                            }
+                            override fun onDialogCancel(tag: String) {
+
+                            }
+                        })
+                        confirmDialogFragment.show(supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
+                    }
+                }
+
                 ScanType.SCAN_GRAIL -> scanGrail()
 
                 ScanType.SCAN_CLAIM_TOKEN -> scanClaimToken()
@@ -108,6 +138,12 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             intent.putExtra(Constant.EXTRA_VALIDATE_SNEAKER, validateItem)
             intent.putExtra(Constant.EXTRA_SCAN_TYPE, scanType)
             activity.startActivityForResult(intent, requestCode)
+        }
+
+        fun startForResult(fragment: Fragment, scanType: Int, requestCode: Int) {
+            val intent = Intent(fragment.context, CustomScanActivity::class.java)
+            intent.putExtra(Constant.EXTRA_SCAN_TYPE, scanType)
+            fragment.startActivityForResult(intent, requestCode)
         }
     }
 
@@ -181,6 +217,16 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     R.drawable.ic_guideline_scan_claim,
                     R.string.title_guide_scan_claim,
                     R.string.content_guide_scan_claim
+                )
+            }
+
+            ScanType.SCAN_EOS_NAME -> {
+                setContentBottomView(
+                    R.string.activity_title_scan_eos_name,
+                    R.string.header_guide_scan_eos_name,
+                    R.drawable.ic_guideline_scan_eos_name,
+                    R.string.title_guide_scan_eos_name,
+                    R.string.content_guide_scan_eos_name
                 )
             }
         }
