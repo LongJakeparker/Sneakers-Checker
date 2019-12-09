@@ -25,7 +25,7 @@ import retrofit2.Retrofit
 import java.lang.reflect.Type
 
 
-class CollectionActivity : AppCompatActivity() {
+class CollectionActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPref
     private lateinit var service: Retrofit
@@ -60,7 +60,9 @@ class CollectionActivity : AppCompatActivity() {
 
         getCollectionFromContract()
 
-        btnBack.setOnClickListener { onBackPressed() }
+        btnScan.setOnClickListener(this)
+        btnItemSale.setOnClickListener(this)
+        btnBack.setOnClickListener(this)
     }
 
     private fun getCollectionFromContract() {
@@ -142,6 +144,16 @@ class CollectionActivity : AppCompatActivity() {
 
         override fun onPageScrollStateChanged(state: Int) {
 
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            btnScan -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
+
+            btnItemSale -> GrailsTradingActivity.start(this, listCollection[viewPagerCollection.currentItem])
+
+            btnBack -> onBackPressed()
         }
     }
 }

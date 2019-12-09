@@ -32,8 +32,6 @@ import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
 import org.json.JSONArray
@@ -271,6 +269,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     )
                 }
             }
+
+            tvSale -> GrailsTradingActivity.start(this, validatedItem.detail!!)
         }
     }
 

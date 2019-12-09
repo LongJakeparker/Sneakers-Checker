@@ -203,10 +203,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
 
-            tvSetting, ivSetting -> {
-                GrailsTradingActivity.start(this)
-                drawer_layout.closeDrawer(GravityCompat.END)
-            }
+//            tvSetting, ivSetting -> {
+//                drawer_layout.closeDrawer(GravityCompat.END)
+//            }
         }
     }
 

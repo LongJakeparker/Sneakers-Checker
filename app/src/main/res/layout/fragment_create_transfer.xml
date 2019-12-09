@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -73,17 +74,29 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/tvGrailName"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="NMD R1 Trainer"
                                 android:textColor="@android:color/black"
                                 android:textSize="@dimen/text_size_xlarge"
-                                android:textStyle="bold"
-                                android:layout_weight="1"/>
+                                android:textStyle="bold"/>
+
+                            <ImageView
+                                android:id="@+id/ivLimited"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_limited_small"
+                                android:layout_toEndOf="@+id/tvItemNameBack"
+                                android:layout_marginLeft="@dimen/activity_margin_4dp"
+                                android:layout_weight="1"
+                                android:scaleType="fitStart"
+                                android:visibility="gone"
+                                tools:visibility="visible"/>
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/rvGrailColor"

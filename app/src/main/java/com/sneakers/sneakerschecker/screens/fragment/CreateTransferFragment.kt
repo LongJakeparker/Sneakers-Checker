@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.screens.activity.CustomScanActivity
 import kotlinx.android.synthetic.main.fragment_create_transfer.*
 
@@ -18,6 +19,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
     private val REQUEST_CODE_SCAN_EOS_NAME = 1002
 
     private var fragmentView: View? = null
+    private var sneaker: SneakerModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,15 +28,31 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_create_transfer, container, false)
 
+        sneaker = activity?.intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerModel
+
         return fragmentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadSneakerInfo()
+
         btnClose.setOnClickListener(this)
         ivScanEosName.setOnClickListener(this)
+        btnContinue.setOnClickListener(this)
         etReceiverEosName.addTextChangedListener(textWatcher)
+    }
+
+    private fun loadSneakerInfo() {
+        tvGrailName.text = sneaker?.model
+        tvGrailBrand.text = sneaker?.brand
+        tvGrailSize.text = sneaker?.size.toString()
+        tvGrailReleaseDate.text = sneaker?.releaseDate
+
+        if (sneaker?.limitedEdition!!) {
+            ivLimited.visibility = View.VISIBLE
+        }
     }
 
     private val textWatcher = object : TextWatcher {
@@ -71,6 +89,8 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
                     etReceiverEosName.text.clear()
                 }
             }
+
+            btnContinue -> {}
         }
     }
 
