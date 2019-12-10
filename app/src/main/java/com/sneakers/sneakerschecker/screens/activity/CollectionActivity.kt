@@ -17,6 +17,8 @@ import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_collection.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,6 +45,7 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collection)
+        EventBus.getDefault().register(this)
 
         sharedPref = SharedPref(this)
 
@@ -155,5 +158,15 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
 
             btnBack -> onBackPressed()
         }
+    }
+
+    @Subscribe
+    fun onEvent(reloadCollectionEvent: ReloadCollectionEvent) {
+        getCollectionFromContract()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }

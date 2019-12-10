@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -89,12 +90,12 @@ class InputPasswordDialog : DialogFragment() {
         })
 
         etInputCode.requestFocus()
-        val keyboard =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        keyboard.showSoftInput(etInputCode, 0)
 
         builder.setView(view)
-        return builder.create()
+
+        val dialog: Dialog = builder.create()
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        return dialog
     }
 
     private fun returnPasscode() {

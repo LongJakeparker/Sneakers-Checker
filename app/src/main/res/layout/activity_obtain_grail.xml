@@ -120,6 +120,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvCongrats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/img_ribbon"
@@ -135,7 +136,8 @@
         </FrameLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvDesCongrats"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:text="@string/text_des_obtain_grail"
             android:textColor="@android:color/black"

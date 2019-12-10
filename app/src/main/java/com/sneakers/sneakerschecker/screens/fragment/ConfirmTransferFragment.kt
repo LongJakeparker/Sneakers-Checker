@@ -1,22 +1,30 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
+import com.sneakers.sneakerschecker.model.ReloadCollectionEvent
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.model.User
+import com.sneakers.sneakerschecker.screens.activity.ObtainGrailActivity
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_confirm_transfer.*
 import kotlinx.android.synthetic.main.fragment_create_transfer.ivLimited
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailBrand
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailName
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailReleaseDate
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailSize
+import org.greenrobot.eventbus.EventBus
 
 class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private var fragmentView: View? = null
@@ -24,6 +32,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private var receiverEosName: String? = null
     private var receiverName: String? = null
     private var currentUser: User? = null
+    private var password: String? = null
 
     private lateinit var sharedPref: SharedPref
 
@@ -75,11 +84,26 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         when (v) {
             btnBack -> activity?.onBackPressed()
 
-            btnConfirm -> createTransaction()
+            btnConfirm -> {
+                val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_confirm_transaction),
+                    resources.getString(R.string.dialog_msg_confirm_transaction), true)
+                confirmDialogFragment.setListener(object : IDialogListener {
+                    override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
+                        if (ok) {
+                            InputPasswordDialog.show(this@ConfirmTransferFragment, fragmentManager!!)
+                        }
+                    }
+                    override fun onDialogCancel(tag: String) {
+
+                    }
+                })
+                confirmDialogFragment.show(activity!!.supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
+            }
         }
     }
 
     private fun createTransaction() {
+        CommonUtils.toggleLoading(fragmentView, true)
         val jsonData = ContractRequest.transferSneakerJson(
             sneaker?.id!!,
             currentUser?.id!!
@@ -88,14 +112,38 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         ContractRequest.callEosApi(currentUser?.eosName!!,
             ContractRequest.METHOD_TRANSFER,
             jsonData,
-            null,
+            getString(R.string.format_eascrypt_password, password),
             currentUser?.encryptedPrivateKey,
             null,
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
-
+                    CommonUtils.toggleLoading(fragmentView, false)
+                    if (e == null) {
+                        Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
+                        ObtainGrailActivity.start(activity!!, sneaker!!)
+                        EventBus.getDefault().post(ReloadCollectionEvent())
+                        activity?.finish()
+                    } else {
+                        if (e.message == "pad block corrupted") {
+                            Toast.makeText(context, getString(R.string.msg_wrong_password), Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                        }
+                        password = ""
+                    }
                 }
 
             })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.DIALOG_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            if (data?.extras?.containsKey(Constant.EXTRA_USER_PASSWORD)!!) {
+                password = data.extras?.getString(Constant.EXTRA_USER_PASSWORD)
+                createTransaction()
+            }
+        }
     }
 }

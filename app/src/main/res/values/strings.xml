@@ -132,6 +132,8 @@
     <string name="dialog_msg_invalid_eos_name">Receiver\'s EOS name is wrong format</string>
     <string name="dialog_title_close_private_key_confirm">Do you want to close?</string>
     <string name="dialog_msg_close_private_key_confirm">Please copy or write down your private key before close this screen.\nYou can\'t regain if you lost your private key.</string>
+    <string name="dialog_title_confirm_transaction">Transaction confirmation</string>
+    <string name="dialog_msg_confirm_transaction">You need to cost $80 to perform this transaction completely</string>
 
     <string name="activity_title_scan_grail">Scan Grails QR</string>
     <string name="header_guide_scan_grail">How to use the scan feature?</string>
@@ -196,5 +198,7 @@
     <string name="text_transaction_fee">Transaction fee</string>
     <string name="text_des_transaction_fee">This is the extra fee you have to pay for this transaction by your credit card.</string>
     <string name="text_add_payment">Add a payment method</string>
+    <string name="text_successful">SUCCESSFUL</string>
+    <string name="text_des_tranfer_successful">Your Grail has been transferred successful to new owner</string>
 
 </resources>

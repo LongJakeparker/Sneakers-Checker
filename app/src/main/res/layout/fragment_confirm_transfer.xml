@@ -1,279 +1,291 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/activity_margin_4dp"
-        android:background="@android:color/transparent"
-        android:padding="@dimen/activity_margin_12dp"
-        android:layout_marginLeft="@dimen/activity_margin_12dp"
-        android:src="@drawable/ic_back"/>
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_transfer"
-        android:textSize="@dimen/text_size_big"
-        android:textColor="@color/colorBlack"
-        android:layout_marginStart="@dimen/activity_margin_24dp"
-        android:textStyle="bold"/>
-
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-        <FrameLayout
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/activity_margin_4dp"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/activity_margin_12dp"
+            android:layout_marginLeft="@dimen/activity_margin_12dp"
+            android:src="@drawable/ic_back"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_transfer"
+            android:textSize="@dimen/text_size_big"
+            android:textColor="@color/colorBlack"
+            android:layout_marginStart="@dimen/activity_margin_24dp"
+            android:textStyle="bold"/>
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/activity_margin_16dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="270dp"
-                android:src="@drawable/img_line"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/activity_margin_32dp"/>
-
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/activity_margin_16dp">
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="270dp"
+                    android:src="@drawable/img_line"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/activity_margin_32dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_shoes_transfer"
-                        android:layout_marginHorizontal="@dimen/activity_margin_16dp"/>
+                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/activity_margin_16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/drawable_bg_transfer_item"
-                        android:paddingTop="@dimen/activity_margin_16dp"
-                        android:paddingLeft="@dimen/activity_margin_16dp"
-                        android:paddingRight="@dimen/activity_margin_24dp"
-                        android:paddingBottom="@dimen/activity_margin_24dp"
-                        android:layout_marginRight="@dimen/activity_margin_8dp"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_shoes_transfer"
+                            android:layout_marginHorizontal="@dimen/activity_margin_16dp"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:background="@drawable/drawable_bg_transfer_item"
+                            android:paddingTop="@dimen/activity_margin_16dp"
+                            android:paddingLeft="@dimen/activity_margin_16dp"
+                            android:paddingRight="@dimen/activity_margin_24dp"
+                            android:paddingBottom="@dimen/activity_margin_24dp"
+                            android:layout_marginRight="@dimen/activity_margin_8dp"
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tvGrailName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="NMD R1 Trainer"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/text_size_xlarge"
-                                android:textStyle="bold"/>
-
-                            <ImageView
-                                android:id="@+id/ivLimited"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_limited_small"
-                                android:layout_toEndOf="@+id/tvItemNameBack"
-                                android:layout_marginLeft="@dimen/activity_margin_4dp"
-                                android:layout_weight="1"
-                                android:scaleType="fitStart"
-                                android:visibility="gone"
-                                tools:visibility="visible"/>
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rvGrailColor"
+                                <TextView
+                                    android:id="@+id/tvGrailName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="NMD R1 Trainer"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="@dimen/text_size_xlarge"
+                                    android:textStyle="bold"/>
+
+                                <ImageView
+                                    android:id="@+id/ivLimited"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_limited_small"
+                                    android:layout_toEndOf="@+id/tvItemNameBack"
+                                    android:layout_marginLeft="@dimen/activity_margin_4dp"
+                                    android:layout_weight="1"
+                                    android:scaleType="fitStart"
+                                    android:visibility="gone"
+                                    tools:visibility="visible"/>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvGrailColor"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="@dimen/activity_margin_16dp"/>
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvGrailBrand"
                                 android:layout_width="wrap_content"
-                                android:layout_height="@dimen/activity_margin_16dp"/>
+                                android:layout_height="wrap_content"
+                                android:text="Adidas"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/text_size_default"/>
+
+                            <TextView
+                                android:id="@+id/tvGrailSize"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Size 7 (U.S.)"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/text_size_default"/>
+
+                            <TextView
+                                android:id="@+id/tvGrailReleaseDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Released at Aug 28, 2019"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/text_size_default"/>
 
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tvGrailBrand"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Adidas"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_default"/>
-
-                        <TextView
-                            android:id="@+id/tvGrailSize"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Size 7 (U.S.)"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_default"/>
-
-                        <TextView
-                            android:id="@+id/tvGrailReleaseDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Released at Aug 28, 2019"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_default"/>
-
                     </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/activity_margin_16dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_receiver"
-                        android:layout_marginHorizontal="@dimen/activity_margin_16dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/drawable_bg_transfer_item"
-                        android:paddingTop="@dimen/activity_margin_16dp"
-                        android:paddingLeft="@dimen/activity_margin_16dp"
-                        android:paddingRight="@dimen/activity_margin_24dp"
-                        android:paddingBottom="@dimen/activity_margin_24dp"
-                        android:layout_marginRight="@dimen/activity_margin_8dp"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/activity_margin_16dp">
 
-                        <TextView
-                            android:id="@+id/tvReceiverName"
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bárbara Cotilla"
-                            android:textStyle="bold"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_xlarge"/>
-
-                        <TextView
-                            android:id="@+id/tvReceiverEosName"
-                            android:layout_width="match_parent"
-                            android:layout_height="33dp"
-                            android:text="5Kb8kLf9zgWQnogidDA76MzPL6maiP98M"
-                            android:textSize="@dimen/text_size_default"
-                            android:layout_marginTop="@dimen/activity_margin_4dp"
-                            android:textColor="@android:color/black"
-                            android:gravity="center_vertical"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/activity_margin_16dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_card_transfer"
-                        android:layout_marginHorizontal="@dimen/activity_margin_16dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/drawable_bg_transfer_item"
-                        android:paddingTop="@dimen/activity_margin_16dp"
-                        android:paddingLeft="@dimen/activity_margin_16dp"
-                        android:paddingRight="@dimen/activity_margin_24dp"
-                        android:paddingBottom="@dimen/activity_margin_24dp"
-                        android:layout_marginRight="@dimen/activity_margin_8dp"
-                        android:orientation="vertical">
+                            android:src="@drawable/ic_receiver"
+                            android:layout_marginHorizontal="@dimen/activity_margin_16dp"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:background="@drawable/drawable_bg_transfer_item"
+                            android:paddingTop="@dimen/activity_margin_16dp"
+                            android:paddingLeft="@dimen/activity_margin_16dp"
+                            android:paddingRight="@dimen/activity_margin_24dp"
+                            android:paddingBottom="@dimen/activity_margin_24dp"
+                            android:layout_marginRight="@dimen/activity_margin_8dp"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:id="@+id/tvReceiverName"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_transaction_fee"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/text_size_xlarge"
+                                android:text="Bárbara Cotilla"
                                 android:textStyle="bold"
-                                android:layout_weight="1"/>
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/text_size_xlarge"/>
 
                             <TextView
-                                android:id="@+id/tvTransferFee"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="$80"
-                                android:textSize="@dimen/text_size_xxlarge"
-                                android:textColor="@color/colorOrangish"
-                                android:textStyle="bold"/>
+                                android:id="@+id/tvReceiverEosName"
+                                android:layout_width="match_parent"
+                                android:layout_height="33dp"
+                                android:text="5Kb8kLf9zgWQnogidDA76MzPL6maiP98M"
+                                android:textSize="@dimen/text_size_default"
+                                android:layout_marginTop="@dimen/activity_margin_4dp"
+                                android:textColor="@android:color/black"
+                                android:gravity="center_vertical"/>
 
                         </LinearLayout>
 
-                        <TextView
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/activity_margin_16dp">
+
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/text_des_transaction_fee"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_default"
-                            android:layout_marginRight="@dimen/activity_margin_32dp"
-                            android:layout_marginTop="@dimen/activity_margin_4dp"/>
+                            android:src="@drawable/ic_card_transfer"
+                            android:layout_marginHorizontal="@dimen/activity_margin_16dp"/>
 
-                        <TextView
-                            android:id="@+id/tvCardId"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="✱✱✱✱ ✱✱✱✱ ✱✱✱✱ 4242 (11/22)"
-                            android:textColor="@color/colorBlueGreen"
-                            android:textSize="@dimen/text_size_default"
-                            android:textStyle="bold"
-                            android:layout_marginTop="@dimen/activity_margin_12dp"
-                            android:gravity="center_vertical"
-                            android:layout_marginBottom="@dimen/activity_margin_4dp"/>
+                            android:background="@drawable/drawable_bg_transfer_item"
+                            android:paddingTop="@dimen/activity_margin_16dp"
+                            android:paddingLeft="@dimen/activity_margin_16dp"
+                            android:paddingRight="@dimen/activity_margin_24dp"
+                            android:paddingBottom="@dimen/activity_margin_24dp"
+                            android:layout_marginRight="@dimen/activity_margin_8dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_transaction_fee"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="@dimen/text_size_xlarge"
+                                    android:textStyle="bold"
+                                    android:layout_weight="1"/>
+
+                                <TextView
+                                    android:id="@+id/tvTransferFee"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="$80"
+                                    android:textSize="@dimen/text_size_xxlarge"
+                                    android:textColor="@color/colorOrangish"
+                                    android:textStyle="bold"/>
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_des_transaction_fee"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/text_size_default"
+                                android:layout_marginRight="@dimen/activity_margin_32dp"
+                                android:layout_marginTop="@dimen/activity_margin_4dp"/>
+
+                            <TextView
+                                android:id="@+id/tvCardId"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="✱✱✱✱ ✱✱✱✱ ✱✱✱✱ 4242 (11/22)"
+                                android:textColor="@color/colorBlueGreen"
+                                android:textSize="@dimen/text_size_default"
+                                android:textStyle="bold"
+                                android:layout_marginTop="@dimen/activity_margin_12dp"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="@dimen/activity_margin_4dp"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </FrameLayout>
 
-        </FrameLayout>
+        </ScrollView>
 
-    </ScrollView>
+        <TextView
+            android:id="@+id/btnConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/drawable_btn_green_gradient_selector"
+            android:text="@string/label_button_confirm"
+            android:layout_marginBottom="@dimen/activity_margin_24dp"
+            android:textColor="@color/colorWhite"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_xlarge"
+            android:padding="@dimen/activity_margin_16dp"
+            android:layout_marginHorizontal="@dimen/activity_margin_24dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"/>
 
-    <TextView
-        android:id="@+id/btnConfirm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/drawable_btn_green_gradient_selector"
-        android:text="@string/label_button_confirm"
-        android:layout_marginBottom="@dimen/activity_margin_24dp"
-        android:textColor="@color/colorWhite"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_size_xlarge"
-        android:padding="@dimen/activity_margin_16dp"
-        android:layout_marginHorizontal="@dimen/activity_margin_24dp"
-        android:layout_marginTop="@dimen/activity_margin_16dp"/>
+    </LinearLayout>
 
-</LinearLayout>
+    <include
+        android:id="@+id/pb_loading"
+        layout="@layout/loading_medium"
+        android:visibility="gone"/>
+
+</RelativeLayout>

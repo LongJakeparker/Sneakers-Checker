@@ -17,8 +17,6 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.screens.activity.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import android.widget.LinearLayout
@@ -52,8 +50,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        EventBus.getDefault().register(this)
 
         sharedPref = SharedPref(this)
 
@@ -326,18 +322,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    @Subscribe
-    fun getMessage(refreshWorkMessage: BusEventMessage) {
-        if (refreshWorkMessage.message == Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN) {
-//            builder.setTitle("Transfer Status")
-//                .setMessage("Your transfer was succeed")
-//                .setPositiveButton("OK", dialogClickListener).show()
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().unregister(this)
         countDownTimer!!.cancel()
     }
 
