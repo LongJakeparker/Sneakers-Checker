@@ -93,6 +93,7 @@
     <string name="label_button_update">Update</string>
     <string name="label_button_done">Done</string>
     <string name="label_button_continue">Continue</string>
+    <string name="label_button_confirm">Confirm</string>
 
     <string name="text_question_login_1">What is private key?</string>
     <string name="text_question_login_2">How to find out private key?</string>

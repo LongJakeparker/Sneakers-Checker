@@ -42,7 +42,7 @@ class ContractRequest {
                     "}"
         }
 
-        fun ClaimSneakerJson(sneakerId: Long, newOwnerId: Int): String {
+        fun transferSneakerJson(sneakerId: Long, newOwnerId: Int): String {
             return "{\n" +
                     "\"sneaker_id\": " + sneakerId + ",\n" +
                     "\"new_owner_id\": " + newOwnerId + "\n" +

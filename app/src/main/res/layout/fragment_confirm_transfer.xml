@@ -3,19 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/root">
+    android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/btnClose"
+        android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_close"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/activity_margin_4dp"
         android:background="@android:color/transparent"
         android:padding="@dimen/activity_margin_12dp"
-        android:layout_marginTop="@dimen/activity_margin_4dp"
-        android:layout_marginEnd="@dimen/activity_margin_12dp"
-        android:layout_gravity="end"/>
+        android:layout_marginLeft="@dimen/activity_margin_12dp"
+        android:src="@drawable/ic_back"/>
 
     <TextView
         android:id="@+id/title"
@@ -159,35 +159,23 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvReceiverName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/text_receiver"
+                            android:text="Bárbara Cotilla"
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/text_size_xlarge"/>
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tvReceiverEosName"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <EditText
-                                android:id="@+id/etReceiverEosName"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:hint="@string/hint_receiver_eos_name"
-                                android:textSize="@dimen/text_size_default" />
-
-                            <ImageView
-                                android:id="@+id/ivScanEosName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_scan_has_bg"
-                                android:layout_marginLeft="@dimen/activity_margin_16dp"/>
-
-                        </LinearLayout>
+                            android:layout_height="33dp"
+                            android:text="5Kb8kLf9zgWQnogidDA76MzPL6maiP98M"
+                            android:textSize="@dimen/text_size_default"
+                            android:layout_marginTop="@dimen/activity_margin_4dp"
+                            android:textColor="@android:color/black"
+                            android:gravity="center_vertical"/>
 
                     </LinearLayout>
 
@@ -251,30 +239,17 @@
                             android:layout_marginRight="@dimen/activity_margin_32dp"
                             android:layout_marginTop="@dimen/activity_margin_4dp"/>
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tvCardId"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
+                            android:text="✱✱✱✱ ✱✱✱✱ ✱✱✱✱ 4242 (11/22)"
+                            android:textColor="@color/colorBlueGreen"
+                            android:textSize="@dimen/text_size_default"
+                            android:textStyle="bold"
+                            android:layout_marginTop="@dimen/activity_margin_12dp"
                             android:gravity="center_vertical"
-                            android:layout_marginTop="@dimen/activity_margin_8dp">
-
-                            <TextView
-                                android:id="@+id/tvCardId"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/text_add_payment"
-                                android:textColor="@color/colorBlueGreen"
-                                android:textSize="@dimen/text_size_default"
-                                android:textStyle="bold"/>
-
-                            <ImageView
-                                android:id="@+id/ivAddPayment"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_add_has_bg"/>
-
-                        </LinearLayout>
+                            android:layout_marginBottom="@dimen/activity_margin_4dp"/>
 
                     </LinearLayout>
 
@@ -287,14 +262,13 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/btnContinue"
+        android:id="@+id/btnConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/drawable_btn_green_gradient_selector"
-        android:text="@string/label_button_continue"
+        android:text="@string/label_button_confirm"
         android:layout_marginBottom="@dimen/activity_margin_24dp"
         android:textColor="@color/colorWhite"
-        android:enabled="false"
         android:gravity="center"
         android:textStyle="bold"
         android:textSize="@dimen/text_size_xlarge"

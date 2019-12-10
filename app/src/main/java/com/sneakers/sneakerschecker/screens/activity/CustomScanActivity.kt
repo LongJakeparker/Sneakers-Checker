@@ -364,7 +364,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun scanClaimToken() {
         startProgress()
-        val jsonData = ContractRequest.ClaimSneakerJson(
+        val jsonData = ContractRequest.transferSneakerJson(
             sneakerContractModel.id!!,
             userInfo.id!!
         )
