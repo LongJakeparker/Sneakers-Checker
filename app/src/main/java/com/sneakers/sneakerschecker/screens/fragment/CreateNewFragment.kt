@@ -1,15 +1,15 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.FirebaseException
@@ -18,9 +18,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import com.google.gson.Gson
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
+import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.screens.activity.VerifyPhoneActivity
@@ -46,12 +46,11 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     private val TAG = "PhoneAuth"
 
     private var fragmentView: View? = null
+    private var password: String = ""
+    private var isConfirmPassword: Boolean = false
 
     private lateinit var service: Retrofit
     private lateinit var sharedPref: SharedPref
-    private lateinit var listIvPassCode: Array<ImageView>
-
-    private var isShowingPassword: Boolean = false
 
     private lateinit var fireAuth: FirebaseAuth
 
@@ -75,21 +74,10 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listIvPassCode = arrayOf(
-            ivNumber1,
-            ivNumber2,
-            ivNumber3,
-            ivNumber4,
-            ivNumber5,
-            ivNumber6
-        )
-
         etUserPhone.addTextChangedListener(textWatcher)
-        etUserPassword.addTextChangedListener(passwordTextWatcher)
-        btnRegister.setOnClickListener(this)
+        btnNext.setOnClickListener(this)
         ibBack.setOnClickListener(this)
         root.setOnClickListener(this)
-//        btnShowPassword.setOnClickListener(this)
     }
 
 
@@ -103,43 +91,18 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         }
 
         override fun afterTextChanged(s: Editable) {
-            btnRegister.isEnabled = validateData()
-        }
-    }
-
-    private val passwordTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-        }
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-        }
-
-        override fun afterTextChanged(s: Editable) {
-            if (s.isNotEmpty()) {
-                listIvPassCode[s.length - 1].setImageResource(R.drawable.drawable_bg_pass_code_black)
-                if (s.length < 6) {
-                    listIvPassCode[s.length].setImageResource(R.drawable.drawable_bg_pass_code)
-                } else {
-                    btnRegister.isEnabled = validateData()
-                }
-            } else {
-                listIvPassCode[0].setImageResource(R.drawable.drawable_bg_pass_code)
-            }
+            btnNext.isEnabled = validateData()
         }
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            btnRegister -> {
+            btnNext -> {
                 CommonUtils.toggleLoading(fragmentView, true)
                 checkDuplicatePhone()
             }
 
             ibBack -> activity?.onBackPressed()
-
-//            btnShowPassword -> showPassword()
 
             root -> CommonUtils.hideKeyboard(activity)
         }
@@ -152,21 +115,20 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         call.enqueue(object : Callback<ResponseBody> {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                CommonUtils.toggleLoading(fragmentView, false)
                 when {
                     response.isSuccessful -> {
                         try {
                             val jsonObject = JSONObject(response.body()?.string())
                             val isExisting = jsonObject.getBoolean("isExisting")
                             if (!isExisting) {
-                                PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                                    "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}", // Phone number to verify
-                                    60, // Timeout duration
-                                    TimeUnit.SECONDS, // Unit of timeout
-                                    activity!!, // Activity (for callback binding)
-                                    callbacks
-                                ) // OnVerificationStateChangedCallbacks
+                                InputPasswordDialog.show(
+                                    this@CreateNewFragment,
+                                    fragmentManager!!,
+                                    getString(R.string.dialog_title_create_passcode),
+                                    getString(R.string.dialog_message_create_passcode)
+                                )
                             } else {
-                                CommonUtils.toggleLoading(fragmentView, false)
                                 tvWarning.text = getString(R.string.msg_phone_existing)
                                 tvWarning.visibility = VISIBLE
                             }
@@ -176,7 +138,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                     }
 
                     else -> {
-                        CommonUtils.toggleLoading(fragmentView, false)
                         Toast.makeText(
                             context,
                             "Response Code ${response.code()}: ${response.message()}",
@@ -197,24 +158,8 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         })
     }
 
-//    private fun showPassword() {
-//        val cursorStart = etUserPassword.selectionStart
-//        val cursorEnd = etUserPassword.selectionEnd
-//        if (!isShowingPassword) {
-//            etUserPassword.transformationMethod = null
-//            isShowingPassword = true
-//            etUserPassword.setSelection(cursorStart, cursorEnd)
-//            btnShowPassword.setImageResource(R.drawable.ic_hide_password)
-//        } else {
-//            etUserPassword.transformationMethod = PasswordTransformationMethod()
-//            isShowingPassword = false
-//            etUserPassword.setSelection(cursorStart, cursorEnd)
-//            btnShowPassword.setImageResource(R.drawable.ic_show_password)
-//        }
-//    }
-
     fun validateData(): Boolean {
-        return !(etUserPhone.text.trim().length < 9 || etUserPassword.text.trim().length < 6)
+        return etUserPhone.text.trim().length >= 9
     }
 
     fun visibleWarning(message: String) {
@@ -237,7 +182,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             VerifyPhoneActivity.start(
                 activity!!,
                 "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
-                etUserPassword.text.toString().trim(),
+                password,
                 credential
             )
         }
@@ -274,9 +219,45 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             VerifyPhoneActivity.start(
                 activity!!,
                 "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
-                etUserPassword.text.toString().trim(), verificationId, token
+                password, verificationId, token
             )
             // ...
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.DIALOG_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            if (!isConfirmPassword) {
+                password = data?.extras?.getString(Constant.EXTRA_USER_PASSWORD, "")!!
+                InputPasswordDialog.show(
+                    this@CreateNewFragment,
+                    fragmentManager!!,
+                    getString(R.string.dialog_title_re_enter_passcode),
+                    getString(R.string.dialog_message_create_passcode)
+                )
+                isConfirmPassword = true
+            } else {
+                val confirmPassword = data?.extras?.getString(Constant.EXTRA_USER_PASSWORD, "")!!
+                if  (confirmPassword != password) {
+                    InputPasswordDialog.show(
+                        this@CreateNewFragment,
+                        fragmentManager!!,
+                        getString(R.string.dialog_title_re_enter_passcode),
+                        getString(R.string.dialog_message_re_enter_wrong_passcode)
+                    )
+                } else {
+                    CommonUtils.toggleLoading(fragmentView, true)
+                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                        "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}", // Phone number to verify
+                        60, // Timeout duration
+                        TimeUnit.SECONDS, // Unit of timeout
+                        activity!!, // Activity (for callback binding)
+                        callbacks
+                    ) // OnVerificationStateChangedCallbacks
+                }
+            }
         }
     }
 }

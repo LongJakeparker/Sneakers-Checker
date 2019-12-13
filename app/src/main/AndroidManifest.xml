@@ -28,8 +28,10 @@
             android:name=".screens.activity.VerifyPhoneActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity android:name=".screens.activity.CustomScanActivity" />
-        <activity android:name=".screens.activity.LoginActivity" />
-        <activity android:name=".screens.activity.CreateNewActivity" />
+        <activity android:name=".screens.activity.LoginActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
+        <activity android:name=".screens.activity.CreateNewActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
 
         <service
             android:name=".service.MyFirebaseMessagingService"

@@ -328,12 +328,12 @@ class SneakerInfoActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    @Subscribe
-    fun getMessage(refreshWorkMessage: BusEventMessage) {
-        if (refreshWorkMessage.message == Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN) {
-            finish()
-        }
-    }
+//    @Subscribe
+//    fun getMessage(refreshWorkMessage: BusEventMessage) {
+//        if (refreshWorkMessage.message == Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN) {
+//            finish()
+//        }
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

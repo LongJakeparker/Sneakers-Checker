@@ -141,7 +141,7 @@ class TransferActivity : AppCompatActivity(), View.OnClickListener {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 dialog.dismiss()
                 if (response.code() == 203) {
-                    EventBus.getDefault().post(BusEventMessage(Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN))
+//                    EventBus.getDefault().post(BusEventMessage(Constant.BusMessage.MESS_CLOSE_CHECK_SCREEN))
                     finish()
                 } else {
                     Toast.makeText(

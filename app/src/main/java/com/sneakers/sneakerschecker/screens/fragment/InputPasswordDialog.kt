@@ -3,7 +3,6 @@ package com.sneakers.sneakerschecker.screens.fragment
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,23 +12,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
+import kotlinx.android.synthetic.main.dialog_input_password.*
 
 
 class InputPasswordDialog : DialogFragment() {
     private lateinit var etInputCode: EditText
     private lateinit var listIvPassCode: Array<ImageView>
+    private var dialogTitle: String? = ""
+    private var dialogMessage: String? = ""
 
     companion object {
         fun show(fragment: Fragment, fragmentManager: FragmentManager) {
+            show(fragment, fragmentManager, "", "")
+        }
+
+        fun show(fragment: Fragment, fragmentManager: FragmentManager, title: String, message: String) {
             val dialog = InputPasswordDialog()
+            val bundle = Bundle()
+            bundle.putString(Constant.EXTRA_DIALOG_TITLE, title)
+            bundle.putString(Constant.EXTRA_DIALOG_MESSAGE, message)
+            dialog.arguments = bundle
             dialog.setTargetFragment(fragment, Constant.DIALOG_REQUEST_CODE)
             dialog.show(fragmentManager, InputPasswordDialog::class.java.simpleName)
         }
@@ -48,8 +58,18 @@ class InputPasswordDialog : DialogFragment() {
         val builder = AlertDialog.Builder(activity!!)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_input_password, null, false)
 
+        dialogTitle = arguments?.getString(Constant.EXTRA_DIALOG_TITLE, "")
+        dialogMessage = arguments?.getString(Constant.EXTRA_DIALOG_MESSAGE, "")
+
+        if (dialogTitle!!.isNotEmpty()) {
+            view.findViewById<TextView>(R.id.tvTitle).text = dialogTitle
+        }
+
+        if (dialogMessage!!.isNotEmpty()) {
+            view.findViewById<TextView>(R.id.tvMessage).text = dialogMessage
+        }
+
         etInputCode = view.findViewById(R.id.etInputCode)
-//        btnSend = view.findViewById(R.id.tvSend)
 
         listIvPassCode = arrayOf(
             view.findViewById(R.id.tvNumber1),
@@ -75,26 +95,29 @@ class InputPasswordDialog : DialogFragment() {
                 before: Int, count: Int
             ) {
                 if (s.isNotEmpty()) {
-                    listIvPassCode[s.length - 1].setImageResource(R.drawable.drawable_bg_pass_code_black)
+                    listIvPassCode[s.length - 1].setImageResource(R.drawable.ic_passcode)
                     if (s.length < 6) {
-                        listIvPassCode[s.length].setImageResource(R.drawable.drawable_bg_pass_code)
+                        listIvPassCode[s.length].setImageResource(R.drawable.ic_passcode_empty)
                     } else {
                         Handler().postDelayed({
                             returnPasscode()
                         }, 200)
                     }
                 } else {
-                    listIvPassCode[0].setImageResource(R.drawable.drawable_bg_pass_code)
+                    listIvPassCode[0].setImageResource(R.drawable.ic_passcode_empty)
                 }
             }
         })
 
         etInputCode.requestFocus()
 
+        view.findViewById<ImageView>(R.id.btnClose).setOnClickListener{ dismiss() }
+
         builder.setView(view)
 
         val dialog: Dialog = builder.create()
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.window.setBackgroundDrawableResource(R.drawable.drawable_bg_dialog_intput_passcode)
         return dialog
     }
 

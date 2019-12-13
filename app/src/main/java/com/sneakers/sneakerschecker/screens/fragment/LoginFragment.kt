@@ -1,10 +1,10 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.PhoneAuthProvider
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
@@ -19,23 +20,27 @@ import com.sneakers.sneakerschecker.utils.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
+import kotlinx.android.synthetic.main.fragment_create_new.*
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.fragment_login.etUserPhone
+import kotlinx.android.synthetic.main.fragment_login.ibBack
+import kotlinx.android.synthetic.main.fragment_login.pickerCountryCode
+import kotlinx.android.synthetic.main.fragment_login.root
+import kotlinx.android.synthetic.main.fragment_login.tvWarning
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 
 class LoginFragment : Fragment(), View.OnClickListener {
 
     private var fragmentView: View? = null
+    private var password: String = ""
 
     private lateinit var service: Retrofit
 
     private lateinit var sharedPref: SharedPref
-
-    private var isShowingPassword: Boolean = false
-
-    private lateinit var listIvPassCode: Array<ImageView>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,19 +60,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listIvPassCode = arrayOf(
-            ivNumber1,
-            ivNumber2,
-            ivNumber3,
-            ivNumber4,
-            ivNumber5,
-            ivNumber6
-        )
-
         etUserPhone.addTextChangedListener(textWatcher)
-        etUserPassword.addTextChangedListener(passwordTextWatcher)
         btnLogin.setOnClickListener(this)
-//        btnShowPassword.setOnClickListener(this)
         root.setOnClickListener(this)
         ibBack.setOnClickListener(this)
     }
@@ -86,61 +80,20 @@ class LoginFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private val passwordTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-        }
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-        }
-
-        override fun afterTextChanged(s: Editable) {
-            if (s.isNotEmpty()) {
-                listIvPassCode[s.length - 1].setImageResource(R.drawable.drawable_bg_pass_code_black)
-                if (s.length < 6) {
-                    listIvPassCode[s.length].setImageResource(R.drawable.drawable_bg_pass_code)
-                } else {
-                    btnLogin.isEnabled = validateData()
-                }
-            } else {
-                listIvPassCode[0].setImageResource(R.drawable.drawable_bg_pass_code)
-            }
-        }
-    }
-
     fun validateData(): Boolean {
-        return !(etUserPhone.text.trim().length < 9 || etUserPassword.text.trim().length < 6)
+        return etUserPhone.text.trim().length >= 9
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
 
-            R.id.btnLogin -> requestLogIn()
-
-//            R.id.btnShowPassword -> showPassword()
+            R.id.btnLogin -> InputPasswordDialog.show(this, fragmentManager!!)
 
             R.id.root -> CommonUtils.hideKeyboard(activity)
 
             R.id.ibBack -> activity!!.finish()
         }
     }
-
-//    private fun showPassword() {
-//        val cursorStart = etUserPassword.selectionStart
-//        val cursorEnd = etUserPassword.selectionEnd
-//        if (!isShowingPassword) {
-//            etUserPassword.transformationMethod = null
-//            isShowingPassword = true
-//            etUserPassword.setSelection(cursorStart, cursorEnd)
-//            btnShowPassword.setImageResource(R.drawable.ic_hide_password)
-//        } else {
-//            etUserPassword.transformationMethod = PasswordTransformationMethod()
-//            isShowingPassword = false
-//            etUserPassword.setSelection(cursorStart, cursorEnd)
-//            btnShowPassword.setImageResource(R.drawable.ic_show_password)
-//        }
-//    }
 
     private fun requestLogIn() {
         CommonUtils.toggleLoading(fragmentView, true)
@@ -151,7 +104,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 authToken,
                 Constant.GRANT_TYPE_PASSWORD,
                 "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
-                etUserPassword.text.toString().trim()
+                password
             )
         call.enqueue(object : Callback<SignIn> {
 
@@ -162,7 +115,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
                     activity!!.setResult(Activity.RESULT_OK)
                     activity!!.finish()
 
-                } else if (response.code() == 503) {
+                } else if (response.code() == 400) {
                     tvWarning.text = getString(R.string.msg_login_failed)
                     tvWarning.visibility = View.VISIBLE
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
@@ -180,5 +133,13 @@ class LoginFragment : Fragment(), View.OnClickListener {
             }
 
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.DIALOG_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            password = data?.extras?.getString(Constant.EXTRA_USER_PASSWORD, "")!!
+            requestLogIn()
+        }
     }
 }

@@ -200,5 +200,11 @@
     <string name="text_add_payment">Add a payment method</string>
     <string name="text_successful">SUCCESSFUL</string>
     <string name="text_des_tranfer_successful">Your Grail has been transferred successful to new owner</string>
+    <string name="dialog_title_create_passcode">Enter your passcode</string>
+    <string name="dialog_message_create_passcode">This passcode will be required entering whenever this phone number is used to log in our system.\nSo you need remember this passcode carefully.</string>
+    <string name="dialog_title_confirm_passcode">Passcode confirmation</string>
+    <string name="dialog_message_confirm_passcode">You need to cost $80 to complete this transaction.\nPlease enter your passcode to confirm the payment.</string>
+    <string name="dialog_title_re_enter_passcode">Re-enter passcode</string>
+    <string name="dialog_message_re_enter_wrong_passcode"><font color="#d0021b">Your re-enter passcode is wrong</font></string>
 
 </resources>
