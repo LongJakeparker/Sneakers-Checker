@@ -44,39 +44,43 @@
         android:layout_marginHorizontal="@dimen/activity_margin_24dp"
         android:id="@+id/linearLayout">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bubble_background"
-            android:paddingHorizontal="@dimen/activity_margin_16dp"
-            android:paddingVertical="6dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_phone"/>
+        <RelativeLayout
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:background="@drawable/drawable_bg_country_code_picker"
+            android:padding="@dimen/activity_margin_4dp">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/pickerCountryCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:ccp_contentColor="@color/colorOffWhite"
+                app:ccp_showFullName="true"
+                app:ccp_showNameCode="false"
                 app:ccp_defaultNameCode="VN"
                 app:ccp_textSize="@dimen/text_size_large"
-                app:ccp_showFlag="false"/>
+                app:ccp_showFlag="false"
+                android:layout_centerInParent="true"/>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="numberDecimal"
-                android:textSize="@dimen/text_size_large"
-                android:id="@+id/etUserPhone"
-                android:hint="@string/hint_phone"
-                android:background="@android:color/transparent"
-                android:maxLength="9"/>
+        </RelativeLayout>
 
-        </LinearLayout>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:textSize="@dimen/text_size_large"
+            android:hint="@string/text_holder_user_phone"
+            android:id="@+id/etUserPhone"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawableTint="@color/colorDarkTurquoise"
+            android:drawablePadding="@dimen/activity_margin_12dp"
+            android:paddingVertical="@dimen/activity_margin_12dp"
+            android:paddingHorizontal="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:background="@drawable/bubble_background_green"
+            android:maxLength="9"
+            android:textColor="@color/colorDarkTurquoise">
+        </EditText>
 
     </LinearLayout>
 

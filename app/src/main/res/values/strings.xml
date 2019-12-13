@@ -169,7 +169,7 @@
     <string name="msg_scan_fail">Something went wrong when validate</string>
     <string name="format_eascrypt_password">%struegrails</string>
     <string name="hint_phone">94 325–32563</string>
-    <string name="text_create_with_phone">Please choose your region and enter phone number to begin creating your account</string>
+    <string name="text_create_with_phone">Please choose your region\nand enter phone number to begin joining\nwith us</string>
     <string name="text_verify_otp">Enter the verification code we just sent you on your registered phone number *******%s.</string>
     <string name="text_didnt_receive_code">I didn’t receive code.</string>
     <string name="text_title_finish_verify">CONGRATULATIONS</string>
