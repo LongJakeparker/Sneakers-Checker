@@ -20,7 +20,8 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".screens.activity.ObtainGrailActivity"/>
-        <activity android:name=".screens.activity.GrailsTradingActivity"/>
+        <activity android:name=".screens.activity.GrailsTradingActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".screens.activity.ManageCardActivity" />
         <activity android:name=".screens.activity.UpdateUserRegisterActivity" />
         <activity android:name=".screens.activity.FinishVerifyActivity" />

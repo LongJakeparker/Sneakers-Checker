@@ -4,7 +4,7 @@ import java.io.Serializable
 
 class ValidateModel : Serializable {
     var detail: SneakerModel? = null
-    var factory: FactoryModel? = null
+    var factory: FactoryContractModel? = null
 //    override fun describeContents(): Int {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }

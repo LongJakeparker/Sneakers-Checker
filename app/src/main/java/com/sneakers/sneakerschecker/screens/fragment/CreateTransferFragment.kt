@@ -8,19 +8,32 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.screens.activity.CustomScanActivity
+import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_transfer.*
+import okhttp3.ResponseBody
+import org.json.JSONException
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class CreateTransferFragment : Fragment(), View.OnClickListener {
     private val REQUEST_CODE_SCAN_EOS_NAME = 1002
 
     private var fragmentView: View? = null
     private var sneaker: SneakerModel? = null
+    private var receiverName: String = ""
+    private lateinit var service: Retrofit
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +43,8 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         fragmentView = inflater.inflate(R.layout.fragment_create_transfer, container, false)
 
         sneaker = activity?.intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerModel
+
+        service = RetrofitClientInstance().getRetrofitInstance()!!
 
         return fragmentView
     }
@@ -98,15 +113,70 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
 
             root -> CommonUtils.hideKeyboard(activity)
 
-            btnContinue -> confirmTransaction()
+            btnContinue -> checkEosName()
         }
+    }
+
+    private fun checkEosName() {
+        CommonUtils.toggleLoading(fragmentView, true)
+        val call = service.create(MainApi::class.java)
+            .getUserNameByEosName(etReceiverEosName.text.toString().trim())
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                CommonUtils.toggleLoading(fragmentView, false)
+                Toast.makeText(
+                    context,
+                    t.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                CommonUtils.toggleLoading(fragmentView, false)
+                when {
+                    response.isSuccessful -> {
+                        try {
+                            val jsonObject = JSONObject(response.body()?.string())
+                            receiverName = jsonObject.getString("username")
+                            confirmTransaction()
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    response.code() == 400 -> {
+                        val alertDialogFragment =
+                            AlertDialogFragment.newInstance(getString(R.string.msg_eos_name_not_valid))
+                        alertDialogFragment.show(
+                            fragmentManager!!,
+                            AlertDialogFragment::class.java.simpleName
+                        )
+                    }
+
+                    else -> {
+                        val alertDialogFragment =
+                            AlertDialogFragment.newInstance("Response Code ${response.code()}: ${response.message()}")
+                        alertDialogFragment.show(
+                            fragmentManager!!,
+                            AlertDialogFragment::class.java.simpleName
+                        )
+//                        Toast.makeText(
+//                            context,
+//                            "Response Code ${response.code()}: ${response.message()}",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
+                }
+            }
+
+        })
     }
 
     private fun confirmTransaction() {
         val confirmTransferFragment = ConfirmTransferFragment()
         val bundle = Bundle()
         bundle.putSerializable(Constant.EXTRA_SNEAKER, sneaker)
-        bundle.putString(Constant.EXTRA_RECEIVER_NAME, "Bárbara Cotilla")
+        bundle.putString(Constant.EXTRA_RECEIVER_NAME, receiverName)
         bundle.putString(
             Constant.EXTRA_RECEIVER_EOS_NAME,
             etReceiverEosName.text.toString().trim()

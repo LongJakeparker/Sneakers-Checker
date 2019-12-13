@@ -1,5 +1,5 @@
 package com.sneakers.sneakerschecker.model
 
-class FactoryModel: UserUpdateModel() {
+class FactoryContractModel: UserUpdateModel() {
     var brand: String? = ""
 }

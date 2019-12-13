@@ -38,4 +38,7 @@ interface MainApi {
 
     @GET("user/collector/{userId}/")
     fun getUserInformation(@Path("userId") userId: Int): Call<CollectorModel>
+
+    @GET("user/eos/{eosName}/")
+    fun getUserNameByEosName(@Path("eosName") eosName: String): Call<ResponseBody>
 }

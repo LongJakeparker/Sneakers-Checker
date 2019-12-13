@@ -6,9 +6,9 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
 
-class FactoryModelJsonSerializer: JsonSerializer<FactoryModel> {
+class FactoryModelJsonSerializer: JsonSerializer<FactoryContractModel> {
 
-    override fun serialize(factoryModel: FactoryModel?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+    override fun serialize(factoryModel: FactoryContractModel?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
         val jsonObject = JsonObject()
         jsonObject.add("userIdentity", context?.serialize(factoryModel?.userIdentity))
         jsonObject.add("username", context?.serialize(factoryModel?.username))

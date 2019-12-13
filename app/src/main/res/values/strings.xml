@@ -132,8 +132,6 @@
     <string name="dialog_msg_invalid_eos_name">Receiver\'s EOS name is wrong format</string>
     <string name="dialog_title_close_private_key_confirm">Do you want to close?</string>
     <string name="dialog_msg_close_private_key_confirm">Please copy or write down your private key before close this screen.\nYou can\'t regain if you lost your private key.</string>
-    <string name="dialog_title_confirm_transaction">Transaction confirmation</string>
-    <string name="dialog_msg_confirm_transaction">You need to cost $80 to perform this transaction completely</string>
 
     <string name="activity_title_scan_grail">Scan Grails QR</string>
     <string name="header_guide_scan_grail">How to use the scan feature?</string>
@@ -180,7 +178,8 @@
     <string name="dialog_title_input_password">Enter Passcode</string>
     <string name="dialog_des_input_password">Enter your passcode</string>
     <string name="msg_phone_existing">Oops!\nThis number has been used already!</string>
-    <string name="msg_login_failed">Oops!\nPhone or password not correct.</string>
+    <string name="msg_login_failed_phone">Oops!\nPhone number is not valid.</string>
+    <string name="msg_login_failed_password">Oops!\nPassword is not correct.</string>
     <string name="msg_sneaker_not_exist">Sneaker not exist</string>
     <string name="label_button_sell">Sale item</string>
     <string name="label_button_stolen">Stolen</string>
@@ -189,7 +188,7 @@
     <string name="text_item_was_stolen">(Was stolen)</string>
     <string name="text_congrats">CONGRATULATION</string>
     <string name="text_des_obtain_grail">You have just obtained a new Grails item.\nIt was been moved to your collections.</string>
-    <string name="msg_wrong_password">Password not correct</string>
+    <string name="msg_wrong_password">Password is not correct</string>
     <string name="msg_no_data_card">Oops! Still no have credit card</string>
     <string name="msg_detail_no_data_card">Please add a new credit card to continue your\npayment processing</string>
     <string name="text_add_new_credit_card">Add a new credit card</string>
@@ -202,9 +201,10 @@
     <string name="text_des_tranfer_successful">Your Grail has been transferred successful to new owner</string>
     <string name="dialog_title_create_passcode">Enter your passcode</string>
     <string name="dialog_message_create_passcode">This passcode will be required entering whenever this phone number is used to log in our system.\nSo you need remember this passcode carefully.</string>
-    <string name="dialog_title_confirm_passcode">Passcode confirmation</string>
-    <string name="dialog_message_confirm_passcode">You need to cost $80 to complete this transaction.\nPlease enter your passcode to confirm the payment.</string>
+    <string name="dialog_title_confirm_passcode">Enter your passcode</string>
+    <string name="dialog_message_confirm_passcode">You need to cost <font color="#ff773f">$80</font> to complete this transaction.\nPlease enter your passcode to confirm the payment.</string>
     <string name="dialog_title_re_enter_passcode">Re-enter passcode</string>
     <string name="dialog_message_re_enter_wrong_passcode"><font color="#d0021b">Your re-enter passcode is wrong</font></string>
+    <string name="msg_eos_name_not_valid">EOS name is not valid</string>
 
 </resources>

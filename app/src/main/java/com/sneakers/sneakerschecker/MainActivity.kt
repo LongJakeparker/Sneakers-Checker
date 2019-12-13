@@ -24,7 +24,7 @@ import com.sneakers.sneakerschecker.model.*
 import android.animation.LayoutTransition
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
-import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
+import com.sneakers.sneakerschecker.screens.fragment.dialog.ConfirmDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.web3j.crypto.Credentials

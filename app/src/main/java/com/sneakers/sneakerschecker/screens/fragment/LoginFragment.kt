@@ -115,8 +115,12 @@ class LoginFragment : Fragment(), View.OnClickListener {
                     activity!!.setResult(Activity.RESULT_OK)
                     activity!!.finish()
 
+                } else if (response.code() == 503) {
+                    tvWarning.text = getString(R.string.msg_login_failed_phone)
+                    tvWarning.visibility = View.VISIBLE
+                    Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 } else if (response.code() == 400) {
-                    tvWarning.text = getString(R.string.msg_login_failed)
+                    tvWarning.text = getString(R.string.msg_login_failed_password)
                     tvWarning.visibility = View.VISIBLE
                     Log.d("TAG", "onResponse - Status : " + response.errorBody()!!.string())
                 } else {

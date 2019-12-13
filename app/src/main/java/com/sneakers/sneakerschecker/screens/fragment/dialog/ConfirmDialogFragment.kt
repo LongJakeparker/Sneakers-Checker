@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.screens.fragment
+package com.sneakers.sneakerschecker.screens.fragment.dialog
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -32,7 +32,8 @@ class ConfirmDialogFragment : DialogFragment() {
         private val KEY_NEGATIVE_LABEL = "key_negative_label"
 
         fun newInstance(title: CharSequence, message: CharSequence, isBoldTitle: Boolean): ConfirmDialogFragment {
-            val dialogFragment = ConfirmDialogFragment()
+            val dialogFragment =
+                ConfirmDialogFragment()
             val bundle = Bundle()
             bundle.putCharSequence(KEY_TITLE, title)
             bundle.putCharSequence(KEY_MESSAGE, message)
@@ -42,7 +43,8 @@ class ConfirmDialogFragment : DialogFragment() {
         }
 
         fun newInstance(title: CharSequence, message: CharSequence): ConfirmDialogFragment {
-            val dialogFragment = ConfirmDialogFragment()
+            val dialogFragment =
+                ConfirmDialogFragment()
             val bundle = Bundle()
             bundle.putCharSequence(KEY_TITLE, title)
             bundle.putCharSequence(KEY_MESSAGE, message)
@@ -56,7 +58,8 @@ class ConfirmDialogFragment : DialogFragment() {
             positiveLabel: String,
             negativeLabel: String
         ): ConfirmDialogFragment {
-            val dialogFragment = ConfirmDialogFragment()
+            val dialogFragment =
+                ConfirmDialogFragment()
             val bundle = Bundle()
             bundle.putCharSequence(KEY_TITLE, title)
             bundle.putCharSequence(KEY_MESSAGE, message)
@@ -67,7 +70,8 @@ class ConfirmDialogFragment : DialogFragment() {
         }
 
         fun newInstance(message: CharSequence): ConfirmDialogFragment {
-            val dialogFragment = ConfirmDialogFragment()
+            val dialogFragment =
+                ConfirmDialogFragment()
             val bundle = Bundle()
             bundle.putCharSequence(KEY_MESSAGE, message)
             dialogFragment.arguments = bundle
@@ -75,7 +79,8 @@ class ConfirmDialogFragment : DialogFragment() {
         }
 
         fun newInstance(message: CharSequence, positiveLabel: String, negativeLabel: String): ConfirmDialogFragment {
-            val dialogFragment = ConfirmDialogFragment()
+            val dialogFragment =
+                ConfirmDialogFragment()
             val bundle = Bundle()
             bundle.putCharSequence(KEY_MESSAGE, message)
             bundle.putString(KEY_POSITIVE_LABEL, positiveLabel)

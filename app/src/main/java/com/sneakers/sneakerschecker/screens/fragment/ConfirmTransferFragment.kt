@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
-import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.ReloadCollectionEvent
@@ -17,6 +16,7 @@ import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.model.User
 import com.sneakers.sneakerschecker.screens.activity.ObtainGrailActivity
+import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_confirm_transfer.*
 import kotlinx.android.synthetic.main.fragment_create_transfer.ivLimited
@@ -85,19 +85,11 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
             btnBack -> activity?.onBackPressed()
 
             btnConfirm -> {
-                val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_confirm_transaction),
-                    resources.getString(R.string.dialog_msg_confirm_transaction), true)
-                confirmDialogFragment.setListener(object : IDialogListener {
-                    override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
-                        if (ok) {
-                            InputPasswordDialog.show(this@ConfirmTransferFragment, fragmentManager!!)
-                        }
-                    }
-                    override fun onDialogCancel(tag: String) {
-
-                    }
-                })
-                confirmDialogFragment.show(activity!!.supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
+                InputPasswordDialog.show(
+                    this@ConfirmTransferFragment, fragmentManager!!,
+                    resources.getString(R.string.dialog_title_confirm_passcode),
+                    resources.getString(R.string.dialog_message_confirm_passcode)
+                )
             }
         }
     }
@@ -106,7 +98,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         CommonUtils.toggleLoading(fragmentView, true)
         val jsonData = ContractRequest.transferSneakerJson(
             sneaker?.id!!,
-            currentUser?.id!!
+            105
         )
 
         ContractRequest.callEosApi(currentUser?.eosName!!,
@@ -125,9 +117,19 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
                         activity?.finish()
                     } else {
                         if (e.message == "pad block corrupted") {
-                            Toast.makeText(context, getString(R.string.msg_wrong_password), Toast.LENGTH_LONG).show()
+                            val alertDialogFragment =
+                                AlertDialogFragment.newInstance(getString(R.string.msg_wrong_password))
+                            alertDialogFragment.show(
+                                fragmentManager!!,
+                                AlertDialogFragment::class.java.simpleName
+                            )
                         } else {
-                            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                            val alertDialogFragment =
+                                AlertDialogFragment.newInstance(e.message)
+                            alertDialogFragment.show(
+                                fragmentManager!!,
+                                AlertDialogFragment::class.java.simpleName
+                            )
                         }
                         password = ""
                     }

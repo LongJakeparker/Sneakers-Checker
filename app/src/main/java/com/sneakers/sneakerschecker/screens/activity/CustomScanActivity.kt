@@ -31,9 +31,10 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
-import com.sneakers.sneakerschecker.screens.fragment.ConfirmDialogFragment
+import com.sneakers.sneakerschecker.screens.fragment.dialog.ConfirmDialogFragment
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Callback
@@ -384,6 +385,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                             Toast.LENGTH_LONG
                         ).show()
                         ObtainGrailActivity.start(this@CustomScanActivity, validatedItem)
+                        EventBus.getDefault().post(ReloadCollectionEvent())
 
                         val returnIntent = Intent()
                         setResult(Activity.RESULT_OK, returnIntent)
@@ -524,7 +526,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     private fun validateFactory() {
         val gson =
             GsonBuilder().registerTypeAdapter(
-                FactoryModel::class.java,
+                FactoryContractModel::class.java,
                 FactoryModelJsonSerializer()
             )
                 .create()
