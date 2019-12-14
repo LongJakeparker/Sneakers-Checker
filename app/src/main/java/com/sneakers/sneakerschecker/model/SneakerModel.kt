@@ -12,6 +12,7 @@ class SneakerModel : Serializable {
     var limitedEdition: Boolean? = false
     var releaseDate: String? = ""
     var isCardFliped: Boolean = false
+    var isCardActivate: Boolean = true
 
 
 //    override fun writeToParcel(dest: Parcel?, flags: Int) {

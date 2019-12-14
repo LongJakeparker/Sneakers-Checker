@@ -19,8 +19,6 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
-import okhttp3.MediaType
-import okhttp3.RequestBody
 
 
 class CommonUtils {
@@ -109,24 +107,5 @@ class CommonUtils {
             }
             return result
         }
-
-//        fun showProgressDialog(context: Context) {
-//            if (mProgressDialog == null) {
-//                mProgressDialog = ProgressDialog(context)
-//                mProgressDialog?.setMessage(context.getString(R.string.common_loading))
-//                mProgressDialog?.setCanceledOnTouchOutside(false)
-//                mProgressDialog?.setCancelable(false)
-//            }
-//
-//            if (!mProgressDialog?.isShowing!!) {
-//                mProgressDialog?.show()
-//            }
-//        }
-//
-//        fun dismissProgressDialog() {
-//            if (mProgressDialog != null && mProgressDialog?.isShowing!!) {
-//                mProgressDialog?.dismiss()
-//            }
-//        }
     }
 }

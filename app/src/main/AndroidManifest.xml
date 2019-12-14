@@ -30,9 +30,9 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity android:name=".screens.activity.CustomScanActivity" />
         <activity android:name=".screens.activity.LoginActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysVisible"/>
         <activity android:name=".screens.activity.CreateNewActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysVisible"/>
 
         <service
             android:name=".service.MyFirebaseMessagingService"

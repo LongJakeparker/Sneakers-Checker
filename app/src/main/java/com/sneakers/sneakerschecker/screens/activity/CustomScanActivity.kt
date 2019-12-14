@@ -341,6 +341,10 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                             tvItemOwner.text = userInfo.username
                         }
                     }
+
+                    Constant.ItemCondition.STOLEN -> {
+                        llItemStolen.visibility = View.VISIBLE
+                    }
                 }
 
                 blurView.visibility = View.VISIBLE

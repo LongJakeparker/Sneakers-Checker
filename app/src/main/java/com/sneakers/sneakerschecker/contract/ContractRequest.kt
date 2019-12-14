@@ -33,6 +33,7 @@ class ContractRequest {
 
         val METHOD_UPDATE_USER = "updateuser"
         val METHOD_TRANSFER = "transfer"
+        val METHOD_REPORT_STOLEN = "reportstolen"
 
         fun updateUserJson(eosName: String, id: Int, infoHash: String): String {
             return "{\n" +
@@ -46,6 +47,12 @@ class ContractRequest {
             return "{\n" +
                     "\"sneaker_id\": " + sneakerId + ",\n" +
                     "\"new_owner_id\": " + newOwnerId + "\n" +
+                    "}"
+        }
+
+        fun stolenSneakerJson(sneakerId: Long): String {
+            return "{\n" +
+                    "\"sneaker_id\": " + sneakerId + "\n" +
                     "}"
         }
 
@@ -144,6 +151,7 @@ class ContractRequest {
                         Log.d("rpcResponseError: ", backendErrorMessage)
                         null
                     } else {
+                        Log.d("transactionSignAndBroadCastError: ", transactionSignAndBroadCastError.localizedMessage)
                         null
                     }
 

@@ -23,10 +23,16 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
 
         view.tvItemIndexFront.text = (position + 1).toString()
         view.tvItemIndexBack.text = (position + 1).toString()
+        view.tvItemIndexFrontDisabled.text = (position + 1).toString()
+        view.tvItemIndexBackDisabled.text = (position + 1).toString()
         view.tvItemNameFront.text = item.model
         view.tvItemNameBack.text = item.model
+        view.tvItemNameFrontDisabled.text = item.model
+        view.tvItemNameBackDisabled.text = item.model
         view.tvItemSize.text = item.size.toString()
+        view.tvItemSizeDisabled.text = item.size.toString()
         view.tvItemBrand.text = item.brand
+        view.tvItemBrandDisabled.text = item.brand
 
         if (item.limitedEdition!!) {
             view.ivLimitedFront.visibility = VISIBLE
@@ -36,10 +42,10 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
             view.ivLimitedBack.visibility = GONE
         }
 
-//        if (item.condition == Constant.ItemCondition.STOLEN) {
-//            view.rlViewItemStolenFront.visibility = VISIBLE
-//            view.clViewItemStolenBack.visibility = VISIBLE
-//        }
+        if (!item.isCardActivate) {
+            view.rlViewItemStolenFront.visibility = VISIBLE
+            view.clViewItemStolenBack.visibility = VISIBLE
+        }
 
         view.flipCard.setOnClickListener {
             view.flipCard.flipTheView()
@@ -64,5 +70,9 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
+    }
+
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
     }
 }

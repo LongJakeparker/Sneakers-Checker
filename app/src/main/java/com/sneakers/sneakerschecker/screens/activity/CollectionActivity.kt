@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -15,6 +16,8 @@ import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.screens.fragment.InputPasswordDialog
+import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_collection.*
 import org.greenrobot.eventbus.EventBus
@@ -34,6 +37,7 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
     private var listCollection: ArrayList<SneakerModel> = ArrayList()
     private var listContractCollection: ArrayList<SneakerContractModel> = ArrayList()
     private var userInfo: User? = null
+    private var adapter: CollectionAdapter? = null
 
     companion object {
         fun start(activity: Activity) {
@@ -60,6 +64,11 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
         btnItemSale.setOnClickListener(this)
         btnScanNoData.setOnClickListener(this)
         btnBack.setOnClickListener(this)
+        btnItemStolen.setOnClickListener(this)
+        btnCloseReport.setOnClickListener(this)
+        blurView.setOnClickListener(this)
+        llConfirmStolen.setOnClickListener(this)
+        btnConfirmStolen.setOnClickListener(this)
     }
 
     private fun getCollectionFromContract() {
@@ -99,11 +108,13 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
                 if (response.isSuccessful) {
                     listCollection.clear()
                     listCollection.addAll(response.body()?.collection!!)
-                    viewPagerCollection.adapter = CollectionAdapter(listCollection, this@CollectionActivity)
+                    checkActivateSneaker()
+                    adapter = CollectionAdapter(listCollection, this@CollectionActivity)
+                    viewPagerCollection.adapter = adapter
                     viewPagerCollection.addOnPageChangeListener(viewChangeListener)
                     if (listCollection.size > 0) {
                         btnScan.visibility = View.VISIBLE
-                        rlBtnSaleAndStolen.visibility = View.VISIBLE
+                        showButtonStolen(0)
                         llViewNoData.visibility = View.GONE
                     } else {
                         llViewNoData.visibility = View.VISIBLE
@@ -116,6 +127,53 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
 
         })
 
+    }
+
+    private fun checkActivateSneaker() {
+        for (collectionItem in listCollection) {
+            val contractItem = binarySearch(
+                listContractCollection,
+                0,
+                listContractCollection.size - 1,
+                collectionItem.id!!
+            )
+
+            if (contractItem != null) {
+                if (contractItem.status == Constant.ItemCondition.STOLEN) {
+                    collectionItem.isCardActivate = false
+                }
+            }
+        }
+    }
+
+    fun binarySearch(
+        array: ArrayList<SneakerContractModel>,
+        left: Int,
+        right: Int,
+        item: Long
+    ): SneakerContractModel? {
+        if (right >= left) {
+            val mid: Int =
+                left + (right - left) / 2 // Tương đương (l+r)/2 nhưng ưu điểm tránh tràn số khi l,r lớn
+            // Nếu arr[mid] = x, trả về chỉ số và kết thúc.
+            if (array[mid].id == item) return array[mid]
+            // Nếu arr[mid] > x, thực hiện tìm kiếm nửa trái của mảng
+            return if (array[mid].id!! > item) binarySearch(
+                array,
+                left,
+                mid - 1,
+                item
+            ) else binarySearch(
+                array,
+                mid + 1,
+                right,
+                item
+            )
+            // Nếu arr[mid] < x, thực hiện tìm kiếm nửa phải của mảng
+        }
+
+        // Nếu không tìm thấy
+        return null
     }
 
     private fun getListSneakerId(): java.util.ArrayList<Long> {
@@ -137,7 +195,7 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         override fun onPageSelected(position: Int) {
-
+            showButtonStolen(position)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
@@ -145,14 +203,109 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    fun showButtonStolen(position: Int) {
+        if (listCollection[position].isCardActivate) {
+            cvFound.visibility = View.GONE
+            rlBtnSaleAndStolen.visibility = View.VISIBLE
+        } else {
+            cvFound.visibility = View.VISIBLE
+            rlBtnSaleAndStolen.visibility = View.GONE
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v) {
-            btnScan, btnScanNoData -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
+            llConfirmStolen -> {
+            }
 
-            btnItemSale -> GrailsTradingActivity.start(this, listCollection[viewPagerCollection.currentItem])
+            btnScan, btnScanNoData -> CustomScanActivity.start(
+                this,
+                CustomScanActivity.ScanType.SCAN_GRAIL
+            )
+
+            btnItemSale -> GrailsTradingActivity.start(
+                this,
+                listCollection[viewPagerCollection.currentItem]
+            )
+
+            btnItemStolen -> {
+                llConfirmStolen.visibility = View.VISIBLE
+                blurView.visibility = View.VISIBLE
+                blurView.isClickable = true
+                blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_view))
+            }
+
+            btnCloseReport, blurView -> closeReportView()
+
+            btnConfirmStolen -> InputPasswordDialog.show(supportFragmentManager, "", "", object :
+                InputPasswordDialog.PasscodeResultInterface {
+                override fun onReceivePasscode(passcode: String) {
+                    closeReportView()
+                    reportSotlen(passcode)
+                }
+
+            })
 
             btnBack -> onBackPressed()
         }
+    }
+
+    fun closeReportView() {
+        llConfirmStolen.visibility = View.GONE
+        blurView.visibility = View.GONE
+        blurView.isClickable = false
+        blurView.startAnimation(
+            AnimationUtils.loadAnimation(
+                this,
+                R.anim.fade_out_view
+            )
+        )
+    }
+
+    private fun reportSotlen(passcode: String) {
+        CommonUtils.toggleLoading(window.decorView.rootView, true)
+        val jsonData = ContractRequest.stolenSneakerJson(
+            listCollection[viewPagerCollection.currentItem].id!!
+        )
+
+        ContractRequest.callEosApi(userInfo?.eosName!!,
+            ContractRequest.METHOD_REPORT_STOLEN,
+            jsonData,
+            getString(R.string.format_eascrypt_password, passcode),
+            userInfo?.encryptedPrivateKey,
+            null,
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    CommonUtils.toggleLoading(window.decorView.rootView, false)
+                    if (e == null) {
+                        Toast.makeText(
+                            this@CollectionActivity,
+                            "Transaction id: $result",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        listCollection[viewPagerCollection.currentItem].isCardActivate = false
+                        adapter?.notifyDataSetChanged()
+
+                    } else {
+                        if (e.message == "pad block corrupted") {
+                            val alertDialogFragment =
+                                AlertDialogFragment.newInstance(getString(R.string.msg_wrong_password))
+                            alertDialogFragment.show(
+                                supportFragmentManager,
+                                AlertDialogFragment::class.java.simpleName
+                            )
+                        } else {
+                            val alertDialogFragment =
+                                AlertDialogFragment.newInstance(e.message)
+                            alertDialogFragment.show(
+                                supportFragmentManager,
+                                AlertDialogFragment::class.java.simpleName
+                            )
+                        }
+                    }
+                }
+
+            })
     }
 
     @Subscribe

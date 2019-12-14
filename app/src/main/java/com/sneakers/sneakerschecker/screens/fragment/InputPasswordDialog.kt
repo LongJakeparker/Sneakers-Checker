@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
-import kotlinx.android.synthetic.main.dialog_input_password.*
 
 
 class InputPasswordDialog : DialogFragment() {
@@ -28,19 +27,40 @@ class InputPasswordDialog : DialogFragment() {
     private lateinit var listIvPassCode: Array<ImageView>
     private var dialogTitle: String? = ""
     private var dialogMessage: String? = ""
+    private var mListener: PasscodeResultInterface? = null
 
     companion object {
         fun show(fragment: Fragment, fragmentManager: FragmentManager) {
             show(fragment, fragmentManager, "", "")
         }
 
-        fun show(fragment: Fragment, fragmentManager: FragmentManager, title: String, message: String) {
+        fun show(
+            fragment: Fragment,
+            fragmentManager: FragmentManager,
+            title: String,
+            message: String
+        ) {
             val dialog = InputPasswordDialog()
             val bundle = Bundle()
             bundle.putString(Constant.EXTRA_DIALOG_TITLE, title)
             bundle.putString(Constant.EXTRA_DIALOG_MESSAGE, message)
             dialog.arguments = bundle
             dialog.setTargetFragment(fragment, Constant.DIALOG_REQUEST_CODE)
+            dialog.show(fragmentManager, InputPasswordDialog::class.java.simpleName)
+        }
+
+        fun show(
+            fragmentManager: FragmentManager,
+            title: String,
+            message: String,
+            callback: PasscodeResultInterface
+        ) {
+            val dialog = InputPasswordDialog()
+            val bundle = Bundle()
+            bundle.putString(Constant.EXTRA_DIALOG_TITLE, title)
+            bundle.putString(Constant.EXTRA_DIALOG_MESSAGE, message)
+            dialog.arguments = bundle
+            dialog.mListener = callback
             dialog.show(fragmentManager, InputPasswordDialog::class.java.simpleName)
         }
     }
@@ -100,7 +120,12 @@ class InputPasswordDialog : DialogFragment() {
                         listIvPassCode[s.length].setImageResource(R.drawable.ic_passcode_empty)
                     } else {
                         Handler().postDelayed({
-                            returnPasscode()
+                            if (targetFragment != null) {
+                                returnPasscode()
+                            } else {
+                                mListener?.onReceivePasscode(etInputCode.text.toString().trim())
+                                dismiss()
+                            }
                         }, 200)
                     }
                 } else {
@@ -111,7 +136,7 @@ class InputPasswordDialog : DialogFragment() {
 
         etInputCode.requestFocus()
 
-        view.findViewById<ImageView>(R.id.btnClose).setOnClickListener{ dismiss() }
+        view.findViewById<ImageView>(R.id.btnClose).setOnClickListener { dismiss() }
 
         builder.setView(view)
 
@@ -130,5 +155,9 @@ class InputPasswordDialog : DialogFragment() {
         targetFragment!!.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
         dismiss()
+    }
+
+    interface PasscodeResultInterface {
+        fun onReceivePasscode(passcode: String)
     }
 }

@@ -135,6 +135,7 @@
             android:layout_height="wrap_content"
             android:elevation="10dp"
             app:cardCornerRadius="6dp"
+            android:layout_margin="@dimen/activity_margin_4dp"
             android:layout_centerInParent="true"
             android:visibility="gone">
 
@@ -150,7 +151,6 @@
                 android:textSize="@dimen/text_size_xlarge"
                 android:paddingHorizontal="@dimen/activity_margin_20dp"
                 android:paddingVertical="@dimen/activity_margin_14dp"
-                android:layout_margin="@dimen/activity_margin_4dp"
                 android:drawableLeft="@drawable/ic_found"
                 android:drawableTint="@android:color/white"/>
 
@@ -235,5 +235,74 @@
         layout="@layout/loading_medium"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
+
+    <View
+        android:id="@+id/blurView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.6"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:animateLayoutChanges="true">
+
+        <LinearLayout
+            android:id="@+id/llConfirmStolen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/drawable_bg_bottom_view_scan"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/btnCloseReport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="@dimen/activity_margin_12dp"
+                android:layout_marginTop="@dimen/activity_margin_4dp"
+                android:layout_marginRight="@dimen/activity_margin_12dp"
+                android:src="@drawable/ic_close"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_title_confirm_report"
+                android:layout_marginTop="@dimen/activity_margin_4dp"
+                android:textSize="@dimen/text_size_xxlarge"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="@dimen/activity_margin_24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_msg_confirm_report"
+                android:layout_marginHorizontal="@dimen/activity_margin_24dp"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_default"
+                android:layout_marginTop="@dimen/activity_margin_4dp"/>
+
+            <TextView
+                android:id="@+id/btnConfirmStolen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/drawable_btn_red_gradient_selector"
+                android:text="@string/label_button_confirm_stolen"
+                android:textColor="@color/colorOffWhite"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size_large"
+                android:layout_marginHorizontal="@dimen/activity_margin_24dp"
+                android:paddingVertical="@dimen/activity_margin_14dp"
+                android:layout_marginVertical="@dimen/activity_margin_24dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
