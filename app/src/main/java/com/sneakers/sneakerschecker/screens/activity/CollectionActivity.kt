@@ -54,17 +54,11 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
-//        listCollection.add(SneakerModel())
-//        listCollection.add(SneakerModel())
-//        listCollection.add(SneakerModel())
-//
-//        viewPagerCollection.adapter = CollectionAdapter(listCollection, this)
-//        viewPagerCollection.addOnPageChangeListener(viewChangeListener)
-
         getCollectionFromContract()
 
         btnScan.setOnClickListener(this)
         btnItemSale.setOnClickListener(this)
+        btnScanNoData.setOnClickListener(this)
         btnBack.setOnClickListener(this)
     }
 
@@ -110,6 +104,7 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
                     if (listCollection.size > 0) {
                         btnScan.visibility = View.VISIBLE
                         rlBtnSaleAndStolen.visibility = View.VISIBLE
+                        llViewNoData.visibility = View.GONE
                     } else {
                         llViewNoData.visibility = View.VISIBLE
                     }
@@ -152,7 +147,7 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            btnScan -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
+            btnScan, btnScanNoData -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
 
             btnItemSale -> GrailsTradingActivity.start(this, listCollection[viewPagerCollection.currentItem])
 

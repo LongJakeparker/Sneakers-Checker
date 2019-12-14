@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.FinishTransferEvent
 import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.model.ValidateModel
 import kotlinx.android.synthetic.main.activity_obtain_grail.*
+import org.greenrobot.eventbus.EventBus
 
 class ObtainGrailActivity : AppCompatActivity() {
     var sneakerObtained: ValidateModel? = null
@@ -45,7 +47,10 @@ class ObtainGrailActivity : AppCompatActivity() {
             bindSaleData()
         }
 
-        btnDone.setOnClickListener{ finish() }
+        btnDone.setOnClickListener{
+            EventBus.getDefault().post(FinishTransferEvent())
+            finish()
+        }
     }
 
     private fun bindObtainedData() {

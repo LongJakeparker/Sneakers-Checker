@@ -33,6 +33,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
     private var fragmentView: View? = null
     private var sneaker: SneakerModel? = null
     private var receiverName: String = ""
+    private var receiverId: Int? = null
     private lateinit var service: Retrofit
 
     override fun onCreateView(
@@ -138,6 +139,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
                         try {
                             val jsonObject = JSONObject(response.body()?.string())
                             receiverName = jsonObject.getString("username")
+                            receiverId = jsonObject.getInt("id")
                             confirmTransaction()
                         } catch (e: JSONException) {
                             e.printStackTrace()
@@ -177,6 +179,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
         bundle.putSerializable(Constant.EXTRA_SNEAKER, sneaker)
         bundle.putString(Constant.EXTRA_RECEIVER_NAME, receiverName)
+        bundle.putInt(Constant.EXTRA_RECEIVER_ID, receiverId!!)
         bundle.putString(
             Constant.EXTRA_RECEIVER_EOS_NAME,
             etReceiverEosName.text.toString().trim()

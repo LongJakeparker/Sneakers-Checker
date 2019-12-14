@@ -35,6 +35,7 @@ import com.sneakers.sneakerschecker.screens.fragment.dialog.ConfirmDialogFragmen
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Callback
@@ -164,6 +165,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
+        EventBus.getDefault().register(this)
+
         barcodeView = findViewById<View>(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
         val formats = listOf(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
         barcodeView!!.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
@@ -196,6 +199,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         blurView.setOnClickListener(this)
         btnClose.setOnClickListener(this)
         tvClaim.setOnClickListener(this)
+        tvSale.setOnClickListener(this)
     }
 
     private fun setupBottomView() {
@@ -384,8 +388,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                             "Transaction id: $result",
                             Toast.LENGTH_LONG
                         ).show()
-                        ObtainGrailActivity.start(this@CustomScanActivity, validatedItem)
                         EventBus.getDefault().post(ReloadCollectionEvent())
+                        ObtainGrailActivity.start(this@CustomScanActivity, validatedItem)
 
                         val returnIntent = Intent()
                         setResult(Activity.RESULT_OK, returnIntent)
@@ -693,8 +697,22 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         when {
             requestCode == REQUEST_CODE_CLAIM &&
                     resultCode == Activity.RESULT_OK -> {
+                CollectionActivity.start(this)
                 finish()
             }
         }
+    }
+
+    @Subscribe
+    fun onEvent(finishTransferEvent: FinishTransferEvent) {
+        if (scanType == ScanType.SCAN_GRAIL) {
+            CollectionActivity.start(this)
+            finish()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }

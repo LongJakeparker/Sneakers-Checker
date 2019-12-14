@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
-import com.sneakers.sneakerschecker.model.ReloadCollectionEvent
-import com.sneakers.sneakerschecker.model.SharedPref
-import com.sneakers.sneakerschecker.model.SneakerModel
-import com.sneakers.sneakerschecker.model.User
+import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.screens.activity.ObtainGrailActivity
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
@@ -33,6 +30,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private var receiverName: String? = null
     private var currentUser: User? = null
     private var password: String? = null
+    private var receiverEosId: Int? = null
 
     private lateinit var sharedPref: SharedPref
 
@@ -49,6 +47,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         sneaker = activity?.intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerModel
         receiverName = arguments?.getString(Constant.EXTRA_RECEIVER_NAME)
         receiverEosName = arguments?.getString(Constant.EXTRA_RECEIVER_EOS_NAME)
+        receiverEosId = arguments?.getInt(Constant.EXTRA_RECEIVER_ID, 0)
 
 
         return fragmentView
@@ -98,7 +97,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         CommonUtils.toggleLoading(fragmentView, true)
         val jsonData = ContractRequest.transferSneakerJson(
             sneaker?.id!!,
-            105
+            receiverEosId!!
         )
 
         ContractRequest.callEosApi(currentUser?.eosName!!,
