@@ -1,7 +1,5 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +13,6 @@ import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SneakerModel
-import com.sneakers.sneakerschecker.screens.activity.CustomScanActivity
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_transfer.*
@@ -34,6 +31,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
     private var sneaker: SneakerModel? = null
     private var receiverName: String = ""
     private var receiverId: Int? = null
+    private var receiverAvatar: String? = null
     private lateinit var service: Retrofit
 
     override fun onCreateView(
@@ -56,10 +54,10 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         loadSneakerInfo()
 
         btnClose.setOnClickListener(this)
-        ivScanEosName.setOnClickListener(this)
+        ivClearPhone.setOnClickListener(this)
         btnContinue.setOnClickListener(this)
         root.setOnClickListener(this)
-        etReceiverEosName.addTextChangedListener(textWatcher)
+        etReceiverPhone.addTextChangedListener(textWatcher)
     }
 
     private fun loadSneakerInfo() {
@@ -84,44 +82,38 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
 
         override fun afterTextChanged(s: Editable) {
             if (s.isNotEmpty()) {
-                ivScanEosName.setImageResource(R.drawable.ic_close_has_bg)
+                ivClearPhone.visibility = View.VISIBLE
+                ivClearPhone.isClickable = true
             } else {
-                ivScanEosName.setImageResource(R.drawable.ic_scan_has_bg)
+                ivClearPhone.visibility = View.INVISIBLE
+                ivClearPhone.isClickable = false
             }
             btnContinue.isEnabled = validateData()
         }
     }
 
     private fun validateData(): Boolean {
-        return !(etReceiverEosName.text.isEmpty())
+        return (etReceiverPhone.text.isNotEmpty())
     }
 
     override fun onClick(v: View?) {
         when (v) {
             btnClose -> activity?.finish()
 
-            ivScanEosName -> {
-                if (etReceiverEosName.text.isEmpty()) {
-                    CustomScanActivity.startForResult(
-                        this,
-                        CustomScanActivity.ScanType.SCAN_EOS_NAME,
-                        REQUEST_CODE_SCAN_EOS_NAME
-                    )
-                } else {
-                    etReceiverEosName.text.clear()
-                }
+            ivClearPhone -> {
+                etReceiverPhone.text.clear()
             }
 
             root -> CommonUtils.hideKeyboard(activity)
 
-            btnContinue -> checkEosName()
+            btnContinue -> checkPhoneNumber()
         }
     }
 
-    private fun checkEosName() {
+    private fun checkPhoneNumber() {
         CommonUtils.toggleLoading(fragmentView, true)
         val call = service.create(MainApi::class.java)
-            .getUserNameByEosName(etReceiverEosName.text.toString().trim())
+            .getUserNameByPhone("+${pickerCountryCode.selectedCountryCode + etReceiverPhone.text.toString().trim()}")
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 CommonUtils.toggleLoading(fragmentView, false)
@@ -140,6 +132,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
                             val jsonObject = JSONObject(response.body()?.string())
                             receiverName = jsonObject.getString("username")
                             receiverId = jsonObject.getInt("id")
+                            receiverAvatar = jsonObject.getString("avatar")
                             confirmTransaction()
                         } catch (e: JSONException) {
                             e.printStackTrace()
@@ -162,11 +155,6 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
                             fragmentManager!!,
                             AlertDialogFragment::class.java.simpleName
                         )
-//                        Toast.makeText(
-//                            context,
-//                            "Response Code ${response.code()}: ${response.message()}",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
                     }
                 }
             }
@@ -180,9 +168,10 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         bundle.putSerializable(Constant.EXTRA_SNEAKER, sneaker)
         bundle.putString(Constant.EXTRA_RECEIVER_NAME, receiverName)
         bundle.putInt(Constant.EXTRA_RECEIVER_ID, receiverId!!)
+        bundle.putString(Constant.EXTRA_RECEIVER_AVATAR, receiverAvatar)
         bundle.putString(
             Constant.EXTRA_RECEIVER_EOS_NAME,
-            etReceiverEosName.text.toString().trim()
+            "+${pickerCountryCode.selectedCountryCode + etReceiverPhone.text.toString().trim()}"
         )
         confirmTransferFragment.arguments = bundle
         val transaction = activity!!.supportFragmentManager.beginTransaction()
@@ -194,17 +183,5 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         )
             .replace(R.id.fl_transfer_content, confirmTransferFragment)
             .addToBackStack(null).commit()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when {
-            requestCode == REQUEST_CODE_SCAN_EOS_NAME && resultCode == Activity.RESULT_OK -> {
-                val eosName = data?.extras?.getString(Constant.EXTRA_USER_EOS_NAME)
-                etReceiverEosName.setText(eosName)
-                ivScanEosName.setImageResource(R.drawable.ic_close_has_bg)
-            }
-        }
     }
 }

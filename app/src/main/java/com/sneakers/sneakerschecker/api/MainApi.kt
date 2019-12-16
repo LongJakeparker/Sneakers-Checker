@@ -39,8 +39,8 @@ interface MainApi {
     @GET("user/collector/{userId}/")
     fun getUserInformation(@Path("userId") userId: Int): Call<CollectorModel>
 
-    @GET("user/eos/{eosName}/")
-    fun getUserNameByEosName(@Path("eosName") eosName: String): Call<ResponseBody>
+    @GET("user/userIdentity/{phone}/")
+    fun getUserNameByPhone(@Path("phone") phone: String): Call<ResponseBody>
 
     @POST("sneaker/fcm/notification/")
     fun pushTransferNotification(@Header("Authorization") token: String,

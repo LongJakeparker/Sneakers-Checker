@@ -159,7 +159,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
     }
 
     fun validateData(): Boolean {
-        return etUserPhone.text.trim().length >= 9
+        return etUserPhone.text.isNotEmpty()
     }
 
     fun visibleWarning(message: String) {

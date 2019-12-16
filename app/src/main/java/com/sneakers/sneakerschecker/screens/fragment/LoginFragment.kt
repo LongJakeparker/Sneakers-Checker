@@ -81,7 +81,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     }
 
     fun validateData(): Boolean {
-        return etUserPhone.text.trim().length >= 9
+        return etUserPhone.text.isNotEmpty()
     }
 
     override fun onClick(v: View?) {

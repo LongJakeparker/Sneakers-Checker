@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tvCreateNew.setOnClickListener(this)
         tvLogout.setOnClickListener(this)
         ivLogout.setOnClickListener(this)
-        rlUserAddress.setOnClickListener(this)
+        rlUserPhone.setOnClickListener(this)
         btnScanToken.setOnClickListener(this)
         tvCollection.setOnClickListener(this)
         ivCollection.setOnClickListener(this)
@@ -172,8 +172,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_CODE_START_CREATE_ACTIVITY)
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
-            rlUserAddress -> {
-                CommonUtils.copyToClipboard(this, tvUserAddress.text.toString())
+            rlUserPhone -> {
+                CommonUtils.copyToClipboard(this, tvUserPhone.text.toString())
                 tvCopied.visibility = View.VISIBLE
             }
 
@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun notifyUserLogin() {
         val userInfo = sharedPref.getUser(Constant.LOGIN_USER)
         tvUserName.text = userInfo?.user?.username
-        tvUserAddress.text = userInfo?.user?.eosName
+        tvUserPhone.text = userInfo?.user?.userIdentity
 
         val qrCode = CommonUtils.generateQrCode(this, 1.0,
             userInfo?.user?.eosName!!)
@@ -250,7 +250,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             params.setMargins(0, resources.getDimension(R.dimen.activity_margin_24dp).toInt(), 0, 0)
             tvUserName.layoutParams = params
 
-            rlUserAddress.visibility = View.VISIBLE
+            rlUserPhone.visibility = View.VISIBLE
             ivExpand.setImageResource(R.drawable.ic_expand_up)
 
             lnNavigationItemUnexpanded.visibility = View.GONE
@@ -275,7 +275,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             params.setMargins(0, resources.getDimension(R.dimen.activity_margin_16dp).toInt(), 0, 0)
             tvUserName.layoutParams = params
 
-            rlUserAddress.visibility = View.GONE
+            rlUserPhone.visibility = View.GONE
             ivExpand.setImageResource(R.drawable.ic_expand_down)
             lnNavigationItemExpanded.visibility = View.GONE
 

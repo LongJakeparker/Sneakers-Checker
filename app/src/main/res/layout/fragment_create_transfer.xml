@@ -158,7 +158,6 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/drawable_bg_transfer_item"
                             android:paddingTop="@dimen/activity_margin_16dp"
-                            android:paddingLeft="@dimen/activity_margin_16dp"
                             android:paddingRight="@dimen/activity_margin_24dp"
                             android:paddingBottom="@dimen/activity_margin_24dp"
                             android:layout_marginRight="@dimen/activity_margin_8dp"
@@ -170,27 +169,39 @@
                                 android:text="@string/text_receiver"
                                 android:textStyle="bold"
                                 android:textColor="@android:color/black"
-                                android:textSize="@dimen/text_size_xlarge"/>
+                                android:textSize="@dimen/text_size_xlarge"
+                                android:layout_marginLeft="@dimen/activity_margin_16dp"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginLeft="@dimen/activity_margin_8dp">
+
+                                <com.hbb20.CountryCodePicker
+                                    android:id="@+id/pickerCountryCode"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:ccp_defaultNameCode="VN"
+                                    app:ccp_showFlag="false"
+                                    app:ccp_textSize="@dimen/text_size_default"/>
 
                                 <EditText
-                                    android:id="@+id/etReceiverEosName"
+                                    android:id="@+id/etReceiverPhone"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:hint="@string/hint_receiver_eos_name"
-                                    android:textSize="@dimen/text_size_default" />
+                                    android:textSize="@dimen/text_size_default"
+                                    android:inputType="numberDecimal"
+                                    android:maxLength="9"/>
 
                                 <ImageView
-                                    android:id="@+id/ivScanEosName"
+                                    android:id="@+id/ivClearPhone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_scan_has_bg"
+                                    android:src="@drawable/ic_close_has_bg"
                                     android:layout_marginLeft="@dimen/activity_margin_16dp"/>
 
                             </LinearLayout>

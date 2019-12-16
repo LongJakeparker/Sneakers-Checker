@@ -193,7 +193,7 @@
     <string name="msg_detail_no_data_card">Please add a new credit card to continue your\npayment processing</string>
     <string name="text_add_new_credit_card">Add a new credit card</string>
     <string name="text_receiver">Receiver</string>
-    <string name="hint_receiver_eos_name">Input receiver EOS name</string>
+    <string name="hint_receiver_eos_name">Receiver phone number</string>
     <string name="text_transaction_fee">Transaction fee</string>
     <string name="text_des_transaction_fee">This is the extra fee you have to pay for this transaction by your credit card.</string>
     <string name="text_add_payment">Add a payment method</string>
@@ -205,7 +205,7 @@
     <string name="dialog_message_confirm_passcode">You need to cost <font color="#ff773f">$80</font> to complete this transaction.\nPlease enter your passcode to confirm the payment.</string>
     <string name="dialog_title_re_enter_passcode">Re-enter passcode</string>
     <string name="dialog_message_re_enter_wrong_passcode"><font color="#d0021b">Your re-enter passcode is wrong</font></string>
-    <string name="msg_eos_name_not_valid">EOS name is not valid</string>
+    <string name="msg_eos_name_not_valid">Phone number is not valid</string>
     <string name="dialog_title_confirm_report">DO YOUR GRAILS WAS STOLEN?</string>
     <string name="dialog_msg_confirm_report">This will mark the item as was stolen, it may affect your value and make bad reviews. Make sure this is true for the benefit of everyone.</string>
     <string name="label_button_confirm_stolen">Yes, I make sure</string>

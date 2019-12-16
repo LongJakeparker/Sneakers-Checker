@@ -666,7 +666,6 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun loadItemInfo() {
         hadScanResult = true
-        barcodeView?.resume()
 
         tvItemName.text = validatedItem.detail?.model
         tvItemBrand.text = validatedItem.detail?.brand
@@ -677,6 +676,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         rlScanFail.visibility = View.GONE
 
         rlScanResultHeader.visibility = View.VISIBLE
+
+        expandBottomView()
     }
 
     override fun onResume() {

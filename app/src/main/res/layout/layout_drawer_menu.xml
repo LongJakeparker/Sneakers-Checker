@@ -54,7 +54,7 @@
             android:layout_marginTop="@dimen/activity_margin_16dp"/>
 
         <RelativeLayout
-            android:id="@+id/rlUserAddress"
+            android:id="@+id/rlUserPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin_24dp"
@@ -62,14 +62,14 @@
             android:visibility="gone">
 
             <TextView
-                android:id="@+id/tvUserAddress"
+                android:id="@+id/tvUserPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:ellipsize="middle"
-                android:textSize="@dimen/text_size_default"
+                android:ellipsize="end"
+                android:textSize="@dimen/text_size_large"
                 android:textColor="@color/colorOffWhite"
-                android:drawableLeft="@drawable/ic_location"
+                android:drawableLeft="@drawable/ic_phone"
                 android:drawablePadding="@dimen/activity_margin_8dp"
                 android:paddingHorizontal="@dimen/activity_margin_16dp"
                 android:paddingVertical="13dp"
@@ -102,8 +102,8 @@
         app:layout_constraintTop_toBottomOf="@+id/lnTopNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:paddingHorizontal="@dimen/activity_margin_10dp"
-        android:paddingBottom="@dimen/activity_margin_10dp"
+        android:paddingHorizontal="@dimen/activity_margin_12dp"
+        android:paddingBottom="@dimen/activity_margin_12dp"
         android:visibility="gone"/>
 
     <LinearLayout
