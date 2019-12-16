@@ -27,7 +27,7 @@ import java.util.concurrent.Callable
 
 class ContractRequest {
     companion object {
-        val nodeUrl = "https://api.jungle.alohaeos.com:443"
+        val nodeUrl = "http://jungle2.cryptolions.io:80"
         val contractName = "truegrail123"
         val compositeDisposable: CompositeDisposable = CompositeDisposable()
 

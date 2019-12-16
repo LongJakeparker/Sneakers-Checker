@@ -49,7 +49,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_login, container, false)
 
-        sharedPref = context?.let { SharedPref(it) }!!
+        sharedPref = SharedPref(activity!!)
 
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
@@ -97,6 +97,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     private fun requestLogIn() {
         CommonUtils.toggleLoading(fragmentView, true)
+        val fcmToken = sharedPref.getString(Constant.FCM_TOKEN)
         val authToken =
             okhttp3.Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
         val call = service.create(AuthenticationApi::class.java)
@@ -104,7 +105,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 authToken,
                 Constant.GRANT_TYPE_PASSWORD,
                 "+${pickerCountryCode.selectedCountryCode + etUserPhone.text.toString().trim()}",
-                password
+                password,
+                fcmToken
             )
         call.enqueue(object : Callback<SignIn> {
 

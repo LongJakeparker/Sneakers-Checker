@@ -41,4 +41,8 @@ interface MainApi {
 
     @GET("user/eos/{eosName}/")
     fun getUserNameByEosName(@Path("eosName") eosName: String): Call<ResponseBody>
+
+    @POST("sneaker/fcm/notification/")
+    fun pushTransferNotification(@Header("Authorization") token: String,
+                                 @Body param: HashMap<String, Any>): Call<ResponseBody>
 }

@@ -26,6 +26,8 @@ import com.sneakers.sneakerschecker.eosCommander.crypto.ec.EosPrivateKey
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_verify_phone.*
+import kotlinx.android.synthetic.main.activity_verify_phone.tvWarning
+import kotlinx.android.synthetic.main.fragment_login.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -293,7 +295,6 @@ class VerifyPhoneActivity : AppCompatActivity(), View.OnClickListener {
         data[Constant.API_FIELD_ENCRYPTED_PRIVATE_KEY] = encryptedPrivateKey
         data[Constant.API_FIELD_USER_ROLE] = Constant.USER_ROLE_COLLECTOR
         data[Constant.API_FIELD_EOS_NAME] = CommonUtils.generateEOSAccountName()
-//        data[Constant.API_FIELD_REGISTRATION_TOKEN] = sharedPref.getString(Constant.FCM_TOKEN)
 
         CommonUtils.toggleLoading(window.decorView.rootView, true)
 
@@ -329,7 +330,6 @@ class VerifyPhoneActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun requestLogIn() {
-
         val authToken =
             okhttp3.Credentials.basic(Constant.AUTH_TOKEN_USERNAME, Constant.AUTH_TOKEN_PASSWORD)
         val call = service.create(AuthenticationApi::class.java)
@@ -337,7 +337,8 @@ class VerifyPhoneActivity : AppCompatActivity(), View.OnClickListener {
                 authToken,
                 Constant.GRANT_TYPE_PASSWORD,
                 phoneNumber!!,
-                password!!
+                password!!,
+                sharedPref.getString(Constant.FCM_TOKEN)
             )
         call.enqueue(object : Callback<SignIn> {
 

@@ -3,14 +3,16 @@ package com.sneakers.sneakerschecker.model
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.web3j.crypto.Credentials
-import javax.net.ssl.SNIHostName
 
 
 class SharedPref {
     private val PREFS_FILENAME = "com.sneakerchecker.storage"
     private var prefs: SharedPreferences? = null
+
+    companion object {
+        val IS_APP_BACKGROUND = "is_app_background"
+    }
 
     constructor(context: Context) {
         prefs = context.getSharedPreferences(PREFS_FILENAME, 0)
@@ -46,7 +48,7 @@ class SharedPref {
         editor.apply()
     }
 
-    fun setUser(value: SignIn, fieldName: String) {
+    fun setUser(value: SignIn?, fieldName: String) {
         val gson = Gson()
         val user = gson.toJson(value)
 

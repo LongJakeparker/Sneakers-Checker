@@ -71,6 +71,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         setViewPager()
 
+        val isObtained = intent?.getBooleanExtra(Constant.EXTRA_IS_OBTAINED, false)
+        if (isObtained != null && isObtained) {
+            val sneakerInfo = intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerModel
+            ObtainGrailActivity.start(baseContext, sneakerInfo, true)
+        }
+
         btnMenuMain.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
         tvCreateNew.setOnClickListener(this)
@@ -85,7 +91,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tvSetting.setOnClickListener(this)
         ivSetting.setOnClickListener(this)
 
-        Log.e("FCM-TOKEN", FirebaseInstanceId.getInstance().token)
+        Log.e("FCM-TOKEN", sharedPref.getString(Constant.FCM_TOKEN))
     }
 
     private fun checkUserLogin() {
@@ -282,7 +288,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun logOut() {
-        sharedPref.clearPref()
+        sharedPref.setUser(null, Constant.LOGIN_USER)
         sharedPref.setBool(true, Constant.ACCOUNT_UNLINK)
 
         notifyUserLogout()

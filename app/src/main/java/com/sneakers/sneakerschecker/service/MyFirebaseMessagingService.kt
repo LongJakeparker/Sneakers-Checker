@@ -5,37 +5,64 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.TrueGrailsApplication
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.ReloadCollectionEvent
 import com.sneakers.sneakerschecker.model.SharedPref
-import com.sneakers.sneakerschecker.screens.activity.CollectionActivity
+import com.sneakers.sneakerschecker.model.SneakerModel
+import com.sneakers.sneakerschecker.screens.activity.ObtainGrailActivity
+import org.greenrobot.eventbus.EventBus
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     private var NOTIFICATION_ID = 1
     private lateinit var sharedPref: SharedPref
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        generateNotification(remoteMessage.notification?.body, remoteMessage.notification?.title)
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        /* now let's wait until the debugger attaches */
+        android.os.Debug.waitForDebugger()
     }
 
-    private fun generateNotification(body: String?, title: String?) {
-        val intent = Intent(this, CollectionActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        val payload = remoteMessage.data["payload"]
+        val title = remoteMessage.data["title"]
+        val body = remoteMessage.data["body"]
+        val sneakerInfo = Gson().fromJson(payload, SneakerModel::class.java)
+        if (!TrueGrailsApplication.mInstance?.isAppBackground()!!) {
+            ObtainGrailActivity.start(baseContext, sneakerInfo, true)
+            EventBus.getDefault().post(ReloadCollectionEvent())
+        } else {
+            generateNotification(
+                sneakerInfo,
+                body,
+                title
+            )
+        }
+    }
 
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+    private fun generateNotification(sneakerInfo: SneakerModel, body: String?, title: String?) {
+        val intent: Intent = Intent(applicationContext, NotificationActionService::class.java)
+            .putExtra(Constant.EXTRA_SNEAKER, sneakerInfo)
+            .putExtra(Constant.EXTRA_IS_OBTAINED, true)
+            .setAction(NotificationActionService.ACTION_OBTAINED_GRAIL)
+
+        val pendingIntent = PendingIntent.getService(applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         createNotificationChannel()
 
         val notificationBuilder = NotificationCompat.Builder(this, Constant.CHANNEL_TRANSFER)
-            .setSmallIcon(R.drawable.sneaker_image_sample)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
@@ -43,7 +70,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (NOTIFICATION_ID > 1073741824) {
             NOTIFICATION_ID = 0

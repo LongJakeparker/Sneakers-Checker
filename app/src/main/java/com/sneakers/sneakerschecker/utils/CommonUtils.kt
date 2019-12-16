@@ -1,6 +1,8 @@
 package com.sneakers.sneakerschecker.utils
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningTaskInfo
 import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.ClipboardManager

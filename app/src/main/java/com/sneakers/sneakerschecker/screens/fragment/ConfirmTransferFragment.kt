@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
+import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
@@ -21,7 +22,12 @@ import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailBrand
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailName
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailReleaseDate
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailSize
+import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private var fragmentView: View? = null
@@ -30,7 +36,8 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private var receiverName: String? = null
     private var currentUser: User? = null
     private var password: String? = null
-    private var receiverEosId: Int? = null
+    private var receiverId: Int? = null
+    private lateinit var service: Retrofit
 
     private lateinit var sharedPref: SharedPref
 
@@ -41,13 +48,15 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_confirm_transfer, container, false)
 
+        service = RetrofitClientInstance().getRetrofitInstance()!!
+
         sharedPref = context?.let { SharedPref(it) }!!
         currentUser = sharedPref.getUser(Constant.LOGIN_USER)?.user
 
         sneaker = activity?.intent?.getSerializableExtra(Constant.EXTRA_SNEAKER) as SneakerModel
         receiverName = arguments?.getString(Constant.EXTRA_RECEIVER_NAME)
         receiverEosName = arguments?.getString(Constant.EXTRA_RECEIVER_EOS_NAME)
-        receiverEosId = arguments?.getInt(Constant.EXTRA_RECEIVER_ID, 0)
+        receiverId = arguments?.getInt(Constant.EXTRA_RECEIVER_ID, 0)
 
 
         return fragmentView
@@ -97,7 +106,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         CommonUtils.toggleLoading(fragmentView, true)
         val jsonData = ContractRequest.transferSneakerJson(
             sneaker?.id!!,
-            receiverEosId!!
+            receiverId!!
         )
 
         ContractRequest.callEosApi(currentUser?.eosName!!,
@@ -108,13 +117,11 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
             null,
             object : ContractRequest.Companion.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
-                    CommonUtils.toggleLoading(fragmentView, false)
                     if (e == null) {
                         Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
-                        ObtainGrailActivity.start(activity!!, sneaker!!)
-                        EventBus.getDefault().post(ReloadCollectionEvent())
-                        activity?.finish()
+                        pushNotification()
                     } else {
+                        CommonUtils.toggleLoading(fragmentView, false)
                         if (e.message == "pad block corrupted") {
                             val alertDialogFragment =
                                 AlertDialogFragment.newInstance(getString(R.string.msg_wrong_password))
@@ -135,6 +142,47 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
                 }
 
             })
+    }
+
+    private fun pushNotification() {
+        val params = HashMap<String, Any>()
+        params[Constant.API_FIELD_SEANER_ID] = sneaker?.id!!
+        params[Constant.API_FIELD_NEW_OWNER_ID] = receiverId!!
+
+        val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
+        val call = service.create(MainApi::class.java)
+            .pushTransferNotification(
+                accessToken,
+                params
+            )
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                CommonUtils.toggleLoading(fragmentView, false)
+                val alertDialogFragment =
+                    AlertDialogFragment.newInstance(t.localizedMessage)
+                alertDialogFragment.show(
+                    fragmentManager!!,
+                    AlertDialogFragment::class.java.simpleName
+                )
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                CommonUtils.toggleLoading(fragmentView, false)
+                if (response.isSuccessful) {
+                    ObtainGrailActivity.start(activity!!, sneaker!!)
+                    EventBus.getDefault().post(ReloadCollectionEvent())
+                    activity?.finish()
+                } else {
+                    val alertDialogFragment =
+                        AlertDialogFragment.newInstance(response.message())
+                    alertDialogFragment.show(
+                        fragmentManager!!,
+                        AlertDialogFragment::class.java.simpleName
+                    )
+                }
+            }
+
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -37,6 +37,8 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         if (item.limitedEdition!!) {
             view.ivLimitedFront.visibility = VISIBLE
             view.ivLimitedBack.visibility = VISIBLE
+            view.ivLimitedFrontDisabled.visibility = VISIBLE
+            view.ivLimitedBackDisabled.visibility = VISIBLE
         } else {
             view.ivLimitedFront.visibility = GONE
             view.ivLimitedBack.visibility = GONE

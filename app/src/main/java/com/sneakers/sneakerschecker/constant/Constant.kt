@@ -39,6 +39,7 @@ object Constant {
     const val EXTRA_IS_OBTAINED = "EXTRA_IS_OBTAINED"
     const val EXTRA_DIALOG_TITLE = "EXTRA_DIALOG_TITLE"
     const val EXTRA_DIALOG_MESSAGE = "EXTRA_DIALOG_MESSAGE"
+    const val EXTRA_IS_SNEAKER_MODEL = "EXTRA_IS_SNEAKER_MODEL"
 
 
 
@@ -53,6 +54,10 @@ object Constant {
     const val API_FIELD_USER_ADDRESS = "address"
     const val API_FIELD_EOS_NAME = "eosName"
     const val API_FIELD_USER_IDENTITY = "userIdentity"
+    const val API_FIELD_SEANER_ID = "sneaker_id"
+    const val API_FIELD_NEW_OWNER_ID = "new_owner_id"
+    const val API_FIELD_GRANT_TYPE = "grant_type"
+    const val API_FIELD_FCM_TOKEN = "fcmToken"
 
     const val DIALOG_REQUEST_CODE = 1004
 

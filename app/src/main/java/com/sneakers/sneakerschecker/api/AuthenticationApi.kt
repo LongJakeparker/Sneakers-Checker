@@ -15,7 +15,8 @@ interface AuthenticationApi {
     fun signInApi(@Header("Authorization") token:String,
                   @Field("grant_type") grant_type: String,
                   @Field("username") userIdentity: String,
-                  @Field("password") password: String): Call<SignIn>
+                  @Field("password") password: String,
+                  @Field("fcmToken") fcmToken: String): Call<SignIn>
 
     @FormUrlEncoded
     @POST("/oauth/token")
