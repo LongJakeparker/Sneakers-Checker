@@ -25,9 +25,9 @@ class NotificationActionService : IntentService(NotificationActionService::class
             val isObtained = intent.getBooleanExtra(Constant.EXTRA_IS_OBTAINED, false)
             if (TrueGrailsApplication.mInstance?.isAppRunning()!!) {
                 EventBus.getDefault().post(ReloadCollectionEvent())
-                ObtainGrailActivity.start(this, sneakerInfo, true)
+                ObtainGrailActivity.start(baseContext, sneakerInfo, true)
             } else {
-                val parentIntent = Intent(this, MainActivity::class.java)
+                val parentIntent = Intent(baseContext, MainActivity::class.java)
                 parentIntent.putExtra(Constant.EXTRA_IS_OBTAINED, isObtained)
                 parentIntent.putExtra(Constant.EXTRA_SNEAKER, sneakerInfo)
                 startActivity(parentIntent)
