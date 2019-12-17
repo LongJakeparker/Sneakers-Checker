@@ -21,6 +21,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
+import com.sneakers.sneakerschecker.model.User
 
 
 class CommonUtils {
@@ -108,6 +109,16 @@ class CommonUtils {
                 result += characters[randomIndex]
             }
             return result
+        }
+
+        fun getCurrentUser(context: Context): User? {
+            val sharedPref = SharedPref(context)
+
+            if (sharedPref.getUser(Constant.LOGIN_USER) != null) {
+                return sharedPref.getUser(Constant.LOGIN_USER)?.user
+            }
+
+            return null
         }
     }
 }

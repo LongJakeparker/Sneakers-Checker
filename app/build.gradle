@@ -75,7 +75,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
     implementation 'com.google.android.material:material:1.1.0-beta01'
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
@@ -95,6 +95,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0'
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    //BrainTree payment
+    implementation ('com.braintreepayments.api:drop-in:4.3.0') {
+        transitive = false
+    }
+    implementation 'com.braintreepayments:card-form:4.2.0'
 
 }
 

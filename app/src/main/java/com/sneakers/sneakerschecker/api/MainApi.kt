@@ -45,4 +45,7 @@ interface MainApi {
     @POST("sneaker/fcm/notification/")
     fun pushTransferNotification(@Header("Authorization") token: String,
                                  @Body param: HashMap<String, Any>): Call<ResponseBody>
+
+    @GET("payment/token/{userId}/")
+    fun getBrainTreeClientToken(@Path("userId") userId: Int): Call<ResponseBody>
 }

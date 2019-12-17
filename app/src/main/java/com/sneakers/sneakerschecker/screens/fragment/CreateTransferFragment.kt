@@ -23,10 +23,18 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import android.content.Intent.getIntent
+import androidx.core.app.ActivityCompat.startActivityForResult
+import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.models.PaymentMethodNonce
+import android.content.Intent.getIntent
+import androidx.core.app.ActivityCompat.startActivityForResult
+import com.braintreepayments.api.dropin.DropInRequest
+import com.braintreepayments.api.dropin.DropInResult
+import com.braintreepayments.cardform.view.CardForm
+
 
 class CreateTransferFragment : Fragment(), View.OnClickListener {
-    private val REQUEST_CODE_SCAN_EOS_NAME = 1002
-
     private var fragmentView: View? = null
     private var sneaker: SneakerModel? = null
     private var receiverName: String = ""
@@ -51,6 +59,8 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        getBrainTreeClientToken()
+
         loadSneakerInfo()
 
         btnClose.setOnClickListener(this)
@@ -58,6 +68,34 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         btnContinue.setOnClickListener(this)
         root.setOnClickListener(this)
         etReceiverPhone.addTextChangedListener(textWatcher)
+    }
+
+    private fun getBrainTreeClientToken() {
+        val call = service.create(MainApi::class.java)
+            .getBrainTreeClientToken(CommonUtils.getCurrentUser(context!!)?.id!!)
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val alertDialogFragment =
+                    AlertDialogFragment.newInstance(t.message)
+                alertDialogFragment.show(
+                    fragmentManager!!,
+                    AlertDialogFragment::class.java.simpleName
+                )
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                submitPaymentMethod()
+            }
+
+        })
+    }
+
+    private fun submitPaymentMethod() {
+        val dropInRequest = DropInRequest()
+            .cardholderNameStatus(CardForm.FIELD_REQUIRED)
+            .vaultManager(true)
+            .clientToken(mClientToken)
+        startActivityForResult(dropInRequest.getIntent(context), DROP_IN_REQUEST)
     }
 
     private fun loadSneakerInfo() {
@@ -117,11 +155,12 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 CommonUtils.toggleLoading(fragmentView, false)
-                Toast.makeText(
-                    context,
-                    t.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                val alertDialogFragment =
+                    AlertDialogFragment.newInstance(t.message)
+                alertDialogFragment.show(
+                    fragmentManager!!,
+                    AlertDialogFragment::class.java.simpleName
+                )
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
