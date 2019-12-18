@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         ivCardManage.setOnClickListener(this)
         tvSetting.setOnClickListener(this)
         ivSetting.setOnClickListener(this)
+        tvProfile.setOnClickListener(this)
+        ivProfile.setOnClickListener(this)
 
         Log.e("FCM-TOKEN", sharedPref.getString(Constant.FCM_TOKEN))
     }
@@ -205,9 +207,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
 
-//            tvSetting, ivSetting -> {
-//                drawer_layout.closeDrawer(GravityCompat.END)
-//            }
+            tvProfile, ivProfile -> {
+                UserProfileActivity.start(this)
+                drawer_layout.closeDrawer(GravityCompat.END)
+            }
         }
     }
 

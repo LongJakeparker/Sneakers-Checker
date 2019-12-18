@@ -26,13 +26,21 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import java.nio.charset.StandardCharsets
 import android.app.Activity
+import android.widget.RadioGroup
+import android.app.DatePickerDialog
+import android.graphics.Color
+import java.util.*
+import kotlin.collections.HashMap
 
 
-
-
-class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
+open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
+    RadioGroup.OnCheckedChangeListener {
 
     private var fragmentView: View? = null
+    private var day: Int = 0
+    private var month: Int = 0
+    private var year: Int = 0
+    private var isIndividualUser: Boolean = true
 
     private lateinit var service: Retrofit
 
@@ -62,10 +70,18 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        day= Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        year= Calendar.getInstance().get(Calendar.YEAR)
+        month= Calendar.getInstance().get(Calendar.MONTH)
+
         etUserName.addTextChangedListener(textWatcher)
         etUserAddress.addTextChangedListener(textWatcher)
         btnUpdate.setOnClickListener(this)
         root.setOnClickListener(this)
+        rgGender.setOnCheckedChangeListener(this)
+        llBirthday.setOnClickListener(this)
+        rlTypeIndividual.setOnClickListener(this)
+        rlTypeStore.setOnClickListener(this)
     }
 
     private fun updateUser() {
@@ -170,6 +186,56 @@ class UpdateUserRegisterFragment : Fragment(), View.OnClickListener {
             btnUpdate -> updateSmartContract()
 
             root -> CommonUtils.hideKeyboard(activity)
+
+            llBirthday -> openDateDialog()
+
+            rlTypeIndividual -> selectAccountType(true)
+
+            rlTypeStore -> selectAccountType(false)
+        }
+    }
+
+    private fun selectAccountType(isIndividualUser: Boolean) {
+        this.isIndividualUser = isIndividualUser
+
+        if (isIndividualUser) {
+            rlTypeIndividual.setBackgroundResource(R.drawable.drawable_bg_account_type_checked)
+            tvIndividual.setTextColor(resources.getColor(R.color.brightBlue, null))
+
+            rlTypeStore.setBackgroundResource(R.drawable.drawable_bg_account_type)
+            tvStore.setTextColor(Color.BLACK)
+        } else {
+            rlTypeStore.setBackgroundResource(R.drawable.drawable_bg_account_type_checked)
+            tvStore.setTextColor(resources.getColor(R.color.brightBlue, null))
+
+            rlTypeIndividual.setBackgroundResource(R.drawable.drawable_bg_account_type)
+            tvIndividual.setTextColor(Color.BLACK)
+        }
+    }
+
+    private fun openDateDialog() {
+        val listener =
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                day = dayOfMonth
+                month = monthOfYear
+                this.year = year
+                tvBirthday.text = "$day/${month + 1}/${this.year}"
+            }
+        val dpDialog = DatePickerDialog(activity!!, listener, year, month, day)
+        dpDialog.show()
+    }
+
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        when (group?.checkedRadioButtonId) {
+            R.id.rbtnMen -> {
+                tvGender.text = getString(R.string.text_gender_gentleman)
+                tvGender.setTextColor(resources.getColor(R.color.brightBlue, null))
+            }
+
+            R.id.rbtnLady -> {
+                tvGender.text = getString(R.string.text_gender_lady)
+                tvGender.setTextColor(resources.getColor(R.color.salmon, null))
+            }
         }
     }
 

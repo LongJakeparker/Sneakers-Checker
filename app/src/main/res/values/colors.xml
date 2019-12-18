@@ -38,5 +38,7 @@
     <color name="darkRed">#8d0101</color>
     <color name="warmGrey">#9b9b9b</color>
     <color name="gray_f4f4f4">#f4f4f4</color>
+    <color name="brightBlue">#007aff</color>
+    <color name="salmon">#fa7268</color>
 
 </resources>

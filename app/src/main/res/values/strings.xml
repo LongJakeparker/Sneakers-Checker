@@ -71,7 +71,7 @@
     <string name="label_transfer">Grails trading</string>
 
     <string name="text_holder_user_name">Your name (*)</string>
-    <string name="text_holder_user_email">Your email</string>
+    <string name="text_holder_user_email">Your email (*)</string>
     <string name="text_holder_user_address">Your address (*)</string>
     <string name="text_holder_user_phone">Your phone</string>
     <string name="text_holder_user_password">Your password (6 digits)</string>
@@ -209,5 +209,15 @@
     <string name="dialog_title_confirm_report">DO YOUR GRAILS WAS STOLEN?</string>
     <string name="dialog_msg_confirm_report">This will mark the item as was stolen, it may affect your value and make bad reviews. Make sure this is true for the benefit of everyone.</string>
     <string name="label_button_confirm_stolen">Yes, I make sure</string>
+    <string name="label_personal_info">Personal info</string>
+    <string name="label_account_type">Account type</string>
+    <string name="text_gender_gentleman">You are a gentleman</string>
+    <string name="text_gender_lady">You are a lady</string>
+    <string name="hint_birthday">Your birthday</string>
+    <string name="text_remind_filed_required">You must input several required fields with (*) symbol</string>
+    <string name="text_individual">INDIVIDUAL</string>
+    <string name="text_des_individual">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
+    <string name="text_store">STORE</string>
+    <string name="text_des_store">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
 
 </resources>
