@@ -6,8 +6,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+//import com.braintreepayments.api.BraintreeFragment
+//import com.braintreepayments.api.models.PaymentMethodNonce
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
@@ -23,15 +24,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import android.content.Intent.getIntent
-import androidx.core.app.ActivityCompat.startActivityForResult
-import com.braintreepayments.api.BraintreeFragment
-import com.braintreepayments.api.models.PaymentMethodNonce
-import android.content.Intent.getIntent
-import androidx.core.app.ActivityCompat.startActivityForResult
-import com.braintreepayments.api.dropin.DropInRequest
-import com.braintreepayments.api.dropin.DropInResult
-import com.braintreepayments.cardform.view.CardForm
 
 
 class CreateTransferFragment : Fragment(), View.OnClickListener {
@@ -91,11 +83,11 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
     }
 
     private fun submitPaymentMethod() {
-        val dropInRequest = DropInRequest()
-            .cardholderNameStatus(CardForm.FIELD_REQUIRED)
-            .vaultManager(true)
-            .clientToken(mClientToken)
-        startActivityForResult(dropInRequest.getIntent(context), DROP_IN_REQUEST)
+//        val dropInRequest = DropInRequest()
+//            .cardholderNameStatus(CardForm.FIELD_REQUIRED)
+//            .vaultManager(true)
+//            .clientToken(mClientToken)
+//        startActivityForResult(dropInRequest.getIntent(context), DROP_IN_REQUEST)
     }
 
     private fun loadSneakerInfo() {

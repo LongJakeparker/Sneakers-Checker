@@ -97,7 +97,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     //BrainTree payment
-    implementation ('com.braintreepayments.api:drop-in:4.3.0') {
+    implementation('com.braintreepayments.api:drop-in:4.3.0') {
         transitive = false
     }
     implementation 'com.braintreepayments:card-form:4.2.0'

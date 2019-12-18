@@ -20,9 +20,11 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".screens.activity.ObtainGrailActivity"/>
-        <activity android:name=".screens.activity.GrailsTradingActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".screens.activity.UserProfileActivity"></activity>
+        <activity android:name=".screens.activity.ObtainGrailActivity" />
+        <activity
+            android:name=".screens.activity.GrailsTradingActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".screens.activity.ManageCardActivity" />
         <activity android:name=".screens.activity.UpdateUserRegisterActivity" />
         <activity android:name=".screens.activity.FinishVerifyActivity" />
@@ -30,10 +32,12 @@
             android:name=".screens.activity.VerifyPhoneActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity android:name=".screens.activity.CustomScanActivity" />
-        <activity android:name=".screens.activity.LoginActivity"
-            android:windowSoftInputMode="adjustPan|stateAlwaysVisible"/>
-        <activity android:name=".screens.activity.CreateNewActivity"
-            android:windowSoftInputMode="adjustPan|stateAlwaysVisible"/>
+        <activity
+            android:name=".screens.activity.LoginActivity"
+            android:windowSoftInputMode="adjustPan|stateAlwaysVisible" />
+        <activity
+            android:name=".screens.activity.CreateNewActivity"
+            android:windowSoftInputMode="adjustPan|stateAlwaysVisible" />
 
         <service
             android:name=".service.MyFirebaseMessagingService"
@@ -53,8 +57,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
@@ -63,12 +68,15 @@
 
         <service android:name=".service.NotificationActionService" />
 
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
