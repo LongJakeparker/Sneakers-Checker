@@ -54,4 +54,10 @@ interface MainApi {
         @Path("userId") userId: Int
     ): Call<ResponseBody>
 
+    @POST("payment/transaction/{userId}/")
+    fun createTransaction(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: Int,
+        @Body param: HashMap<String, Any>
+        ): Call<ResponseBody>
 }

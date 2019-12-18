@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
+import com.braintreepayments.api.models.CardNonce
+import com.braintreepayments.api.models.PaymentMethodNonce
 import com.braintreepayments.cardform.view.CardForm
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
@@ -38,7 +40,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
     private var receiverName: String = ""
     private var receiverId: Int? = null
     private var receiverAvatar: String? = null
-    private var brainTreeClientToken: String? = null
+    private var paymentMethodNonce: PaymentMethodNonce? = null
     private lateinit var service: Retrofit
 
     override fun onCreateView(
@@ -65,44 +67,14 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         btnContinue.setOnClickListener(this)
         root.setOnClickListener(this)
         llAddPayment.setOnClickListener(this)
+        ivDeletePayment.setOnClickListener(this)
         etReceiverPhone.addTextChangedListener(textWatcher)
-    }
-
-    private fun getBrainTreeClientToken() {
-        val accessToken = "Bearer " + CommonUtils.getCurrentUser(context!!)?.accessToken
-        val call = service.create(MainApi::class.java)
-            .getBrainTreeClientToken(accessToken, CommonUtils.getCurrentUser(context!!)?.user?.id!!)
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                val alertDialogFragment =
-                    AlertDialogFragment.newInstance(t.message)
-                alertDialogFragment.show(
-                    fragmentManager!!,
-                    AlertDialogFragment::class.java.simpleName
-                )
-            }
-
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.isSuccessful) {
-                    val jsonObject = JSONObject(response.body()?.string())
-                    brainTreeClientToken = jsonObject.getString("clientToken")
-                    submitPaymentMethod(brainTreeClientToken!!)
-                } else {
-                    val alertDialogFragment =
-                        AlertDialogFragment.newInstance(response.message())
-                    alertDialogFragment.show(
-                        fragmentManager!!,
-                        AlertDialogFragment::class.java.simpleName
-                    )
-                }
-            }
-
-        })
     }
 
     private fun submitPaymentMethod(clienToken: String) {
         val dropInRequest = DropInRequest()
             .cardholderNameStatus(CardForm.FIELD_REQUIRED)
+            .vaultCard(true)
             .vaultManager(true)
             .clientToken(clienToken)
         startActivityForResult(dropInRequest.getIntent(context), DROP_IN_REQUEST)
@@ -141,7 +113,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
     }
 
     private fun validateData(): Boolean {
-        return (etReceiverPhone.text.isNotEmpty())
+        return (etReceiverPhone.text.isNotEmpty() && paymentMethodNonce != null)
     }
 
     override fun onClick(v: View?) {
@@ -156,7 +128,14 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
 
             btnContinue -> checkPhoneNumber()
 
-            llAddPayment -> getBrainTreeClientToken()
+            llAddPayment -> submitPaymentMethod(CommonUtils.getBrainTreeToken(context!!))
+
+            ivDeletePayment -> {
+                tvCardId.text = getString(R.string.text_add_payment)
+                ivAddPayment.visibility = View.VISIBLE
+                ivDeletePayment.visibility = View.GONE
+                paymentMethodNonce = null
+            }
         }
     }
 
@@ -224,6 +203,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
             Constant.EXTRA_RECEIVER_EOS_NAME,
             "+${pickerCountryCode.selectedCountryCode + etReceiverPhone.text.toString().trim()}"
         )
+        bundle.putParcelable(Constant.EXTRA_PAYMENT_NONCE, paymentMethodNonce)
         confirmTransferFragment.arguments = bundle
         val transaction = activity!!.supportFragmentManager.beginTransaction()
         transaction.setCustomAnimations(
@@ -243,9 +223,14 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
             if (resultCode == Activity.RESULT_OK) {
                 val result =
                     data!!.getParcelableExtra<DropInResult>(DropInResult.EXTRA_DROP_IN_RESULT)
-                val paymentMethodNonce = result.paymentMethodNonce?.nonce
-                Log.e("Payment Nonce: ", paymentMethodNonce)
-                // send paymentMethodNonce to your server
+                paymentMethodNonce = result.paymentMethodNonce
+                val paymentNonce = result.paymentMethodNonce?.nonce!!
+                Log.e("Payment Nonce: ", paymentNonce)
+
+                tvCardId.text = getString(R.string.format_credit_card, (result.paymentMethodNonce as CardNonce).lastFour)
+                ivAddPayment.visibility = View.GONE
+                ivDeletePayment.visibility = View.VISIBLE
+                btnContinue.isEnabled = validateData()
             } else if (resultCode == Activity.RESULT_CANCELED) { // canceled
             } else { // an error occurred, checked the returned exception
                 val exception =

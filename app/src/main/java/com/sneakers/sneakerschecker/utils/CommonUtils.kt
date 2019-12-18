@@ -121,5 +121,10 @@ class CommonUtils {
 
             return null
         }
+
+        fun getBrainTreeToken(context: Context): String {
+            val sharedPref = SharedPref(context)
+            return sharedPref.getString(Constant.BRAINTREE_TOKEN)
+        }
     }
 }

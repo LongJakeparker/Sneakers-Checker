@@ -219,5 +219,6 @@
     <string name="text_des_individual">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
     <string name="text_store">STORE</string>
     <string name="text_des_store">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
+    <string name="format_credit_card">✱✱✱✱ ✱✱✱✱ ✱✱✱✱ %s</string>
 
 </resources>

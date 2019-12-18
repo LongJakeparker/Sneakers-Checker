@@ -24,11 +24,19 @@ import com.sneakers.sneakerschecker.model.*
 import android.animation.LayoutTransition
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
+import com.sneakers.sneakerschecker.api.MainApi
+import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.screens.fragment.dialog.ConfirmDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
+import okhttp3.ResponseBody
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.json.JSONObject
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.Keys
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.security.Security
 
 
@@ -39,6 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPref
     private var isExpanded: Boolean = false
+    private lateinit var service: Retrofit
 
     private val mainSliderList = arrayListOf(
         MainSliderItem(R.string.text_explore_1, R.drawable.drawable_explore_pager_1),
@@ -52,10 +61,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
 
         sharedPref = SharedPref(this)
+        service = RetrofitClientInstance().getRetrofitInstance()!!
 
         checkUserLogin()
-
-        setupBouncyCastle()
 
         if (sharedPref.getString(Constant.APP_CREDENTIALS) == "") {
             createAppCredentials()
@@ -96,6 +104,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Log.e("FCM-TOKEN", sharedPref.getString(Constant.FCM_TOKEN))
     }
 
+    private fun getBrainTreeClientToken() {
+        val accessToken = "Bearer " + CommonUtils.getCurrentUser(this)?.accessToken
+        val call = service.create(MainApi::class.java)
+            .getBrainTreeClientToken(accessToken, CommonUtils.getCurrentUser(this)?.user?.id!!)
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val alertDialogFragment =
+                    AlertDialogFragment.newInstance(t.message)
+                alertDialogFragment.show(
+                    supportFragmentManager,
+                    AlertDialogFragment::class.java.simpleName
+                )
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    val jsonObject = JSONObject(response.body()?.string())
+                    val brainTreeClientToken = jsonObject.getString("clientToken")
+                    sharedPref.setString(brainTreeClientToken, Constant.BRAINTREE_TOKEN)
+                } else {
+                    val alertDialogFragment =
+                        AlertDialogFragment.newInstance(response.message())
+                    alertDialogFragment.show(
+                        supportFragmentManager,
+                        AlertDialogFragment::class.java.simpleName
+                    )
+                }
+            }
+
+        })
+    }
+
     private fun checkUserLogin() {
         if (!CommonUtils.isNonLoginUser(this)) {
                 notifyUserLogin()
@@ -111,22 +151,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         } catch (e: Exception) {
             Log.e("Error: ", e.message)
         }
-    }
-
-    private fun setupBouncyCastle() {
-        val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)
-            ?: // Web3j will set up the provider lazily when it's first used.
-            return
-        if (provider.javaClass == BouncyCastleProvider::class.java) {
-            // BC with same package name, shouldn't happen in real life.
-            return
-        }
-        // Android registers its own BC provider. As it might be outdated and might not include
-        // all needed ciphers, we substitute it with a known BC bundled in the app.
-        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
-        // of that it's possible to have another BC implementation loaded in VM.
-        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
-        Security.insertProviderAt(BouncyCastleProvider(), 1)
     }
 
     private fun setViewPager() {
@@ -235,6 +259,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tvLogout.visibility = View.VISIBLE
 
         ivExpand.setOnClickListener { expandMenu() }
+
+        getBrainTreeClientToken()
     }
 
     private fun expandMenu() {

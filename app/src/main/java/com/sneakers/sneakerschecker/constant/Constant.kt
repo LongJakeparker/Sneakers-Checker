@@ -11,6 +11,7 @@ object Constant {
 
     const val LOGIN_USER= "login user"
     const val USER_ROLE_COLLECTOR= "collector"
+    const val BRAINTREE_TOKEN= "BRAINTREE_TOKEN"
 
     const val GRANT_TYPE_PASSWORD= "password"
     const val GRANT_TYPE_REFRESH_TOKEN= "refresh_token"
@@ -41,6 +42,7 @@ object Constant {
     const val EXTRA_DIALOG_TITLE = "EXTRA_DIALOG_TITLE"
     const val EXTRA_DIALOG_MESSAGE = "EXTRA_DIALOG_MESSAGE"
     const val EXTRA_IS_SNEAKER_MODEL = "EXTRA_IS_SNEAKER_MODEL"
+    const val EXTRA_PAYMENT_NONCE = "EXTRA_PAYMENT_NONCE"
 
 
 
@@ -59,6 +61,7 @@ object Constant {
     const val API_FIELD_NEW_OWNER_ID = "new_owner_id"
     const val API_FIELD_GRANT_TYPE = "grant_type"
     const val API_FIELD_FCM_TOKEN = "fcmToken"
+    const val API_FIELD_PAYMENT_NONCE = "nonceFromTheClient"
 
     const val DIALOG_REQUEST_CODE = 1004
 

@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.braintreepayments.api.models.CardNonce
+import com.braintreepayments.api.models.PaymentMethodNonce
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
@@ -37,6 +39,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private var currentUser: User? = null
     private var password: String? = null
     private var receiverId: Int? = null
+    private var paymentMethodNonce: PaymentMethodNonce? = null
     private lateinit var service: Retrofit
 
     private lateinit var sharedPref: SharedPref
@@ -57,6 +60,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         receiverName = arguments?.getString(Constant.EXTRA_RECEIVER_NAME)
         receiverEosName = arguments?.getString(Constant.EXTRA_RECEIVER_EOS_NAME)
         receiverId = arguments?.getInt(Constant.EXTRA_RECEIVER_ID, 0)
+        paymentMethodNonce = arguments?.getParcelable(Constant.EXTRA_PAYMENT_NONCE)
 
 
         return fragmentView
@@ -67,6 +71,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
 
         loadSneakerInfo()
         loadReceiverInfo()
+        loadCardInfo()
 
         btnBack.setOnClickListener(this)
         btnConfirm.setOnClickListener(this)
@@ -86,6 +91,10 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private fun loadReceiverInfo() {
         tvReceiverName.text = receiverName
         tvReceiverEosName.text = receiverEosName
+    }
+
+    private fun loadCardInfo() {
+        tvCardId.text = getString(R.string.format_credit_card, (paymentMethodNonce as CardNonce).lastFour)
     }
 
     override fun onClick(v: View?) {
@@ -119,7 +128,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
-                        pushNotification()
+                        chargeTransactionFee()
                     } else {
                         CommonUtils.toggleLoading(fragmentView, false)
                         if (e.message == "pad block corrupted") {
@@ -142,6 +151,45 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
                 }
 
             })
+    }
+
+    private fun chargeTransactionFee() {
+        val params = HashMap<String, Any>()
+        params[Constant.API_FIELD_PAYMENT_NONCE] = paymentMethodNonce?.nonce!!
+
+        val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
+        val call = service.create(MainApi::class.java)
+            .createTransaction(
+                accessToken,
+                sharedPref.getUser(Constant.LOGIN_USER)?.user?.id!!,
+                params
+            )
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                CommonUtils.toggleLoading(fragmentView, false)
+                val alertDialogFragment =
+                    AlertDialogFragment.newInstance(t.message)
+                alertDialogFragment.show(
+                    fragmentManager!!,
+                    AlertDialogFragment::class.java.simpleName
+                )
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    pushNotification()
+                } else {
+                    CommonUtils.toggleLoading(fragmentView, false)
+                    val alertDialogFragment =
+                        AlertDialogFragment.newInstance(response.message())
+                    alertDialogFragment.show(
+                        fragmentManager!!,
+                        AlertDialogFragment::class.java.simpleName
+                    )
+                }
+            }
+
+        })
     }
 
     private fun pushNotification() {

@@ -252,7 +252,7 @@
                                     android:id="@+id/tvTransferFee"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="$80"
+                                    android:text="$5"
                                     android:textSize="@dimen/text_size_xxlarge"
                                     android:textColor="@color/colorOrangish"
                                     android:textStyle="bold"/>
@@ -291,6 +291,13 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/ic_add_has_bg"/>
+
+                                <ImageView
+                                    android:id="@+id/ivDeletePayment"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_close_has_bg"
+                                    android:visibility="gone"/>
 
                             </LinearLayout>
 
