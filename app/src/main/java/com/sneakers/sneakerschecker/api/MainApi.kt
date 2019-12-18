@@ -43,9 +43,15 @@ interface MainApi {
     fun getUserNameByPhone(@Path("phone") phone: String): Call<ResponseBody>
 
     @POST("sneaker/fcm/notification/")
-    fun pushTransferNotification(@Header("Authorization") token: String,
-                                 @Body param: HashMap<String, Any>): Call<ResponseBody>
+    fun pushTransferNotification(
+        @Header("Authorization") token: String,
+        @Body param: HashMap<String, Any>
+    ): Call<ResponseBody>
 
     @GET("payment/token/{userId}/")
-    fun getBrainTreeClientToken(@Path("userId") userId: Int): Call<ResponseBody>
+    fun getBrainTreeClientToken(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: Int
+    ): Call<ResponseBody>
+
 }

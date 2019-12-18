@@ -44,9 +44,28 @@ android {
         exclude 'lib/x86_64/freebsd/libscrypt.so'
         exclude 'lib/x86_64/linux/libscrypt.so'
     }
+
+    applicationVariants.all { variant ->
+        variant.getRuntimeConfiguration().exclude group: 'com.github.stephenc.jcip', module: 'jcip-annotations'
+    }
 }
 
 dependencies {
+    components.all {
+        allVariants {
+            withDependencies { deps ->
+                deps.each { dep ->
+                    if (dep.group == 'net.minidev' && dep.name == 'json-smart') {
+                        dep.version {
+                            prefer "2.3"
+                        }
+                        dep.because "resolving dependencies issue"
+                    }
+                }
+            }
+        }
+    }
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -97,9 +116,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     //BrainTree payment
-    implementation ('com.braintreepayments.api:drop-in:4.3.0') {
-        transitive = false
-    }
+    implementation 'com.braintreepayments.api:drop-in:4.3.0'
     implementation 'com.braintreepayments:card-form:4.2.0'
 
 }

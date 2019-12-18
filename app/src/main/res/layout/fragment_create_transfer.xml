@@ -269,6 +269,7 @@
                                 android:layout_marginTop="@dimen/activity_margin_4dp"/>
 
                             <LinearLayout
+                                android:id="@+id/llAddPayment"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
