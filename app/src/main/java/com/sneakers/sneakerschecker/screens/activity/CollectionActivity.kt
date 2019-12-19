@@ -69,6 +69,7 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
         blurView.setOnClickListener(this)
         llConfirmStolen.setOnClickListener(this)
         btnConfirmStolen.setOnClickListener(this)
+        btnItemFound.setOnClickListener(this)
     }
 
     private fun getCollectionFromContract() {
@@ -237,13 +238,21 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
 
             btnCloseReport, blurView -> closeReportView()
 
-            btnConfirmStolen -> InputPasswordDialog.show(supportFragmentManager, "", "", object :
+            btnConfirmStolen -> {
+                closeReportView()
+                InputPasswordDialog.show(supportFragmentManager, "", "", object :
+                    InputPasswordDialog.PasscodeResultInterface {
+                    override fun onReceivePasscode(passcode: String) {
+                        updateStatus(passcode, Constant.ItemCondition.STOLEN)
+                    }
+                })
+            }
+
+            btnItemFound -> InputPasswordDialog.show(supportFragmentManager, "", "", object :
                 InputPasswordDialog.PasscodeResultInterface {
                 override fun onReceivePasscode(passcode: String) {
-                    closeReportView()
-                    reportSotlen(passcode)
+                    updateStatus(passcode, Constant.ItemCondition.NOT_NEW)
                 }
-
             })
 
             btnBack -> onBackPressed()
@@ -262,14 +271,15 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
         )
     }
 
-    private fun reportSotlen(passcode: String) {
+    private fun updateStatus(passcode: String, status: String) {
         CommonUtils.toggleLoading(window.decorView.rootView, true)
-        val jsonData = ContractRequest.stolenSneakerJson(
-            listCollection[viewPagerCollection.currentItem].id!!
+        val jsonData = ContractRequest.updateStatusSneakerJson(
+            listCollection[viewPagerCollection.currentItem].id!!,
+            status
         )
 
         ContractRequest.callEosApi(userInfo?.eosName!!,
-            ContractRequest.METHOD_REPORT_STOLEN,
+            ContractRequest.METHOD_UPDATE_STATUS,
             jsonData,
             getString(R.string.format_eascrypt_password, passcode),
             userInfo?.encryptedPrivateKey,
@@ -283,8 +293,9 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
                             "Transaction id: $result",
                             Toast.LENGTH_LONG
                         ).show()
-                        listCollection[viewPagerCollection.currentItem].isCardActivate = false
+                        listCollection[viewPagerCollection.currentItem].isCardActivate = !listCollection[viewPagerCollection.currentItem].isCardActivate
                         adapter?.notifyDataSetChanged()
+                        showButtonStolen(viewPagerCollection.currentItem)
 
                     } else {
                         if (e.message == "pad block corrupted") {

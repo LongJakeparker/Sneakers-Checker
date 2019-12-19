@@ -33,7 +33,7 @@ class ContractRequest {
 
         val METHOD_UPDATE_USER = "updateuser"
         val METHOD_TRANSFER = "transfer"
-        val METHOD_REPORT_STOLEN = "reportstolen"
+        val METHOD_UPDATE_STATUS= "updatestatus"
 
         fun updateUserJson(eosName: String, id: Int, infoHash: String): String {
             return "{\n" +
@@ -50,9 +50,10 @@ class ContractRequest {
                     "}"
         }
 
-        fun stolenSneakerJson(sneakerId: Long): String {
+        fun updateStatusSneakerJson(sneakerId: Long, status: String): String {
             return "{\n" +
-                    "\"sneaker_id\": " + sneakerId + "\n" +
+                    "\"sneaker_id\": " + sneakerId + ",\n" +
+                    "\"status\": \"" + status + "\"\n" +
                     "}"
         }
 
