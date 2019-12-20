@@ -117,26 +117,34 @@
                     android:id="@+id/etUserEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/activity_margin_16dp"
                     android:background="@drawable/bubble_background"
                     android:drawableLeft="@drawable/ic_email"
                     android:drawablePadding="@dimen/activity_margin_12dp"
                     android:hint="@string/text_holder_user_email"
-                    android:inputType="textPersonName"
+                    android:inputType="textEmailAddress"
                     android:paddingHorizontal="@dimen/activity_margin_16dp"
                     android:paddingVertical="@dimen/activity_margin_12dp"
                     android:textSize="@dimen/text_size_large"/>
+
+                <TextView
+                    android:id="@+id/tvErrorEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/error_email_validate"
+                    android:textSize="@dimen/text_size_default"
+                    android:textColor="@color/colorOrangeyRed"
+                    android:layout_marginTop="@dimen/activity_margin_4dp"
+                    android:visibility="gone"/>
 
                 <EditText
                     android:id="@+id/etUserAddress"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/activity_margin_16dp"
+                    android:layout_marginVertical="@dimen/activity_margin_16dp"
                     android:background="@drawable/bubble_background"
                     android:drawableLeft="@drawable/ic_address"
                     android:drawablePadding="@dimen/activity_margin_12dp"
                     android:hint="@string/text_holder_user_address"
-                    android:inputType="textPersonName"
                     android:paddingHorizontal="@dimen/activity_margin_16dp"
                     android:paddingVertical="@dimen/activity_margin_12dp"
                     android:textSize="@dimen/text_size_large"/>
@@ -256,7 +264,7 @@
                         android:layout_marginHorizontal="@dimen/activity_margin_24dp"
                         android:layout_marginTop="@dimen/activity_margin_24dp"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"/>
+                        android:layout_alignParentTop="true" />
 
                     <TextView
                         android:layout_width="200dp"

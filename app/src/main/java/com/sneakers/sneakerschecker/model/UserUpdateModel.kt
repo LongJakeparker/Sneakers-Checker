@@ -10,4 +10,6 @@ open class UserUpdateModel : Serializable {
     var username: String? = ""
     var role: String? = ""
     var address: String? = ""
+    var dob: String? = ""
+    var gender: String? = ""
 }

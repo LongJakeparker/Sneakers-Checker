@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_login.ibBack
 import kotlinx.android.synthetic.main.fragment_login.pickerCountryCode
 import kotlinx.android.synthetic.main.fragment_login.root
 import kotlinx.android.synthetic.main.fragment_login.tvWarning
+import kotlinx.android.synthetic.main.fragment_update_user_register.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

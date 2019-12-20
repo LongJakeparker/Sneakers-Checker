@@ -62,6 +62,8 @@ object Constant {
     const val API_FIELD_GRANT_TYPE = "grant_type"
     const val API_FIELD_FCM_TOKEN = "fcmToken"
     const val API_FIELD_PAYMENT_NONCE = "nonceFromTheClient"
+    const val API_FIELD_DOB = "dob"
+    const val API_FIELD_GENDER = "gender"
 
     const val DIALOG_REQUEST_CODE = 1004
 

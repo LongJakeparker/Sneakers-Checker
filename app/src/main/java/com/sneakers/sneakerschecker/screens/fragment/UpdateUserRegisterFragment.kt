@@ -1,12 +1,17 @@
 package com.sneakers.sneakerschecker.screens.fragment
 
+import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.common.hash.Hashing
@@ -25,24 +30,23 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.nio.charset.StandardCharsets
-import android.app.Activity
-import android.widget.RadioGroup
-import android.app.DatePickerDialog
-import android.graphics.Color
 import java.util.*
 import kotlin.collections.HashMap
 
 
 open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
     RadioGroup.OnCheckedChangeListener {
+    val GENDER_MALE = "Male"
+    val GENDER_FEMALE = "Female"
 
     private var fragmentView: View? = null
     private var day: Int = 0
     private var month: Int = 0
     private var year: Int = 0
     private var isIndividualUser: Boolean = true
+    protected var gender: String = GENDER_MALE
 
-    private lateinit var service: Retrofit
+    protected lateinit var service: Retrofit
 
     private lateinit var sharedPref: SharedPref
     private var userInfo: SignIn? = null
@@ -70,18 +74,19 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        day= Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        year= Calendar.getInstance().get(Calendar.YEAR)
-        month= Calendar.getInstance().get(Calendar.MONTH)
+        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        year = Calendar.getInstance().get(Calendar.YEAR)
+        month = Calendar.getInstance().get(Calendar.MONTH)
 
         etUserName.addTextChangedListener(textWatcher)
         etUserAddress.addTextChangedListener(textWatcher)
+        etUserEmail.addTextChangedListener(emailTextWatcher)
         btnUpdate.setOnClickListener(this)
         root.setOnClickListener(this)
         rgGender.setOnCheckedChangeListener(this)
         llBirthday.setOnClickListener(this)
         rlTypeIndividual.setOnClickListener(this)
-        rlTypeStore.setOnClickListener(this)
+//        rlTypeStore.setOnClickListener(this)
     }
 
     private fun updateUser() {
@@ -91,6 +96,8 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
         params[Constant.API_FIELD_USER_NAME] = etUserName.text.toString().trim()
         params[Constant.API_FIELD_USER_ADDRESS] = etUserAddress.text.toString().trim()
         params[Constant.API_FIELD_USER_EMAIL] = etUserEmail.text.toString().trim()
+        params[Constant.API_FIELD_DOB] = tvBirthday.text.toString().trim()
+        params[Constant.API_FIELD_GENDER] = gender
 
         val call = service.create(MainApi::class.java)
             .updateUser(accessToken, userInfo?.user?.id!!, params)
@@ -109,6 +116,8 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
                 if (response.code() == 204) {
                     userInfo?.user?.username = etUserName.text.toString().trim()
                     userInfo?.user?.address = etUserAddress.text.toString().trim()
+                    userInfo?.user?.dob = tvBirthday.text.toString().trim()
+                    userInfo?.user?.gender = gender
                     sharedPref.setUser(userInfo!!, Constant.LOGIN_USER)
 
                     val intent = Intent(activity, MainActivity::class.java)
@@ -137,7 +146,10 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
     private fun callSmartContractApi() {
         CommonUtils.toggleLoading(fragmentView, true)
         val gson =
-            GsonBuilder().registerTypeAdapter(UserUpdateModel::class.java, UserModelJsonSerializer())
+            GsonBuilder().registerTypeAdapter(
+                UserUpdateModel::class.java,
+                UserModelJsonSerializer()
+            )
                 .create()
         val userContractModel = UserUpdateModel()
         userContractModel.userIdentity = userInfo?.user?.userIdentity
@@ -146,6 +158,8 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
         userContractModel.publicKey = userInfo?.user?.publicKey
         userContractModel.role = userInfo?.user?.role
         userContractModel.address = etUserAddress.text.toString().trim()
+        userContractModel.gender = gender
+        userContractModel.dob = tvBirthday.text.toString().trim()
         val strResponseHash = gson.toJson(userContractModel)
         val updateHash =
             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
@@ -169,7 +183,11 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
                         updateUser()
                     } else {
                         if (e.message == "pad block corrupted") {
-                            Toast.makeText(context, getString(R.string.msg_wrong_password), Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                context,
+                                getString(R.string.msg_wrong_password),
+                                Toast.LENGTH_LONG
+                            ).show()
                         } else {
                             Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                         }
@@ -183,7 +201,14 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
 
     override fun onClick(v: View?) {
         when (v) {
-            btnUpdate -> updateSmartContract()
+            btnUpdate -> {
+                if (Patterns.EMAIL_ADDRESS.matcher(etUserEmail.text.toString().trim()).matches()) {
+                    updateSmartContract()
+                } else {
+                    tvErrorEmail.visibility = View.VISIBLE
+                    etUserEmail.setBackgroundResource(R.drawable.bubble_background_red)
+                }
+            }
 
             root -> CommonUtils.hideKeyboard(activity)
 
@@ -230,11 +255,13 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
             R.id.rbtnMen -> {
                 tvGender.text = getString(R.string.text_gender_gentleman)
                 tvGender.setTextColor(resources.getColor(R.color.brightBlue, null))
+                gender = GENDER_MALE
             }
 
             R.id.rbtnLady -> {
                 tvGender.text = getString(R.string.text_gender_lady)
                 tvGender.setTextColor(resources.getColor(R.color.salmon, null))
+                gender = GENDER_FEMALE
             }
         }
     }
@@ -253,8 +280,26 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
         }
     }
 
+    private val emailTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable) {
+            btnUpdate.isEnabled = validateData()
+            tvErrorEmail.visibility = View.GONE
+            etUserEmail.setBackgroundResource(R.drawable.bubble_background)
+        }
+    }
+
     fun validateData(): Boolean {
-        return !(etUserName.text.toString().trim().isEmpty() || etUserAddress.text.toString().trim().isEmpty())
+        return !(etUserName.text.toString().trim().isEmpty() ||
+                etUserAddress.text.toString().trim().isEmpty() ||
+                etUserEmail.text.toString().trim().isEmpty())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
