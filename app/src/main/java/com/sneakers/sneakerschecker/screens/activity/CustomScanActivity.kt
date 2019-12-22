@@ -466,11 +466,21 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
                         val gson =
                             GsonBuilder().registerTypeAdapter(
-                                SneakerModel::class.java,
+                                SneakerHashModel::class.java,
                                 SneakerModelJsonSerializer()
                             )
                                 .create()
-                        val strResponseHash = gson.toJson(validatedItem.detail)
+
+                        val sneakerHashModel = SneakerHashModel()
+                        sneakerHashModel.factoryId = validatedItem.detail?.factoryId
+                        sneakerHashModel.brand = validatedItem.detail?.brand
+                        sneakerHashModel.model = validatedItem.detail?.model
+                        sneakerHashModel.colorway = validatedItem.detail?.colorway
+                        sneakerHashModel.limitedEdition = validatedItem.detail?.limitedEdition
+                        sneakerHashModel.releaseDate = validatedItem.detail?.releaseDate
+                        sneakerHashModel.size = validatedItem.detail?.size.toString()
+
+                        val strResponseHash = gson.toJson(sneakerHashModel)
                         val responseHash =
                             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
                                 .toString()
@@ -671,6 +681,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
         tvItemBrand.text = validatedItem.detail?.brand
         tvItemSize.text = validatedItem.detail?.size.toString()
         tvItemReleaseDate.text = validatedItem.detail?.releaseDate
+
+        ivBrandLogo.setImageResource(CommonUtils.getBrandLogo(validatedItem.detail?.brand!!))
 
         progressBar.visibility = View.GONE
         rlScanFail.visibility = View.GONE

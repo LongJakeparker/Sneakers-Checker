@@ -17,7 +17,9 @@ import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.screens.activity.ObtainGrailActivity
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
+import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_confirm_transfer.*
 import kotlinx.android.synthetic.main.fragment_create_transfer.ivLimited
 import kotlinx.android.synthetic.main.fragment_create_transfer.tvGrailBrand
@@ -36,6 +38,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private var sneaker: SneakerModel? = null
     private var receiverEosName: String? = null
     private var receiverName: String? = null
+    private var receiverAvatar: String? = null
     private var currentUser: User? = null
     private var password: String? = null
     private var receiverId: Int? = null
@@ -60,6 +63,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         receiverName = arguments?.getString(Constant.EXTRA_RECEIVER_NAME)
         receiverEosName = arguments?.getString(Constant.EXTRA_RECEIVER_EOS_NAME)
         receiverId = arguments?.getInt(Constant.EXTRA_RECEIVER_ID, 0)
+        receiverAvatar = arguments?.getString(Constant.EXTRA_RECEIVER_AVATAR)
         paymentMethodNonce = arguments?.getParcelable(Constant.EXTRA_PAYMENT_NONCE)
 
 
@@ -91,6 +95,10 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
     private fun loadReceiverInfo() {
         tvReceiverName.text = receiverName
         tvReceiverEosName.text = receiverEosName
+
+        if (!receiverAvatar.isNullOrEmpty()) {
+            Picasso.get().load(receiverAvatar).into(ivReceiverAvatar)
+        }
     }
 
     private fun loadCardInfo() {
@@ -102,7 +110,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
             btnBack -> activity?.onBackPressed()
 
             btnConfirm -> {
-                InputPasswordDialog.show(
+                InputPasswordDialogFragment.show(
                     this@ConfirmTransferFragment, fragmentManager!!,
                     resources.getString(R.string.dialog_title_confirm_passcode),
                     resources.getString(R.string.dialog_message_confirm_passcode)

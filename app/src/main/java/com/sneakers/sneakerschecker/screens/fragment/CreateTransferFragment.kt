@@ -120,9 +120,7 @@ class CreateTransferFragment : Fragment(), View.OnClickListener {
         when (v) {
             btnClose -> activity?.finish()
 
-            ivClearPhone -> {
-                etReceiverPhone.text.clear()
-            }
+            ivClearPhone -> etReceiverPhone.text.clear()
 
             root -> CommonUtils.hideKeyboard(activity)
 

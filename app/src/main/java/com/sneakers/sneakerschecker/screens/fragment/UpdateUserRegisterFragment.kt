@@ -22,6 +22,7 @@ import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_update_user_register.*
 import okhttp3.ResponseBody
@@ -36,15 +37,16 @@ import kotlin.collections.HashMap
 
 open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
     RadioGroup.OnCheckedChangeListener {
-    val GENDER_MALE = "Male"
-    val GENDER_FEMALE = "Female"
+    val GENDER_MALE = "MALE"
+    val GENDER_FEMALE = "FEMALE"
 
-    private var fragmentView: View? = null
+    protected var fragmentView: View? = null
     private var day: Int = 0
     private var month: Int = 0
     private var year: Int = 0
     private var isIndividualUser: Boolean = true
     protected var gender: String = GENDER_MALE
+    protected var dob: Calendar? = null
 
     protected lateinit var service: Retrofit
 
@@ -92,11 +94,11 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
     private fun updateUser() {
         CommonUtils.toggleLoading(fragmentView, true)
         val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
-        val params = HashMap<String, Any>()
+        val params = HashMap<String, Any?>()
         params[Constant.API_FIELD_USER_NAME] = etUserName.text.toString().trim()
         params[Constant.API_FIELD_USER_ADDRESS] = etUserAddress.text.toString().trim()
         params[Constant.API_FIELD_USER_EMAIL] = etUserEmail.text.toString().trim()
-        params[Constant.API_FIELD_DOB] = tvBirthday.text.toString().trim()
+        params[Constant.API_FIELD_DOB] = dob?.time
         params[Constant.API_FIELD_GENDER] = gender
 
         val call = service.create(MainApi::class.java)
@@ -116,7 +118,7 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
                 if (response.code() == 204) {
                     userInfo?.user?.username = etUserName.text.toString().trim()
                     userInfo?.user?.address = etUserAddress.text.toString().trim()
-                    userInfo?.user?.dob = tvBirthday.text.toString().trim()
+                    userInfo?.user?.dob = dob?.time
                     userInfo?.user?.gender = gender
                     sharedPref.setUser(userInfo!!, Constant.LOGIN_USER)
 
@@ -137,7 +139,7 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
         CommonUtils.toggleLoading(fragmentView, true)
         if (password.isNullOrEmpty()) {
             CommonUtils.toggleLoading(fragmentView, false)
-            InputPasswordDialog.show(this, fragmentManager!!)
+            InputPasswordDialogFragment.show(this, fragmentManager!!)
         } else {
             callSmartContractApi()
         }
@@ -158,8 +160,6 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
         userContractModel.publicKey = userInfo?.user?.publicKey
         userContractModel.role = userInfo?.user?.role
         userContractModel.address = etUserAddress.text.toString().trim()
-        userContractModel.gender = gender
-        userContractModel.dob = tvBirthday.text.toString().trim()
         val strResponseHash = gson.toJson(userContractModel)
         val updateHash =
             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8).toString()
@@ -202,6 +202,7 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
     override fun onClick(v: View?) {
         when (v) {
             btnUpdate -> {
+                CommonUtils.hideKeyboard(activity!!)
                 if (Patterns.EMAIL_ADDRESS.matcher(etUserEmail.text.toString().trim()).matches()) {
                     updateSmartContract()
                 } else {
@@ -245,6 +246,8 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
                 month = monthOfYear
                 this.year = year
                 tvBirthday.text = "$day/${month + 1}/${this.year}"
+                dob = Calendar.getInstance()
+                dob?.set(year, month, day)
             }
         val dpDialog = DatePickerDialog(activity!!, listener, year, month, day)
         dpDialog.show()

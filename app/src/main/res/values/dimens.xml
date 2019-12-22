@@ -87,9 +87,8 @@
     <dimen name="qr_code_size_print">130dp</dimen>
 
     //Main Screen
-    <dimen name="qr_code_size_main">80dp</dimen>
-    <dimen name="qr_code_size_normal">80dp</dimen>
-    <dimen name="qr_code_size_expanded">230dp</dimen>
+    <dimen name="avatar_size_normal">80dp</dimen>
+    <dimen name="avatar_size_expanded">130dp</dimen>
 
     //Drawer Menu
     <dimen name="drawer_button_height">40dp</dimen>

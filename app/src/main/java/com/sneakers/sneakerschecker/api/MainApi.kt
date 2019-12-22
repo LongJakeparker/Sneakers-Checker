@@ -30,7 +30,7 @@ interface MainApi {
     fun updateUser(
         @Header("Authorization") token: String,
         @Path("userId") userId: Int,
-        @Body param: HashMap<String, Any>
+        @Body param: HashMap<String, Any?>
     ): Call<ResponseBody>
 
     @GET("user/duplicate/")

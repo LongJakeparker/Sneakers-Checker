@@ -8,8 +8,8 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import com.sneakers.sneakerschecker.R
-import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SneakerModel
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.flash_card_layout_back.view.*
 import kotlinx.android.synthetic.main.flash_card_layout_front.view.*
 import kotlinx.android.synthetic.main.item_collection.view.*
@@ -33,6 +33,14 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         view.tvItemSizeDisabled.text = item.size.toString()
         view.tvItemBrand.text = item.brand
         view.tvItemBrandDisabled.text = item.brand
+        view.tvFurtherSpec.text = item.furtherSpec
+
+        CommonUtils.getBrandLogo(item.brand!!).let {
+            view.ivBrandLogoFront.setImageResource(it)
+            view.ivBrandLogoBack.setImageResource(it)
+            view.ivBrandLogoFrontDisabled.setImageResource(it)
+            view.ivBrandLogoBackDisabled.setImageResource(it)
+        }
 
         if (item.limitedEdition!!) {
             view.ivLimitedFront.visibility = VISIBLE

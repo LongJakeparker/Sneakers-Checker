@@ -1,4 +1,4 @@
-package com.sneakers.sneakerschecker.screens.fragment
+package com.sneakers.sneakerschecker.screens.fragment.dialog
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -20,9 +20,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.utils.CommonUtils
 
 
-class InputPasswordDialog : DialogFragment() {
+class InputPasswordDialogFragment : DialogFragment() {
     private lateinit var etInputCode: EditText
     private lateinit var listIvPassCode: Array<ImageView>
     private var dialogTitle: String? = ""
@@ -31,7 +32,12 @@ class InputPasswordDialog : DialogFragment() {
 
     companion object {
         fun show(fragment: Fragment, fragmentManager: FragmentManager) {
-            show(fragment, fragmentManager, "", "")
+            show(
+                fragment,
+                fragmentManager,
+                "",
+                ""
+            )
         }
 
         fun show(
@@ -40,13 +46,14 @@ class InputPasswordDialog : DialogFragment() {
             title: String,
             message: String
         ) {
-            val dialog = InputPasswordDialog()
+            val dialog =
+                InputPasswordDialogFragment()
             val bundle = Bundle()
             bundle.putString(Constant.EXTRA_DIALOG_TITLE, title)
             bundle.putString(Constant.EXTRA_DIALOG_MESSAGE, message)
             dialog.arguments = bundle
             dialog.setTargetFragment(fragment, Constant.DIALOG_REQUEST_CODE)
-            dialog.show(fragmentManager, InputPasswordDialog::class.java.simpleName)
+            dialog.show(fragmentManager, InputPasswordDialogFragment::class.java.simpleName)
         }
 
         fun show(
@@ -55,13 +62,14 @@ class InputPasswordDialog : DialogFragment() {
             message: String,
             callback: PasscodeResultInterface
         ) {
-            val dialog = InputPasswordDialog()
+            val dialog =
+                InputPasswordDialogFragment()
             val bundle = Bundle()
             bundle.putString(Constant.EXTRA_DIALOG_TITLE, title)
             bundle.putString(Constant.EXTRA_DIALOG_MESSAGE, message)
             dialog.arguments = bundle
             dialog.mListener = callback
-            dialog.show(fragmentManager, InputPasswordDialog::class.java.simpleName)
+            dialog.show(fragmentManager, InputPasswordDialogFragment::class.java.simpleName)
         }
     }
 

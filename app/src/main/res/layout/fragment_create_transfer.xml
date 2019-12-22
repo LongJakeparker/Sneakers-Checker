@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="@dimen/activity_margin_16dp">
+                    android:layout_marginTop="@dimen/activity_margin_4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -202,7 +202,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/ic_close_has_bg"
-                                    android:layout_marginLeft="@dimen/activity_margin_16dp"/>
+                                    android:layout_marginLeft="@dimen/activity_margin_12dp"
+                                    android:visibility="invisible"
+                                    android:clickable="false"/>
 
                             </LinearLayout>
 

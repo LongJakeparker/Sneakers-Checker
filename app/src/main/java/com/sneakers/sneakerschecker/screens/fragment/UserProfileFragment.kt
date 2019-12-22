@@ -50,10 +50,12 @@ class UserProfileFragment: UpdateUserRegisterFragment() {
     }
 
     private fun getUserInfor() {
+        CommonUtils.toggleLoadingFullBg(fragmentView, true)
         val call = service.create(MainApi::class.java)
             .getUserInformation(CommonUtils.getCurrentUser(context!!)?.user?.id!!)
         call.enqueue(object : Callback<CollectorModel> {
             override fun onFailure(call: Call<CollectorModel>, t: Throwable) {
+                CommonUtils.toggleLoadingFullBg(fragmentView, false)
                 val alertDialogFragment =
                     AlertDialogFragment.newInstance(t.message)
                 alertDialogFragment.show(
@@ -66,6 +68,7 @@ class UserProfileFragment: UpdateUserRegisterFragment() {
                 call: Call<CollectorModel>,
                 response: Response<CollectorModel>
             ) {
+                CommonUtils.toggleLoadingFullBg(fragmentView, false)
                 if (response.isSuccessful) {
                     userProfile = response.body()!!.collector!!
 
@@ -88,20 +91,22 @@ class UserProfileFragment: UpdateUserRegisterFragment() {
         etUserEmail.setText(userProfile?.email)
         etUserAddress.setText(userProfile?.address)
 
-        if (!userProfile?.dob.isNullOrEmpty()) {
-            tvBirthday.text = userProfile?.dob
+        if (userProfile?.dob != null) {
+            tvBirthday.text = CommonUtils.formatDate(userProfile?.dob!!)
         }
 
         if (userProfile?.gender == GENDER_FEMALE) {
             tvGender.text = getString(R.string.text_gender_lady)
             tvGender.setTextColor(resources.getColor(R.color.salmon, null))
             gender = GENDER_FEMALE
-            rbtnMen.isChecked = true
+            rbtnLady.isChecked = true
         } else {
             tvGender.text = getString(R.string.text_gender_gentleman)
             tvGender.setTextColor(resources.getColor(R.color.brightBlue, null))
             gender = GENDER_MALE
-            rbtnLady.isChecked = true
+            rbtnMen.isChecked = true
         }
+
+        btnUpdate.isEnabled = false
     }
 }

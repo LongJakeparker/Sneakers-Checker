@@ -7,4 +7,6 @@ class User : UserUpdateModel() {
     var email: String? = ""
 
     var encryptedPrivateKey: String? = ""
+
+    var avatar: String? = ""
 }

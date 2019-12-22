@@ -16,7 +16,7 @@ import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
-import com.sneakers.sneakerschecker.screens.fragment.InputPasswordDialog
+import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_collection.*
@@ -240,16 +240,16 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
 
             btnConfirmStolen -> {
                 closeReportView()
-                InputPasswordDialog.show(supportFragmentManager, "", "", object :
-                    InputPasswordDialog.PasscodeResultInterface {
+                InputPasswordDialogFragment.show(supportFragmentManager, "", "", object :
+                    InputPasswordDialogFragment.PasscodeResultInterface {
                     override fun onReceivePasscode(passcode: String) {
                         updateStatus(passcode, Constant.ItemCondition.STOLEN)
                     }
                 })
             }
 
-            btnItemFound -> InputPasswordDialog.show(supportFragmentManager, "", "", object :
-                InputPasswordDialog.PasscodeResultInterface {
+            btnItemFound -> InputPasswordDialogFragment.show(supportFragmentManager, "", "", object :
+                InputPasswordDialogFragment.PasscodeResultInterface {
                 override fun onReceivePasscode(passcode: String) {
                     updateStatus(passcode, Constant.ItemCondition.NOT_NEW)
                 }

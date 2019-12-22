@@ -136,7 +136,7 @@
     <string name="activity_title_scan_grail">Scan Grails QR</string>
     <string name="header_guide_scan_grail">How to use the scan feature?</string>
     <string name="title_guide_scan_grail">WHAT DO YOU SCAN FOR?</string>
-    <string name="content_guide_scan_grail">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="content_guide_scan_grail">Find the QR code attached along with the stamp of your sneaker. It represents an unique ID of the sneaker on the TrueGrails system. Scan it to check if the details you find in reality match with the specification retrieved from the blockchain data. The application will also show you what to do based on your account\'s relation to the scanned sneaker.</string>
 
     <string name="activity_title_scan_private_key">Scan Private Key</string>
     <string name="header_guide_scan_private_key">What is private key?</string>
@@ -161,7 +161,7 @@
     <string name="label_item_found">Found it</string>
     <string name="text_item_stolen">This item has been stolen</string>
     <string name="text_item_own_by">Owned by</string>
-    <string name="text_item_is_your">It’s your!</string>
+    <string name="text_item_is_your">It is yours!</string>
     <string name="text_item_is_new">Haven’t had owner</string>
     <string name="text_careful">BE CAREFUL!</string>
 
@@ -195,7 +195,7 @@
     <string name="text_receiver">Receiver</string>
     <string name="hint_receiver_eos_name">Receiver phone number</string>
     <string name="text_transaction_fee">Transaction fee</string>
-    <string name="text_des_transaction_fee">This is the extra fee you have to pay for this transaction by your credit card.</string>
+    <string name="text_des_transaction_fee">The fee for this change of ownership will be used to maintained our system and deliver some more cool features to you</string>
     <string name="text_add_payment">Add a payment method</string>
     <string name="text_successful">SUCCESSFUL</string>
     <string name="text_des_tranfer_successful">Your Grail has been transferred successful to new owner</string>

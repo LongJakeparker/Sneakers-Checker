@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".screens.activity.UserProfileActivity"></activity>
+        <activity android:name=".screens.activity.UserProfileActivity"/>
         <activity android:name=".screens.activity.ObtainGrailActivity" />
         <activity
             android:name=".screens.activity.GrailsTradingActivity"
@@ -47,9 +47,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".screens.activity.TransferActivity" />
         <activity android:name=".screens.activity.CollectionActivity" />
-        <activity android:name=".screens.activity.SneakerInfoActivity" />
         <activity android:name=".screens.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

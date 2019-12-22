@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.viewpager.widget.ViewPager
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.zxing.integration.android.IntentIntegrator
 import com.sneakers.sneakerschecker.adapter.MainSliderAdapter
 import com.sneakers.sneakerschecker.constant.Constant
@@ -28,8 +27,8 @@ import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.screens.fragment.dialog.ConfirmDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
+import com.squareup.picasso.Picasso
 import okhttp3.ResponseBody
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.json.JSONObject
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.Keys
@@ -37,13 +36,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.security.Security
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val TIME_AUTO_NEXT = 4000
     private val REQUEST_CODE_START_LOGIN_ACTIVITY = 1000
-    private val REQUEST_CODE_START_CREATE_ACTIVITY = 1001
 
     private lateinit var sharedPref: SharedPref
     private var isExpanded: Boolean = false
@@ -194,8 +191,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             tvCreateNew -> {
-                val intent = Intent(this, CreateNewActivity::class.java)
-                startActivityForResult(intent, REQUEST_CODE_START_CREATE_ACTIVITY)
+                CreateNewActivity.start(this)
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
             rlUserPhone -> {
@@ -243,17 +239,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tvUserName.text = userInfo?.user?.username
         tvUserPhone.text = userInfo?.user?.userIdentity
 
-        val qrCode = CommonUtils.generateQrCode(this, 1.0,
-            userInfo?.user?.eosName!!)
-
-        if (qrCode != null) {
-            ivQrAddress.setImageBitmap(qrCode)
+        if (!userInfo?.user?.avatar.isNullOrEmpty()) {
+            Picasso.get().load(userInfo?.user?.avatar).into(ivAvatar)
         }
 
-        ivAddressNonLogin.visibility = View.GONE
+        ivAvatarNonLogin.visibility = View.GONE
         lnNavigationItemUnLogin.visibility = View.GONE
 
-        cvQrAddress.visibility = View.VISIBLE
+        ivAvatar.visibility = View.VISIBLE
         ivExpand.visibility = View.VISIBLE
         lnNavigationItemUnexpanded.visibility = View.VISIBLE
         tvLogout.visibility = View.VISIBLE
@@ -268,9 +261,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val layoutTransition = (lnTopNavigation.parent as ConstraintLayout).layoutTransition
             layoutTransition.setDuration(300)
             layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-            ivQrAddress.layoutParams.width = resources.getDimension(R.dimen.qr_code_size_expanded).toInt()
-            ivQrAddress.layoutParams.height = resources.getDimension(R.dimen.qr_code_size_expanded).toInt()
-            ivQrAddress.requestLayout()
+            ivAvatar.layoutParams.width = resources.getDimension(R.dimen.avatar_size_expanded).toInt()
+            ivAvatar.layoutParams.height = resources.getDimension(R.dimen.avatar_size_expanded).toInt()
+            ivAvatar.requestLayout()
 
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -293,9 +286,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val layoutTransition = (lnTopNavigation.parent as ConstraintLayout).layoutTransition
             layoutTransition.setDuration(300)
             layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-            ivQrAddress.layoutParams.width = resources.getDimension(R.dimen.qr_code_size_normal).toInt()
-            ivQrAddress.layoutParams.height = resources.getDimension(R.dimen.qr_code_size_normal).toInt()
-            ivQrAddress.requestLayout()
+            ivAvatar.layoutParams.width = resources.getDimension(R.dimen.avatar_size_normal).toInt()
+            ivAvatar.layoutParams.height = resources.getDimension(R.dimen.avatar_size_normal).toInt()
+            ivAvatar.requestLayout()
 
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -329,28 +322,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         tvUserName.text = getString(R.string.text_user_name_non_login)
 
-        ivAddressNonLogin.visibility = View.VISIBLE
+        ivAvatarNonLogin.visibility = View.VISIBLE
         lnNavigationItemUnLogin.visibility = View.VISIBLE
 
-        cvQrAddress.visibility = View.GONE
+        ivAvatar.visibility = View.GONE
         ivExpand.visibility = View.GONE
         lnNavigationItemUnexpanded.visibility = View.GONE
         tvLogout.visibility = View.GONE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-
-        if (result != null) {
-            if (result.contents != null) {
-                SneakerInfoActivity.start(this@MainActivity, result.contents)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-
+        super.onActivityResult(requestCode, resultCode, data)
         when {
-            (requestCode == REQUEST_CODE_START_CREATE_ACTIVITY || requestCode == REQUEST_CODE_START_LOGIN_ACTIVITY) &&
+            (requestCode == REQUEST_CODE_START_LOGIN_ACTIVITY) &&
                     resultCode == Activity.RESULT_OK -> {
                 notifyUserLogin()
             }

@@ -6,14 +6,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.PhoneAuthProvider
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
@@ -21,19 +18,18 @@ import com.sneakers.sneakerschecker.utils.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
-import kotlinx.android.synthetic.main.fragment_create_new.*
+import com.sneakers.sneakerschecker.screens.activity.CreateNewActivity
+import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.etUserPhone
 import kotlinx.android.synthetic.main.fragment_login.ibBack
 import kotlinx.android.synthetic.main.fragment_login.pickerCountryCode
 import kotlinx.android.synthetic.main.fragment_login.root
 import kotlinx.android.synthetic.main.fragment_login.tvWarning
-import kotlinx.android.synthetic.main.fragment_update_user_register.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
 
 class LoginFragment : Fragment(), View.OnClickListener {
 
@@ -66,6 +62,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
         btnLogin.setOnClickListener(this)
         root.setOnClickListener(this)
         ibBack.setOnClickListener(this)
+        llGotoSignup.setOnClickListener(this)
     }
 
     private val textWatcher = object : TextWatcher {
@@ -87,13 +84,15 @@ class LoginFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v?.id) {
+        when (v) {
 
-            R.id.btnLogin -> InputPasswordDialog.show(this, fragmentManager!!)
+            btnLogin -> InputPasswordDialogFragment.show(this, fragmentManager!!)
 
-            R.id.root -> CommonUtils.hideKeyboard(activity)
+            root -> CommonUtils.hideKeyboard(activity)
 
-            R.id.ibBack -> activity!!.finish()
+            ibBack -> activity!!.finish()
+
+            llGotoSignup -> CreateNewActivity.start(activity!!)
         }
     }
 
@@ -146,6 +145,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constant.DIALOG_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            CommonUtils.hideKeyboard(activity!!)
             password = data?.extras?.getString(Constant.EXTRA_USER_PASSWORD, "")!!
             requestLogIn()
         }

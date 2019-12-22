@@ -24,6 +24,7 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.screens.activity.VerifyPhoneActivity
+import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_create_new.*
 import okhttp3.ResponseBody
@@ -122,7 +123,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                             val jsonObject = JSONObject(response.body()?.string())
                             val isExisting = jsonObject.getBoolean("isExisting")
                             if (!isExisting) {
-                                InputPasswordDialog.show(
+                                InputPasswordDialogFragment.show(
                                     this@CreateNewFragment,
                                     fragmentManager!!,
                                     getString(R.string.dialog_title_create_passcode),
@@ -231,7 +232,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
             if (!isConfirmPassword) {
                 password = data?.extras?.getString(Constant.EXTRA_USER_PASSWORD, "")!!
-                InputPasswordDialog.show(
+                InputPasswordDialogFragment.show(
                     this@CreateNewFragment,
                     fragmentManager!!,
                     getString(R.string.dialog_title_re_enter_passcode),
@@ -241,7 +242,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
             } else {
                 val confirmPassword = data?.extras?.getString(Constant.EXTRA_USER_PASSWORD, "")!!
                 if  (confirmPassword != password) {
-                    InputPasswordDialog.show(
+                    InputPasswordDialogFragment.show(
                         this@CreateNewFragment,
                         fragmentManager!!,
                         getString(R.string.dialog_title_re_enter_passcode),

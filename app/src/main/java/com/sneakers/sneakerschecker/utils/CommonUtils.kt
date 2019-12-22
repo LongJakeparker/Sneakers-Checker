@@ -1,8 +1,6 @@
 package com.sneakers.sneakerschecker.utils
 
 import android.app.Activity
-import android.app.ActivityManager
-import android.app.ActivityManager.RunningTaskInfo
 import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -22,18 +20,27 @@ import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
-import com.sneakers.sneakerschecker.model.User
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class CommonUtils {
     companion object {
-        private var mProgressDialog: ProgressDialog? = null
 
         fun toggleLoading(loadingParent: View?, show: Boolean) {
             if (loadingParent == null) {
                 return
             }
             val v = loadingParent.findViewById<View>(R.id.pb_loading)
+            if (v != null)
+                v.visibility = if (show) View.VISIBLE else View.GONE
+        }
+
+        fun toggleLoadingFullBg(loadingParent: View?, show: Boolean) {
+            if (loadingParent == null) {
+                return
+            }
+            val v = loadingParent.findViewById<View>(R.id.pb_loading_full)
             if (v != null)
                 v.visibility = if (show) View.VISIBLE else View.GONE
         }
@@ -125,6 +132,33 @@ class CommonUtils {
         fun getBrainTreeToken(context: Context): String {
             val sharedPref = SharedPref(context)
             return sharedPref.getString(Constant.BRAINTREE_TOKEN)
+        }
+
+        fun formatDate(date: Date): String {
+            val format = SimpleDateFormat("dd/MM/yyyy")
+            return format.format(date)
+        }
+
+        fun getBrandLogo(brand: String): Int {
+            return when (brand) {
+                "adidas" -> R.drawable.logo_adidas
+
+                "converse" -> R.drawable.logo_converse
+
+                "vans" -> R.drawable.logo_vans
+
+                "nike" -> R.drawable.logo_nike
+
+                "jordan" -> R.drawable.logo_jordan
+
+                "puma" -> R.drawable.logo_puma
+
+                "balenciaga" -> R.drawable.logo_balenciaga
+
+                "gucci" -> R.drawable.logo_gucci
+
+                else -> R.drawable.logo_adidas
+            }
         }
     }
 }

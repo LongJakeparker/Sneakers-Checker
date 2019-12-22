@@ -1,6 +1,7 @@
 package com.sneakers.sneakerschecker.model
 
 import java.io.Serializable
+import java.util.*
 
 open class UserUpdateModel : Serializable {
 
@@ -10,6 +11,6 @@ open class UserUpdateModel : Serializable {
     var username: String? = ""
     var role: String? = ""
     var address: String? = ""
-    var dob: String? = ""
+    var dob: Date? = null
     var gender: String? = ""
 }

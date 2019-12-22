@@ -82,6 +82,32 @@
             android:textColor="@color/colorDarkTurquoise">
         </EditText>
 
+        <LinearLayout
+            android:id="@+id/llGotoSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/activity_margin_10dp"
+            android:padding="@dimen/activity_margin_4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Let's sign up"
+                android:textColor="@color/colorBlueGreen" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_back"
+                android:rotation="180"
+                android:tint="@color/colorBlueGreen"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <TextView

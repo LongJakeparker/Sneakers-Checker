@@ -6,9 +6,9 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
 
-class SneakerModelJsonSerializer: JsonSerializer<SneakerModel> {
+class SneakerModelJsonSerializer: JsonSerializer<SneakerHashModel> {
 
-    override fun serialize(sneaker: SneakerModel?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+    override fun serialize(sneaker: SneakerHashModel?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
         val jsonObject = JsonObject()
         jsonObject.add("factoryId", context?.serialize(sneaker?.factoryId))
         jsonObject.add("brand", context?.serialize(sneaker?.brand))

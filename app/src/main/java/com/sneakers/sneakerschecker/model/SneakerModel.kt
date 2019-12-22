@@ -2,7 +2,7 @@ package com.sneakers.sneakerschecker.model
 
 import java.io.Serializable
 
-class SneakerModel : Serializable {
+open class SneakerModel : Serializable {
     var id: Long? = 0
     var factoryId: Int? = 0
     var brand: String? = ""
@@ -11,6 +11,7 @@ class SneakerModel : Serializable {
     var colorway: String? = ""
     var limitedEdition: Boolean? = false
     var releaseDate: String? = ""
+    var furtherSpec: String? = ""
     var isCardFliped: Boolean = false
     var isCardActivate: Boolean = true
 
