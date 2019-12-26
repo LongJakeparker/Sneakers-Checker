@@ -23,6 +23,10 @@ import java.nio.charset.StandardCharsets
 class UserProfileFragment: UpdateUserRegisterFragment() {
     private var userProfile: User? = null
 
+    override fun isShowBackButton(): Boolean {
+        return true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,21 +36,6 @@ class UserProfileFragment: UpdateUserRegisterFragment() {
         getUserInfor()
 
         return fragment
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        ibBack.visibility = View.VISIBLE
-
-        ibBack.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View?) {
-        super.onClick(v)
-        when (v) {
-            ibBack -> activity?.onBackPressed()
-        }
     }
 
     private fun getUserInfor() {

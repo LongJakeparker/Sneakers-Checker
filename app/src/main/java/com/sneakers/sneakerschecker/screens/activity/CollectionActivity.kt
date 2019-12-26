@@ -30,7 +30,7 @@ import retrofit2.Retrofit
 import java.lang.reflect.Type
 
 
-class CollectionActivity : AppCompatActivity(), View.OnClickListener {
+class CollectionActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPref
     private lateinit var service: Retrofit
@@ -46,9 +46,12 @@ class CollectionActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    override fun getLayoutId(): Int {
+        return R.layout.activity_collection
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_collection)
         EventBus.getDefault().register(this)
 
         sharedPref = SharedPref(this)

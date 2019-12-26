@@ -13,6 +13,7 @@
 
     <dimen name="activity_margin_4dp">4dp</dimen>
     <dimen name="activity_margin_5dp">5dp</dimen>
+    <dimen name="activity_margin_6dp">6dp</dimen>
     <dimen name="activity_margin_8dp">8dp</dimen>
     <dimen name="activity_margin_10dp">10dp</dimen>
     <dimen name="activity_margin_12dp">12dp</dimen>

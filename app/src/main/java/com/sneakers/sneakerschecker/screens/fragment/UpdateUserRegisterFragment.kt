@@ -35,7 +35,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 
-open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
+open class UpdateUserRegisterFragment : BaseFragment(), View.OnClickListener,
     RadioGroup.OnCheckedChangeListener {
     val GENDER_MALE = "MALE"
     val GENDER_FEMALE = "FEMALE"
@@ -54,12 +54,20 @@ open class UpdateUserRegisterFragment : Fragment(), View.OnClickListener,
     private var userInfo: SignIn? = null
     private var password: String? = null
 
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_update_user_register
+    }
+
+    override fun getScreenTitleId(): Int {
+        return R.string.label_update_info
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        fragmentView = inflater.inflate(R.layout.fragment_update_user_register, container, false)
+
+        fragmentView = super.onCreateView(inflater, container, savedInstanceState)
 
         sharedPref = context?.let { SharedPref(it) }!!
 

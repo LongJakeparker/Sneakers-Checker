@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
         android:id="@+id/collapsingToolBar"
@@ -16,7 +17,8 @@
         app:expandedTitleMarginBottom="@dimen/activity_margin_16dp"
         app:expandedTitleMarginStart="@dimen/activity_margin_16dp"
         app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-        app:title="@string/app_name">
+        app:title="@string/app_name"
+        android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/appBar"

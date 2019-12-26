@@ -1,37 +1,34 @@
-package com.sneakers.sneakerschecker.screens.fragment
+package com.sneakers.sneakerschecker.screens.activity
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.utils.CommonUtils
 
-abstract class BaseFragment : Fragment(), Toolbar.OnMenuItemClickListener {
+abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     protected var mToolBar: Toolbar? = null
     protected var mCollapsingToolbarLayout: CollapsingToolbarLayout? = null
     protected var appBarLayout: AppBarLayout? = null
 
-    protected abstract fun getLayoutId(): Int
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(getLayoutId())
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(getLayoutId(), container, false)
-        mToolBar = view.findViewById(R.id.appBar)
-        (activity as AppCompatActivity).setSupportActionBar(mToolBar)
-        mCollapsingToolbarLayout = view.findViewById(R.id.collapsingToolBar)
-        appBarLayout = view.findViewById(R.id.appBarLayout)
+        mToolBar = findViewById(R.id.appBar)
+        setSupportActionBar(mToolBar)
+        mCollapsingToolbarLayout = findViewById(R.id.collapsingToolBar)
+        appBarLayout = findViewById(R.id.appBarLayout)
         initToolbarNav()
-        return view
     }
+
+    protected abstract fun getLayoutId(): Int
 
     protected open fun getScreenTitleId(): Int {
         return 0
@@ -68,8 +65,8 @@ abstract class BaseFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         if (isShowBackButton()) {
             mToolBar?.setNavigationIcon(R.drawable.ic_back)
             mToolBar?.setNavigationOnClickListener {
-                CommonUtils.hideKeyboard(activity)
-                activity!!.onBackPressed()
+                CommonUtils.hideKeyboard(this)
+                onBackPressed()
             }
         }
         if (getScreenTitle().isNotEmpty()) {
@@ -88,11 +85,11 @@ abstract class BaseFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (menu is MenuBuilder) {
             menu.setOptionalIconsVisible(true)
         }
-        super.onCreateOptionsMenu(menu, inflater)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
