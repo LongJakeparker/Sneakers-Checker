@@ -33,6 +33,7 @@
     <dimen name="activity_margin_48dp">48dp</dimen>
     <dimen name="activity_margin_56dp">56dp</dimen>
     <dimen name="activity_margin_64dp">64dp</dimen>
+    <dimen name="activity_margin_68dp">68dp</dimen>
     <dimen name="activity_margin_128dp">128dp</dimen>
 
     <dimen name="copyright_margin_bottom">5dp</dimen>

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -33,7 +34,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class ConfirmTransferFragment : Fragment(), View.OnClickListener {
+class ConfirmTransferFragment : BaseFragment(), View.OnClickListener {
+
     private var fragmentView: View? = null
     private var sneaker: SneakerModel? = null
     private var receiverEosName: String? = null
@@ -47,13 +49,22 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPref
 
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_confirm_transfer
+    }
+
+    override fun getScreenTitleId(): Int {
+        return R.string.label_transfer
+    }
+
+    override fun isShowBackButton(): Boolean {
+        return true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        fragmentView = inflater.inflate(R.layout.fragment_confirm_transfer, container, false)
-
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
         sharedPref = context?.let { SharedPref(it) }!!
@@ -67,7 +78,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         paymentMethodNonce = arguments?.getParcelable(Constant.EXTRA_PAYMENT_NONCE)
 
 
-        return fragmentView
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,7 +88,6 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
         loadReceiverInfo()
         loadCardInfo()
 
-        btnBack.setOnClickListener(this)
         btnConfirm.setOnClickListener(this)
     }
 
@@ -94,7 +104,7 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
 
     private fun loadReceiverInfo() {
         tvReceiverName.text = receiverName
-        tvReceiverEosName.text = receiverEosName
+        tvReceiverPhone.text = receiverEosName
 
         if (!receiverAvatar.isNullOrEmpty()) {
             Picasso.get().load(receiverAvatar).into(ivReceiverAvatar)
@@ -107,8 +117,6 @@ class ConfirmTransferFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            btnBack -> activity?.onBackPressed()
-
             btnConfirm -> {
                 InputPasswordDialogFragment.show(
                     this@ConfirmTransferFragment, fragmentManager!!,

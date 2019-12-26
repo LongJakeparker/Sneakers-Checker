@@ -27,4 +27,18 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="TextAppearance.TrueGrails.Title" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.TrueGrails.Title.Expand" parent="TextAppearance.TrueGrails.Title">
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="TextAppearance.TrueGrails.Title.Collapse" parent="TextAppearance.TrueGrails.Title">
+        <item name="android:textSize">24sp</item>
+    </style>
+
 </resources>

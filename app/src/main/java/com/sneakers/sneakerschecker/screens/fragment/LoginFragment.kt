@@ -10,28 +10,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.api.AuthenticationApi
 import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.utils.CommonUtils
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
 import com.sneakers.sneakerschecker.screens.activity.CreateNewActivity
 import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_login.*
-import kotlinx.android.synthetic.main.fragment_login.etUserPhone
-import kotlinx.android.synthetic.main.fragment_login.ibBack
-import kotlinx.android.synthetic.main.fragment_login.pickerCountryCode
-import kotlinx.android.synthetic.main.fragment_login.root
-import kotlinx.android.synthetic.main.fragment_login.tvWarning
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class LoginFragment : Fragment(), View.OnClickListener {
+class LoginFragment : BaseFragment(), View.OnClickListener {
 
     private var fragmentView: View? = null
     private var password: String = ""
@@ -40,19 +34,28 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPref
 
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_login
+    }
+
+    override fun getScreenTitleId(): Int {
+        return R.string.label_log_in
+    }
+
+    override fun isShowBackButton(): Boolean {
+        return true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        fragmentView = inflater.inflate(R.layout.fragment_login, container, false)
-
         sharedPref = SharedPref(activity!!)
 
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
-        return fragmentView
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,7 +64,6 @@ class LoginFragment : Fragment(), View.OnClickListener {
         etUserPhone.addTextChangedListener(textWatcher)
         btnLogin.setOnClickListener(this)
         root.setOnClickListener(this)
-        ibBack.setOnClickListener(this)
         llGotoSignup.setOnClickListener(this)
     }
 
@@ -89,8 +91,6 @@ class LoginFragment : Fragment(), View.OnClickListener {
             btnLogin -> InputPasswordDialogFragment.show(this, fragmentManager!!)
 
             root -> CommonUtils.hideKeyboard(activity)
-
-            ibBack -> activity!!.finish()
 
             llGotoSignup -> CreateNewActivity.start(activity!!)
         }

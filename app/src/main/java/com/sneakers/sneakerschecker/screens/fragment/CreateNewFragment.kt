@@ -43,7 +43,8 @@ import java.util.concurrent.TimeUnit
  * A simple [Fragment] subclass.
  *
  */
-class CreateNewFragment : Fragment(), View.OnClickListener {
+class CreateNewFragment : BaseFragment(), View.OnClickListener {
+
     private val TAG = "PhoneAuth"
 
     private var fragmentView: View? = null
@@ -55,12 +56,22 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
     private lateinit var fireAuth: FirebaseAuth
 
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_create_new
+    }
+
+    override fun getScreenTitleId(): Int {
+        return R.string.label_create_account
+    }
+
+    override fun isShowBackButton(): Boolean {
+        return true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        fragmentView = inflater.inflate(R.layout.fragment_create_new, container, false)
 
         fireAuth = FirebaseAuth.getInstance()
 
@@ -69,7 +80,7 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
-        return fragmentView
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,7 +88,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
 
         etUserPhone.addTextChangedListener(textWatcher)
         btnNext.setOnClickListener(this)
-        ibBack.setOnClickListener(this)
         root.setOnClickListener(this)
     }
 
@@ -102,8 +112,6 @@ class CreateNewFragment : Fragment(), View.OnClickListener {
                 CommonUtils.toggleLoading(fragmentView, true)
                 checkDuplicatePhone()
             }
-
-            ibBack -> activity?.onBackPressed()
 
             root -> CommonUtils.hideKeyboard(activity)
         }
