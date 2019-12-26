@@ -16,6 +16,9 @@ object Constant {
     const val GRANT_TYPE_PASSWORD= "password"
     const val GRANT_TYPE_REFRESH_TOKEN= "refresh_token"
 
+    const val IS_OPEN_SCAN_GRAIL = "IS_OPEN_SCAN_GRAIL"
+    const val IS_OPEN_SCAN_CLAIM = "IS_OPEN_SCAN_CLAIM"
+
     const val AUTH_TOKEN_USERNAME= "truegrail_mobile"
     const val AUTH_TOKEN_PASSWORD= "secret"
 

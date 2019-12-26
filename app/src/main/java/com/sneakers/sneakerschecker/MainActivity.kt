@@ -62,18 +62,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         checkUserLogin()
 
-        if (sharedPref.getString(Constant.APP_CREDENTIALS) == "") {
-            createAppCredentials()
-        }
-
-        Thread {
-            try {
-                Web3Instance.setInstance(Web3j.build(HttpService(Constant.ETHEREUM_API_URL)))
-            } catch (e: Exception) {
-                runOnUiThread { Toast.makeText(this, "Connect Blockchain Failed", Toast.LENGTH_LONG).show() }
-            }
-        }.start()
-
         setViewPager()
 
         val isObtained = intent?.getBooleanExtra(Constant.EXTRA_IS_OBTAINED, false)
@@ -121,12 +109,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     val brainTreeClientToken = jsonObject.getString("clientToken")
                     sharedPref.setString(brainTreeClientToken, Constant.BRAINTREE_TOKEN)
                 } else {
-                    val alertDialogFragment =
-                        AlertDialogFragment.newInstance(response.message())
-                    alertDialogFragment.show(
-                        supportFragmentManager,
-                        AlertDialogFragment::class.java.simpleName
-                    )
+                    if (response.code() == 401) {
+                        logOut()
+                    } else {
+                        val alertDialogFragment =
+                            AlertDialogFragment.newInstance(response.message())
+                        alertDialogFragment.show(
+                            supportFragmentManager,
+                            AlertDialogFragment::class.java.simpleName
+                        )
+                    }
                 }
             }
 
@@ -136,17 +128,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun checkUserLogin() {
         if (!CommonUtils.isNonLoginUser(this)) {
                 notifyUserLogin()
-        }
-    }
-
-    private fun createAppCredentials() {
-        try {
-            val keyPair = Keys.createEcKeyPair()
-            val credentials = Credentials.create(keyPair)
-            sharedPref.setCredentials(credentials, Constant.APP_CREDENTIALS)
-
-        } catch (e: Exception) {
-            Log.e("Error: ", e.message)
         }
     }
 

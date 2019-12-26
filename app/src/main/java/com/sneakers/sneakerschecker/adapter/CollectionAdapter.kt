@@ -1,6 +1,8 @@
 package com.sneakers.sneakerschecker.adapter
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -34,6 +36,9 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         view.tvItemBrand.text = item.brand
         view.tvItemBrandDisabled.text = item.brand
         view.tvFurtherSpec.text = item.furtherSpec
+
+        val color = ColorDrawable(Color.parseColor(item.colorway))
+        view.ivItemColor.setImageDrawable(color)
 
         CommonUtils.getBrandLogo(item.brand!!).let {
             view.ivBrandLogoFront.setImageResource(it)

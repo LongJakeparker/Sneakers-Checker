@@ -156,17 +156,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingVertical="@dimen/activity_margin_8dp">
+                    android:paddingVertical="@dimen/activity_margin_8dp"
+                    android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:textSize="@dimen/text_size_large"
                         android:text="@string/label_color"
                         android:textColor="@android:color/black"
                         android:drawableLeft="@drawable/ic_color"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:drawablePadding="@dimen/activity_margin_8dp"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ivItemColor"
+                        android:layout_width="@dimen/activity_margin_16dp"
+                        android:layout_height="@dimen/activity_margin_16dp"
+                        android:elevation="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@color/colorBlueGreen"/>
 
                 </LinearLayout>
 

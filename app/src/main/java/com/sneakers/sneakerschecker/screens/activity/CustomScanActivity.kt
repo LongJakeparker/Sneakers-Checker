@@ -4,7 +4,10 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -210,6 +213,13 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     R.drawable.ic_guideline_scan_grail, R.string.title_guide_scan_grail,
                     R.string.content_guide_scan_grail
                 )
+
+                Handler().postDelayed({
+                    if (!sharedPref.getBool(Constant.IS_OPEN_SCAN_GRAIL)) {
+                        expandBottomView()
+                        sharedPref.setBool(true, Constant.IS_OPEN_SCAN_GRAIL)
+                    }
+                }, 500)
             }
 
             ScanType.SCAN_CLAIM_TOKEN -> {
@@ -221,6 +231,13 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     R.string.title_guide_scan_claim,
                     R.string.content_guide_scan_claim
                 )
+
+                Handler().postDelayed({
+                    if (!sharedPref.getBool(Constant.IS_OPEN_SCAN_CLAIM)) {
+                        expandBottomView()
+                        sharedPref.setBool(true, Constant.IS_OPEN_SCAN_CLAIM)
+                    }
+                }, 500)
             }
 
             ScanType.SCAN_EOS_NAME -> {
@@ -684,6 +701,9 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
 
         ivBrandLogo.setImageResource(CommonUtils.getBrandLogo(validatedItem.detail?.brand!!))
 
+        val color = ColorDrawable(Color.parseColor(validatedItem.detail?.colorway))
+        ivItemColor.setImageDrawable(color)
+
         progressBar.visibility = View.GONE
         rlScanFail.visibility = View.GONE
 
@@ -695,7 +715,9 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        barcodeView?.resume()
+        if (!isExpanded) {
+            barcodeView?.resume()
+        }
     }
 
     override fun onPause() {
