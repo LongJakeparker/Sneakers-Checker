@@ -89,6 +89,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Log.e("FCM-TOKEN", sharedPref.getString(Constant.FCM_TOKEN))
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkUserLogin()
+    }
+
     private fun getBrainTreeClientToken() {
         val accessToken = "Bearer " + CommonUtils.getCurrentUser(this)?.accessToken
         val call = service.create(MainApi::class.java)
