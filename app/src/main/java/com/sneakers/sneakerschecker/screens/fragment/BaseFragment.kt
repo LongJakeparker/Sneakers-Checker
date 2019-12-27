@@ -52,7 +52,6 @@ abstract class BaseFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     protected open fun initToolbarNav() {
         mCollapsingToolbarLayout?.setCollapsedTitleTextAppearance(R.style.TextAppearance_TrueGrails_Title_Collapse)
         mCollapsingToolbarLayout?.setExpandedTitleTextAppearance(R.style.TextAppearance_TrueGrails_Title_Expand)
-        appBarLayout?.outlineProvider = null
 
         if (appBarLayout?.layoutParams != null) {
             val params = appBarLayout?.layoutParams as CoordinatorLayout.LayoutParams
