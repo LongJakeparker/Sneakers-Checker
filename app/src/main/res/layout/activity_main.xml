@@ -13,39 +13,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/btnMenuMain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu"
-            android:background="@android:color/transparent"
-            android:padding="@dimen/activity_margin_10dp"
-            android:layout_marginTop="@dimen/activity_margin_6dp"
-            android:layout_marginEnd="@dimen/activity_margin_6dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"/>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_Explore"
-            android:textSize="@dimen/text_size_big"
-            android:textColor="@color/colorBlack"
-            android:layout_marginStart="@dimen/activity_margin_16dp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/btnMenuMain"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/btnMenuMain"/>
-
-        <com.sneakers.sneakerschecker.customViews.CustomMainViewPager
-            android:id="@+id/viewpagerMain"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="false"
-            android:layout_marginTop="@dimen/activity_margin_32dp"
-            android:layout_below="@+id/title"/>
+            android:layout_height="match_parent">
+
+            <include layout="@layout/layout_header" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <com.sneakers.sneakerschecker.customViews.CustomMainViewPager
+                    android:id="@+id/viewpagerMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:layout_marginTop="@dimen/activity_margin_32dp"
+                    android:layout_below="@+id/title"/>
+
+            </RelativeLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -21,6 +21,8 @@ import org.web3j.protocol.http.HttpService
 import android.widget.LinearLayout
 import com.sneakers.sneakerschecker.model.*
 import android.animation.LayoutTransition
+import android.view.Menu
+import android.view.MenuItem
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.api.MainApi
@@ -38,7 +40,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : BaseActivity(), View.OnClickListener {
     private val TIME_AUTO_NEXT = 4000
     private val REQUEST_CODE_START_LOGIN_ACTIVITY = 1000
 
@@ -55,14 +57,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         sharedPref = SharedPref(this)
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
         checkUserLogin()
 
-        setViewPager()
+//        setViewPager()
 
         val isObtained = intent?.getBooleanExtra(Constant.EXTRA_IS_OBTAINED, false)
         if (isObtained != null && isObtained) {
@@ -70,7 +71,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             ObtainGrailActivity.start(baseContext, sneakerInfo, true)
         }
 
-        btnMenuMain.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
         tvCreateNew.setOnClickListener(this)
         tvLogout.setOnClickListener(this)
@@ -87,6 +87,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         ivProfile.setOnClickListener(this)
 
         Log.e("FCM-TOKEN", sharedPref.getString(Constant.FCM_TOKEN))
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.activity_main
+    }
+
+    override fun getScreenTitleId(): Int {
+        return R.string.label_sneaker_board
     }
 
     override fun onResume() {
@@ -136,39 +144,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun setViewPager() {
-        viewpagerMain.adapter = MainSliderAdapter(this, mainSliderList)
-        viewpagerMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                startTimer()
-            }
-
-        })
-        viewpagerMain.setPageTransformer(false) { view, position ->
-            view.translationX = view.width * -position
-
-            if (position <= -1.0F || position >= 1.0F) {
-                view.alpha = 0.0F
-            } else if (position == 0.0F) {
-                view.alpha = 1.0F
-            } else {
-                // position is between -1.0F & 0.0F OR 0.0F & 1.0F
-                view.alpha = 1.0F - Math.abs(position)
-            }
-        }
-        startTimer()
-    }
+//    private fun setViewPager() {
+//        viewpagerMain.adapter = MainSliderAdapter(this, mainSliderList)
+//        viewpagerMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+//            override fun onPageScrollStateChanged(state: Int) {
+//            }
+//
+//            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+//
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+//                startTimer()
+//            }
+//
+//        })
+//        viewpagerMain.setPageTransformer(false) { view, position ->
+//            view.translationX = view.width * -position
+//
+//            if (position <= -1.0F || position >= 1.0F) {
+//                view.alpha = 0.0F
+//            } else if (position == 0.0F) {
+//                view.alpha = 1.0F
+//            } else {
+//                // position is between -1.0F & 0.0F OR 0.0F & 1.0F
+//                view.alpha = 1.0F - Math.abs(position)
+//            }
+//        }
+//        startTimer()
+//    }
 
     override fun onClick(v: View?) {
         when (v) {
-            btnMenuMain -> drawer_layout.openDrawer(GravityCompat.END)
 
             tvLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
@@ -327,31 +334,49 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        countDownTimer!!.cancel()
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        countDownTimer!!.cancel()
+//    }
+
+//    private fun cancelTimer() {
+//        if (countDownTimer != null) {
+//            countDownTimer!!.cancel()
+//            countDownTimer = null
+//        }
+//    }
+
+//    private fun startTimer() {
+//        cancelTimer()
+//        countDownTimer = object : CountDownTimer(TIME_AUTO_NEXT.toLong(), 500) {
+//            override fun onTick(millisUntilFinished: Long) {}
+//
+//            override fun onFinish() {
+//                var nextItem = viewpagerMain.currentItem + 1
+//                if (nextItem >= viewpagerMain.adapter!!.count) {
+//                    nextItem = viewpagerMain.adapter!!.count / 2
+//                }
+//                viewpagerMain.setCurrentItem(nextItem, true)
+//            }
+//        }
+//        countDownTimer!!.start()
+//    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
-    private fun cancelTimer() {
-        if (countDownTimer != null) {
-            countDownTimer!!.cancel()
-            countDownTimer = null
-        }
-    }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val id = item?.itemId
 
-    private fun startTimer() {
-        cancelTimer()
-        countDownTimer = object : CountDownTimer(TIME_AUTO_NEXT.toLong(), 500) {
-            override fun onTick(millisUntilFinished: Long) {}
-
-            override fun onFinish() {
-                var nextItem = viewpagerMain.currentItem + 1
-                if (nextItem >= viewpagerMain.adapter!!.count) {
-                    nextItem = viewpagerMain.adapter!!.count / 2
-                }
-                viewpagerMain.setCurrentItem(nextItem, true)
-            }
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_menu) {
+            drawer_layout.openDrawer(GravityCompat.END)
+            return true
         }
-        countDownTimer!!.start()
+
+        return super.onOptionsItemSelected(item)
     }
 }
