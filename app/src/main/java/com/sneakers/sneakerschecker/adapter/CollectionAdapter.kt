@@ -37,8 +37,10 @@ class CollectionAdapter(val items: ArrayList<SneakerModel>, val context: Context
         view.tvItemBrandDisabled.text = item.brand
         view.tvFurtherSpec.text = item.furtherSpec
 
-        val color = ColorDrawable(Color.parseColor(item.colorway))
-        view.ivItemColor.setImageDrawable(color)
+        if (!item.colorway.isNullOrEmpty() && item.colorway?.contains("#")!!) {
+            val color = ColorDrawable(Color.parseColor(item.colorway))
+            view.ivItemColor.setImageDrawable(color)
+        }
 
         CommonUtils.getBrandLogo(item.brand!!).let {
             view.ivBrandLogoFront.setImageResource(it)

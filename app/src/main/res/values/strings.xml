@@ -222,5 +222,12 @@
     <string name="text_des_store">This feature is coming soon!</string>
     <string name="format_credit_card">✱✱✱✱ ✱✱✱✱ ✱✱✱✱ %s</string>
     <string name="error_email_validate">* InValid Email Address</string>
+    <string name="format_size">Size %f (U.S.)</string>
+    <string name="format_release_date">Released at %s</string>
+    <string name="format_owned_by">Owned by
+        <font color="#095255">
+            <b>%s</b>
+        </font>
+    </string>
 
 </resources>
