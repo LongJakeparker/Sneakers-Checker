@@ -1,39 +1,34 @@
 package com.sneakers.sneakerschecker
 
+import android.animation.LayoutTransition
 import android.app.Activity
-import android.content.*
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
-import androidx.viewpager.widget.ViewPager
-import com.google.zxing.integration.android.IntentIntegrator
-import com.sneakers.sneakerschecker.adapter.MainSliderAdapter
-import com.sneakers.sneakerschecker.constant.Constant
-import com.sneakers.sneakerschecker.screens.activity.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_drawer_menu.*
-import org.web3j.protocol.Web3j
-import org.web3j.protocol.http.HttpService
-import android.widget.LinearLayout
-import com.sneakers.sneakerschecker.model.*
-import android.animation.LayoutTransition
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import com.sneakers.sneakerschecker.`interface`.IDialogListener
+import com.sneakers.sneakerschecker.adapter.SneakerBoardAdapter
 import com.sneakers.sneakerschecker.api.MainApi
+import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.model.*
+import com.sneakers.sneakerschecker.screens.activity.*
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.screens.fragment.dialog.ConfirmDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_drawer_menu.*
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import org.web3j.crypto.Credentials
-import org.web3j.crypto.Keys
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,6 +42,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private lateinit var sharedPref: SharedPref
     private var isExpanded: Boolean = false
     private lateinit var service: Retrofit
+    private var ListSneaker = ArrayList<SneakerBoardModel?>()
+    private var SneakerBoardAdapter: SneakerBoardAdapter? = null
 
     private val mainSliderList = arrayListOf(
         MainSliderItem(R.string.text_explore_1, R.drawable.drawable_explore_pager_1),
@@ -63,7 +60,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         checkUserLogin()
 
-//        setViewPager()
+        getListSneakerBoard()
 
         val isObtained = intent?.getBooleanExtra(Constant.EXTRA_IS_OBTAINED, false)
         if (isObtained != null && isObtained) {
@@ -140,7 +137,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     private fun checkUserLogin() {
         if (!CommonUtils.isNonLoginUser(this)) {
-                notifyUserLogin()
+            notifyUserLogin()
         }
     }
 
@@ -174,6 +171,52 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 //        startTimer()
 //    }
 
+    private fun setListAdapter() {
+        val layoutManager = LinearLayoutManager(this)
+        rvContent.layoutManager = layoutManager
+        SneakerBoardAdapter = SneakerBoardAdapter(ListSneaker)
+        SneakerBoardAdapter?.setCopyListener(object : SneakerBoardAdapter.CopyListener {
+            override fun onSelectItem(copyData: String?) {
+                CommonUtils.copyToClipboard(this@MainActivity, copyData!!)
+            }
+
+        })
+        SneakerBoardAdapter?.setListener(object : SneakerBoardAdapter.Listener {
+            override fun onSelectItem(itemId: Long?, position: Int) {
+
+            }
+
+        })
+        rvContent.adapter = SneakerBoardAdapter
+        rvContent.isFocusable = false
+    }
+
+    private fun getListSneakerBoard() {
+        val call = service.create(MainApi::class.java)
+            .getListSneakerAvailable()
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val alertDialogFragment =
+                    AlertDialogFragment.newInstance(t.message)
+                alertDialogFragment.show(
+                    supportFragmentManager,
+                    AlertDialogFragment::class.java.simpleName
+                )
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    val jsonObject = JSONObject(response.body()?.string())
+                    val jsonArrayList = jsonObject.getJSONArray("availableTrade")
+                    var userListType = object : TypeToken<List<SneakerBoardModel>>() {}.type
+                    ListSneaker = Gson().fromJson(jsonArrayList.toString(), userListType)
+                    setListAdapter()
+                }
+            }
+
+        })
+    }
+
     override fun onClick(v: View?) {
         when (v) {
 
@@ -198,19 +241,25 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
 
             tvLogout, ivLogout -> {
-                val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_logout),
-                    resources.getString(R.string.msg_logout), true)
+                val confirmDialogFragment = ConfirmDialogFragment.newInstance(
+                    resources.getString(R.string.dialog_title_logout),
+                    resources.getString(R.string.msg_logout), true
+                )
                 confirmDialogFragment.setListener(object : IDialogListener {
                     override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
                         if (ok) {
                             logOut()
                         }
                     }
+
                     override fun onDialogCancel(tag: String) {
 
                     }
                 })
-                confirmDialogFragment.show(supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
+                confirmDialogFragment.show(
+                    supportFragmentManager,
+                    ConfirmDialogFragment::class.java.simpleName
+                )
             }
 
             btnScanToken -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
@@ -254,8 +303,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             val layoutTransition = (lnTopNavigation.parent as ConstraintLayout).layoutTransition
             layoutTransition.setDuration(300)
             layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-            ivAvatar.layoutParams.width = resources.getDimension(R.dimen.avatar_size_expanded).toInt()
-            ivAvatar.layoutParams.height = resources.getDimension(R.dimen.avatar_size_expanded).toInt()
+            ivAvatar.layoutParams.width =
+                resources.getDimension(R.dimen.avatar_size_expanded).toInt()
+            ivAvatar.layoutParams.height =
+                resources.getDimension(R.dimen.avatar_size_expanded).toInt()
             ivAvatar.requestLayout()
 
             val params = LinearLayout.LayoutParams(
@@ -274,13 +325,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             lnNavigationItemExpanded.visibility = View.VISIBLE
 
             isExpanded = true
-        }
-        else {
+        } else {
             val layoutTransition = (lnTopNavigation.parent as ConstraintLayout).layoutTransition
             layoutTransition.setDuration(300)
             layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
             ivAvatar.layoutParams.width = resources.getDimension(R.dimen.avatar_size_normal).toInt()
-            ivAvatar.layoutParams.height = resources.getDimension(R.dimen.avatar_size_normal).toInt()
+            ivAvatar.layoutParams.height =
+                resources.getDimension(R.dimen.avatar_size_normal).toInt()
             ivAvatar.requestLayout()
 
             val params = LinearLayout.LayoutParams(

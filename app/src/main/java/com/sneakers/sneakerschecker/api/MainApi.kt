@@ -60,4 +60,7 @@ interface MainApi {
         @Path("userId") userId: Int,
         @Body param: HashMap<String, Any>
         ): Call<ResponseBody>
+
+    @GET("sneaker/availableTrade/")
+    fun getListSneakerAvailable(): Call<ResponseBody>
 }

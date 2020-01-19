@@ -19,20 +19,26 @@
 
             <include layout="@layout/layout_header" />
 
-            <RelativeLayout
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+<!--                <com.sneakers.sneakerschecker.customViews.CustomMainViewPager-->
+<!--                    android:id="@+id/viewpagerMain"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:clickable="false"-->
+<!--                    android:layout_marginTop="@dimen/activity_margin_32dp"-->
+<!--                    android:layout_below="@+id/title"/>-->
+
+<!--            </RelativeLayout>-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvContent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                <com.sneakers.sneakerschecker.customViews.CustomMainViewPager
-                    android:id="@+id/viewpagerMain"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="false"
-                    android:layout_marginTop="@dimen/activity_margin_32dp"
-                    android:layout_below="@+id/title"/>
-
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

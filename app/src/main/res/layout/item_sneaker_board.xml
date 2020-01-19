@@ -4,9 +4,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_item_sneaker_limit">
+    android:background="@drawable/bg_item_sneaker_limit"
+    android:layout_marginHorizontal="@dimen/activity_margin_20dp"
+    android:id="@+id/root">
 
     <ImageView
+        android:id="@+id/ivItemBrand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/logo_adidas"
@@ -14,6 +17,7 @@
         android:layout_marginStart="46dp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivItemColor"
         android:layout_width="@dimen/activity_margin_16dp"
         android:layout_height="@dimen/activity_margin_16dp"
         android:src="@color/colorBlueGreen"
@@ -29,7 +33,7 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/tvItemNameBack"
+            android:id="@+id/tvItemName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NMD R1 Trainer"
@@ -39,7 +43,7 @@
             android:layout_centerVertical="true"/>
 
         <ImageView
-            android:id="@+id/ivLimitedBack"
+            android:id="@+id/ivLimited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_limited_small"
@@ -50,6 +54,7 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/tvItemSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/format_size"
@@ -59,6 +64,7 @@
         android:layout_marginStart="30dp"/>
 
     <TextView
+        android:id="@+id/tvItemReleaseDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/format_release_date"
@@ -74,37 +80,87 @@
         android:layout_marginTop="@dimen/activity_margin_8dp"
         android:layout_marginStart="30dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/format_owned_by"
-        android:textSize="@dimen/text_size_default"
-        android:textColor="@color/colorDark"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="@dimen/activity_margin_8dp"/>
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="@dimen/activity_margin_34dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="+847711181212"
-            android:textColor="@color/colorDarkTurquoise"
-            android:textSize="@dimen/text_size_default"
-            android:textStyle="bold"/>
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvItemOwnerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/format_owned_by"
+                android:textSize="@dimen/text_size_default"
+                android:textColor="@color/colorDark"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="@dimen/activity_margin_8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="@dimen/activity_margin_34dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvItemOwnerPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+847711181212"
+                    android:textColor="@color/colorDarkTurquoise"
+                    android:textSize="@dimen/text_size_default"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:id="@+id/ivCopyOwnerPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_copy_has_bg"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlBtnSetOwnerInfo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_copy_has_bg"/>
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="@dimen/activity_margin_34dp"
+            android:layout_marginTop="@dimen/activity_margin_10dp"
+            android:background="@android:color/white">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tvGetOwnerInfo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/drawable_bg_btn_green_stroke_corner"
+                android:text="@string/label_get_owner_info"
+                android:gravity="center"
+                android:textColor="@color/colorBlueGreen"/>
+
+            <RelativeLayout
+                android:id="@+id/rlProgressGetOwnerInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@android:color/white"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="200dp"
+                    android:layout_height="30dp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
