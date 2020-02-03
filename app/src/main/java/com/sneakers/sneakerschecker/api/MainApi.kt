@@ -63,4 +63,11 @@ interface MainApi {
 
     @GET("sneaker/availableTrade/")
     fun getListSneakerAvailable(): Call<ResponseBody>
+
+    @PATCH("sneaker/collection/visibility/{sneakerId}/")
+    fun publicSneaker(
+        @Header("Authorization") token: String,
+        @Path("sneakerId") sneakerId: Long,
+        @Body param: HashMap<String, Any?>
+    ): Call<ResponseBody>
 }

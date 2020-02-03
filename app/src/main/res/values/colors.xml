@@ -40,5 +40,7 @@
     <color name="gray_f4f4f4">#f4f4f4</color>
     <color name="brightBlue">#007aff</color>
     <color name="salmon">#fa7268</color>
+    <color name="orange">#f76b1c</color>
+    <color name="lightMustard">#fad961</color>
 
 </resources>

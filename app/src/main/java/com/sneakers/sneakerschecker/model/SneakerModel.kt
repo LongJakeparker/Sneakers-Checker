@@ -14,6 +14,7 @@ open class SneakerModel : Serializable {
     var furtherSpec: String? = ""
     var isCardFliped: Boolean = false
     var isCardActivate: Boolean = true
+    var isVisible: Boolean? = false
 
 
 //    override fun writeToParcel(dest: Parcel?, flags: Int) {

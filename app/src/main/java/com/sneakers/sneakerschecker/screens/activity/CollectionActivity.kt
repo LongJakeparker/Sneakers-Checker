@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -16,10 +15,11 @@ import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
-import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
+import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_collection.*
+import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
@@ -68,10 +68,13 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
         btnScanNoData.setOnClickListener(this)
         btnBack.setOnClickListener(this)
         btnItemStolen.setOnClickListener(this)
+        btnPublicItem.setOnClickListener(this)
         btnCloseReport.setOnClickListener(this)
+        btnClosePublic.setOnClickListener(this)
         blurView.setOnClickListener(this)
         llConfirmStolen.setOnClickListener(this)
         btnConfirmStolen.setOnClickListener(this)
+        btnConfirmPublic.setOnClickListener(this)
         btnItemFound.setOnClickListener(this)
     }
 
@@ -211,6 +214,12 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
         if (listCollection[position].isCardActivate) {
             cvFound.visibility = View.GONE
             rlBtnSaleAndStolen.visibility = View.VISIBLE
+
+            if (listCollection[position].isVisible != null && listCollection[position].isVisible!!) {
+                btnPublicItem.setImageResource(R.drawable.ic_unpublic_sneaker)
+            } else {
+                btnPublicItem.setImageResource(R.drawable.ic_btn_public_sneaker)
+            }
         } else {
             cvFound.visibility = View.VISIBLE
             rlBtnSaleAndStolen.visibility = View.GONE
@@ -239,10 +248,23 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                 blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_view))
             }
 
-            btnCloseReport, blurView -> closeReportView()
+            btnPublicItem -> {
+                if (listCollection[viewPagerCollection.currentItem].isVisible != null &&
+                    listCollection[viewPagerCollection.currentItem].isVisible!!
+                ) {
+                    setPublicItem()
+                } else {
+                    llConfirmPublic.visibility = View.VISIBLE
+                    blurView.visibility = View.VISIBLE
+                    blurView.isClickable = true
+                    blurView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_view))
+                }
+            }
+
+            btnCloseReport, btnClosePublic, btnCloseReportSuccess, blurView -> closePublicReportView()
 
             btnConfirmStolen -> {
-                closeReportView()
+                closePublicReportView()
                 InputPasswordDialogFragment.show(supportFragmentManager, "", "", object :
                     InputPasswordDialogFragment.PasscodeResultInterface {
                     override fun onReceivePasscode(passcode: String) {
@@ -251,19 +273,66 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                 })
             }
 
-            btnItemFound -> InputPasswordDialogFragment.show(supportFragmentManager, "", "", object :
-                InputPasswordDialogFragment.PasscodeResultInterface {
-                override fun onReceivePasscode(passcode: String) {
-                    updateStatus(passcode, Constant.ItemCondition.NOT_NEW)
-                }
-            })
+            btnConfirmPublic -> {
+                closePublicReportView()
+                setPublicItem()
+            }
+
+            btnItemFound -> InputPasswordDialogFragment.show(
+                supportFragmentManager,
+                "",
+                "",
+                object :
+                    InputPasswordDialogFragment.PasscodeResultInterface {
+                    override fun onReceivePasscode(passcode: String) {
+                        updateStatus(passcode, Constant.ItemCondition.NOT_NEW)
+                    }
+                })
 
             btnBack -> onBackPressed()
         }
     }
 
-    fun closeReportView() {
+    private fun setPublicItem() {
+        val accessToken = "Bearer " + sharedPref.getUser(Constant.LOGIN_USER)?.accessToken
+        val param = HashMap<String, Any?>()
+        param["isVisible"] =
+            if (listCollection[viewPagerCollection.currentItem].isVisible != null &&
+                listCollection[viewPagerCollection.currentItem].isVisible!!
+            ) 0 else 1
+        val call = service.create(MainApi::class.java)
+            .publicSneaker(accessToken, listCollection[viewPagerCollection.currentItem].id!!, param)
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                CommonUtils.toggleLoading(window.decorView.rootView, false)
+                Toast.makeText(this@CollectionActivity, "Something went wrong", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                CommonUtils.toggleLoading(window.decorView.rootView, false)
+                if (response.isSuccessful) {
+                    listCollection[viewPagerCollection.currentItem].isVisible =
+                        !(listCollection[viewPagerCollection.currentItem].isVisible != null &&
+                                listCollection[viewPagerCollection.currentItem].isVisible!!)
+                    adapter?.notifyDataSetChanged()
+                    showButtonStolen(viewPagerCollection.currentItem)
+                } else {
+                    Toast.makeText(this@CollectionActivity, response.message(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+        })
+    }
+
+    private fun closePublicReportView() {
+        llConfirmPublic.visibility = View.GONE
         llConfirmStolen.visibility = View.GONE
+        llReportSuccess.visibility = View.GONE
         blurView.visibility = View.GONE
         blurView.isClickable = false
         blurView.startAnimation(
@@ -291,14 +360,17 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                 override fun onDone(result: Any?, e: Throwable?) {
                     CommonUtils.toggleLoading(window.decorView.rootView, false)
                     if (e == null) {
-                        Toast.makeText(
-                            this@CollectionActivity,
-                            "Transaction id: $result",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        listCollection[viewPagerCollection.currentItem].isCardActivate = !listCollection[viewPagerCollection.currentItem].isCardActivate
+                        listCollection[viewPagerCollection.currentItem].isCardActivate =
+                            !listCollection[viewPagerCollection.currentItem].isCardActivate
                         adapter?.notifyDataSetChanged()
                         showButtonStolen(viewPagerCollection.currentItem)
+
+                        if (status == Constant.ItemCondition.STOLEN) {
+                            llReportSuccess.visibility = View.VISIBLE
+                            blurView.visibility = View.VISIBLE
+                            blurView.isClickable = true
+                            blurView.startAnimation(AnimationUtils.loadAnimation(this@CollectionActivity, R.anim.fade_in_view))
+                        }
 
                     } else {
                         if (e.message == "pad block corrupted") {

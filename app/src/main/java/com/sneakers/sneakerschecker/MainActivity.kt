@@ -19,6 +19,7 @@ import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.adapter.SneakerBoardAdapter
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.customViews.VerticalSpaceItemDecoration
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.screens.activity.*
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
@@ -189,6 +190,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         })
         rvContent.adapter = SneakerBoardAdapter
         rvContent.isFocusable = false
+        rvContent.addItemDecoration(VerticalSpaceItemDecoration(resources.getDimensionPixelOffset(R.dimen.activity_margin_16dp)))
     }
 
     private fun getListSneakerBoard() {

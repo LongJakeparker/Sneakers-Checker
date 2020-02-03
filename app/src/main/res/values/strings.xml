@@ -209,6 +209,10 @@
     <string name="msg_eos_name_not_valid">Phone number is not valid</string>
     <string name="dialog_title_confirm_report">DO YOUR GRAILS WAS STOLEN?</string>
     <string name="dialog_msg_confirm_report">This will mark the item as was stolen, it may affect your value and make bad reviews. Make sure this is true for the benefit of everyone.</string>
+    <string name="dialog_title_confirm_public">MAKE YOUR GRAILS PUBLIC?</string>
+    <string name="dialog_msg_confirm_public">This will mark the item is public to everybody, it can be found from [Explorer] and they can see your public information as your name, phone number, etc.</string>
+    <string name="dialog_title_report_success">YOUR GRAILS WAS STOLEN</string>
+    <string name="dialog_msg_report_success">Thank you for your reporting, which will help other people can avoid some bad trouble while scanning.</string>
     <string name="label_button_confirm_stolen">Yes, I make sure</string>
     <string name="label_personal_info">Personal info</string>
     <string name="label_account_type">Account type</string>

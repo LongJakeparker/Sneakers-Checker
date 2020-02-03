@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/colorPutty" />
+            <corners android:radius="@dimen/dimen_radius_button_6dp" />
+
+        </shape>
+
+    </item>
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/orange" />
+            <corners android:radius="@dimen/dimen_radius_button_6dp" />
+
+        </shape>
+
+    </item>
+
+    <item>
+        <shape>
+            <gradient
+                android:startColor="@color/lightMustard"
+                android:endColor="@color/orange"
+                android:angle="-90"
+            />
+            <corners android:radius="@dimen/dimen_radius_button_6dp" />
+        </shape>
+
+    </item>
+
+
+</selector>
