@@ -229,9 +229,9 @@
     <string name="format_size">Size %s (U.S.)</string>
     <string name="format_release_date">Released at %s</string>
     <string name="format_owned_by">Owned by
-        <font color="#095255">
-            <b>%s</b>
-        </font>
+        &lt;font color="#095255">
+            &lt;b>%s&lt;/b>
+        &lt;/font>
     </string>
     <string name="label_get_owner_info">Get owner information</string>
 

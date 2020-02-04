@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_limited_small"
-            android:layout_toEndOf="@+id/tvItemNameBack"
+            android:layout_toEndOf="@+id/tvItemName"
             android:layout_marginLeft="@dimen/activity_margin_4dp"
             android:visibility="gone"/>
 

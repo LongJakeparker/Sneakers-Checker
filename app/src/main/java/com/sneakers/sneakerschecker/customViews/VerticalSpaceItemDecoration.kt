@@ -8,9 +8,12 @@ class VerticalSpaceItemDecoration constructor(private val verticalSpaceHeight: I
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
-        if (parent.getChildAdapterPosition(view) == 0) {
-            outRect.top = verticalSpaceHeight
+
+        val itemCount = state.itemCount
+
+        if (parent.getChildAdapterPosition(view) == itemCount - 1) {
+            outRect.bottom = verticalSpaceHeight * 5
         }
-        outRect.bottom = verticalSpaceHeight
+        outRect.top = verticalSpaceHeight
     }
 }

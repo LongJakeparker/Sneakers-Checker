@@ -15,7 +15,9 @@
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/rlFooter"
+            android:layout_marginBottom="-74dp">
 
             <include layout="@layout/layout_header" />
 
@@ -44,6 +46,7 @@
 
 
         <RelativeLayout
+            android:id="@+id/rlFooter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">

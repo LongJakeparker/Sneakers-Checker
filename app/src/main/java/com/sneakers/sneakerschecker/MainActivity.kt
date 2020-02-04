@@ -19,6 +19,7 @@ import com.sneakers.sneakerschecker.`interface`.IDialogListener
 import com.sneakers.sneakerschecker.adapter.SneakerBoardAdapter
 import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
+import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.customViews.VerticalSpaceItemDecoration
 import com.sneakers.sneakerschecker.model.*
 import com.sneakers.sneakerschecker.screens.activity.*
@@ -29,6 +30,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
 import okhttp3.ResponseBody
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,8 +45,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private lateinit var sharedPref: SharedPref
     private var isExpanded: Boolean = false
     private lateinit var service: Retrofit
-    private var ListSneaker = ArrayList<SneakerBoardModel?>()
-    private var SneakerBoardAdapter: SneakerBoardAdapter? = null
+    private var listSneaker = ArrayList<SneakerBoardModel?>()
+    private var sneakerBoardAdapter: SneakerBoardAdapter? = null
 
     private val mainSliderList = arrayListOf(
         MainSliderItem(R.string.text_explore_1, R.drawable.drawable_explore_pager_1),
@@ -175,20 +177,25 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private fun setListAdapter() {
         val layoutManager = LinearLayoutManager(this)
         rvContent.layoutManager = layoutManager
-        SneakerBoardAdapter = SneakerBoardAdapter(ListSneaker)
-        SneakerBoardAdapter?.setCopyListener(object : SneakerBoardAdapter.CopyListener {
+        sneakerBoardAdapter = SneakerBoardAdapter(listSneaker)
+        sneakerBoardAdapter?.setCopyListener(object : SneakerBoardAdapter.CopyListener {
             override fun onSelectItem(copyData: String?) {
                 CommonUtils.copyToClipboard(this@MainActivity, copyData!!)
             }
 
         })
-        SneakerBoardAdapter?.setListener(object : SneakerBoardAdapter.Listener {
+        sneakerBoardAdapter?.setListener(object : SneakerBoardAdapter.Listener {
             override fun onSelectItem(itemId: Long?, position: Int) {
+                getOwnerId(itemId, position)
+            }
 
+            override fun onNotifyLogin() {
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivityForResult(intent, REQUEST_CODE_START_LOGIN_ACTIVITY)
             }
 
         })
-        rvContent.adapter = SneakerBoardAdapter
+        rvContent.adapter = sneakerBoardAdapter
         rvContent.isFocusable = false
         rvContent.addItemDecoration(VerticalSpaceItemDecoration(resources.getDimensionPixelOffset(R.dimen.activity_margin_16dp)))
     }
@@ -211,8 +218,72 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     val jsonObject = JSONObject(response.body()?.string())
                     val jsonArrayList = jsonObject.getJSONArray("availableTrade")
                     var userListType = object : TypeToken<List<SneakerBoardModel>>() {}.type
-                    ListSneaker = Gson().fromJson(jsonArrayList.toString(), userListType)
+                    listSneaker = Gson().fromJson(jsonArrayList.toString(), userListType)
                     setListAdapter()
+                }
+            }
+
+        })
+    }
+
+    private fun getOwnerId(itemId: Long?, position: Int) {
+        if (itemId == null)
+            return
+
+        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_SNEAKER,
+            itemId,
+            object : ContractRequest.Companion.EOSCallBack {
+                override fun onDone(result: Any?, e: Throwable?) {
+                    if (e == null) {
+                        val sneakerContractModel =
+                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), SneakerContractModel::class.java)
+                        getOwnerInfo(sneakerContractModel.owner_id, position)
+                    } else {
+                        val alertDialogFragment =
+                            AlertDialogFragment.newInstance(e.localizedMessage)
+                        alertDialogFragment.show(
+                            supportFragmentManager,
+                            AlertDialogFragment::class.java.simpleName
+                        )
+                    }
+                }
+            })
+    }
+
+    private fun getOwnerInfo(ownerId: Int?, position: Int) {
+        if (ownerId == null)
+            return
+
+        val call = service.create(MainApi::class.java)
+            .getUserInformation(ownerId)
+        call.enqueue(object : Callback<CollectorModel> {
+            override fun onFailure(call: Call<CollectorModel>, t: Throwable) {
+                val alertDialogFragment =
+                    AlertDialogFragment.newInstance(t.localizedMessage)
+                alertDialogFragment.show(
+                    supportFragmentManager,
+                    AlertDialogFragment::class.java.simpleName
+                )
+            }
+
+            override fun onResponse(
+                call: Call<CollectorModel>,
+                response: Response<CollectorModel>
+            ) {
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        val userInfo = response.body()!!.collector!!
+
+                        listSneaker[position]?.OwnerInfo = userInfo
+                        sneakerBoardAdapter?.notifyItemChanged(position)
+                    }
+                } else {
+                    val alertDialogFragment =
+                        AlertDialogFragment.newInstance(response.message())
+                    alertDialogFragment.show(
+                        supportFragmentManager,
+                        AlertDialogFragment::class.java.simpleName
+                    )
                 }
             }
 

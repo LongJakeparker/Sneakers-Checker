@@ -3,6 +3,8 @@ package com.sneakers.sneakerschecker.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,14 +62,21 @@ class SneakerBoardAdapter(val data: ArrayList<SneakerBoardModel?>) :
 
         if (ownerInfo != null) {
             holder.rlBtnSetOwnerInfo.visibility = View.GONE
-            holder.tvItemOwnerName.text =
-                context?.getString(R.string.format_owned_by, ownerInfo.username)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.tvItemOwnerName.text = Html.fromHtml(context?.getString(R.string.format_owned_by, ownerInfo.username), Html.FROM_HTML_MODE_COMPACT)
+            } else {
+                holder.tvItemOwnerName.text = Html.fromHtml(context?.getString(R.string.format_owned_by, ownerInfo.username))
+            }
             holder.tvItemOwnerPhone.text = ownerInfo.userIdentity
         } else {
             holder.rlBtnSetOwnerInfo.visibility = View.VISIBLE
             holder.tvGetOwnerInfo.setOnClickListener {
-                mListener?.onSelectItem(itemInfo.id, position)
-                holder.rlProgressGetOwnerInfo.visibility = View.VISIBLE
+                if (CommonUtils.isNonLoginUser(context!!)) {
+                    mListener?.onNotifyLogin()
+                } else {
+                    mListener?.onSelectItem(itemInfo.id, position)
+                    holder.rlProgressGetOwnerInfo.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -80,6 +89,8 @@ class SneakerBoardAdapter(val data: ArrayList<SneakerBoardModel?>) :
 
     interface Listener {
         fun onSelectItem(itemId: Long?, position: Int)
+
+        fun onNotifyLogin()
     }
 
     interface CopyListener {
