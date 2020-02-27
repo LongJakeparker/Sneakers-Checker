@@ -158,7 +158,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_grail_story"
+                android:text="@string/label_btn_grail_story"
                 android:textColor="@color/colorOrangish"
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />

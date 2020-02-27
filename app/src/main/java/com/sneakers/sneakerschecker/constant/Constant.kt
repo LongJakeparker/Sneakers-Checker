@@ -73,6 +73,7 @@ object Constant {
 
     const val CONTRACT_TABLE_SNEAKER = "sneakers"
     const val CONTRACT_TABLE_USERS = "users"
+    const val CONTRACT_HISTORIES = "histories"
 
 
     const val CHANNEL_TRANSFER = "CHANNEL_TRANSFER"

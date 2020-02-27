@@ -230,9 +230,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         if (itemId == null)
             return
 
-        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_SNEAKER,
-            itemId,
-            object : ContractRequest.Companion.EOSCallBack {
+        ContractRequest.getTableRowObservable(ContractRequest.getQueryTableRow(Constant.CONTRACT_TABLE_SNEAKER,
+            itemId),
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         val sneakerContractModel =

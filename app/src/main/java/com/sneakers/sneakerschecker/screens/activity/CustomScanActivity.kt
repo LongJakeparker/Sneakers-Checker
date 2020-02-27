@@ -33,8 +33,8 @@ import com.sneakers.sneakerschecker.api.MainApi
 import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.contract.ContractRequest
 import com.sneakers.sneakerschecker.model.*
-import com.sneakers.sneakerschecker.utils.CommonUtils
 import com.sneakers.sneakerschecker.screens.fragment.dialog.ConfirmDialogFragment
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_custom_scan.*
 import kotlinx.android.synthetic.main.include_bottom_view_scan.*
 import org.greenrobot.eventbus.EventBus
@@ -96,8 +96,10 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                         finish()
                     } else {
                         barcodeView?.pause()
-                        val confirmDialogFragment = ConfirmDialogFragment.newInstance(resources.getString(R.string.dialog_title_invalid_eos_name),
-                            resources.getString(R.string.dialog_msg_invalid_eos_name), true)
+                        val confirmDialogFragment = ConfirmDialogFragment.newInstance(
+                            resources.getString(R.string.dialog_title_invalid_eos_name),
+                            resources.getString(R.string.dialog_msg_invalid_eos_name), true
+                        )
                         confirmDialogFragment.setListener(object : IDialogListener {
                             override fun onDialogFinish(tag: String, ok: Boolean, result: Bundle) {
                                 if (ok) {
@@ -105,11 +107,15 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                                     lastText = ""
                                 }
                             }
+
                             override fun onDialogCancel(tag: String) {
 
                             }
                         })
-                        confirmDialogFragment.show(supportFragmentManager, ConfirmDialogFragment::class.java.simpleName)
+                        confirmDialogFragment.show(
+                            supportFragmentManager,
+                            ConfirmDialogFragment::class.java.simpleName
+                        )
                     }
                 }
 
@@ -349,7 +355,8 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
                     Constant.ItemCondition.NOT_NEW -> {
                         llItemStatus.visibility = View.VISIBLE
                         if (!CommonUtils.isNonLoginUser(this) &&
-                            sneakerContractModel.owner_id == sharedPref.getUser(Constant.LOGIN_USER)?.user?.id) {
+                            sneakerContractModel.owner_id == sharedPref.getUser(Constant.LOGIN_USER)?.user?.id
+                        ) {
                             setItemStatus(R.drawable.ic_is_your, R.string.text_item_is_your)
                             tvSale.visibility = View.VISIBLE
                         } else {
@@ -401,7 +408,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             null,
             null,
             scanResult,
-            object : ContractRequest.Companion.EOSCallBack {
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         Toast.makeText(
@@ -528,13 +535,18 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun validateItem(responseHash: String) {
-        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_SNEAKER,
-            scanResult.toLong(),
-            object : ContractRequest.Companion.EOSCallBack {
+        ContractRequest.getTableRowObservable(ContractRequest.getQueryTableRow(
+            Constant.CONTRACT_TABLE_SNEAKER,
+            scanResult.toLong()
+        ),
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         sneakerContractModel =
-                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), SneakerContractModel::class.java)
+                            Gson().fromJson(
+                                (result as JSONArray).getJSONObject(0).toString(),
+                                SneakerContractModel::class.java
+                            )
                         val blockchainHash = sneakerContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
@@ -570,13 +582,18 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             Hashing.sha256().hashString(strResponseHash, StandardCharsets.UTF_8)
                 .toString()
 
-        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_USERS,
-            validatedItem.detail?.factoryId!!.toLong(),
-            object : ContractRequest.Companion.EOSCallBack {
+        ContractRequest.getTableRowObservable(ContractRequest.getQueryTableRow(
+            Constant.CONTRACT_TABLE_USERS,
+            validatedItem.detail?.factoryId!!.toLong()
+        ),
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         val factoryContractModel =
-                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), UserContractModel::class.java)
+                            Gson().fromJson(
+                                (result as JSONArray).getJSONObject(0).toString(),
+                                UserContractModel::class.java
+                            )
                         val blockchainHash = factoryContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(
@@ -661,13 +678,18 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun validateUser(responseHash: String) {
-        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_USERS,
-            sneakerContractModel.owner_id!!.toLong(),
-            object : ContractRequest.Companion.EOSCallBack {
+        ContractRequest.getTableRowObservable(ContractRequest.getQueryTableRow(
+            Constant.CONTRACT_TABLE_USERS,
+            sneakerContractModel.owner_id!!.toLong()
+        ),
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         val userContractModel =
-                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), UserContractModel::class.java)
+                            Gson().fromJson(
+                                (result as JSONArray).getJSONObject(0).toString(),
+                                UserContractModel::class.java
+                            )
                         val blockchainHash = userContractModel.info_hash
                         if (blockchainHash.isNullOrEmpty()) {
                             showMessageScanFail(

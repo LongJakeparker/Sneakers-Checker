@@ -19,6 +19,7 @@ import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_collection.*
+import kotlinx.android.synthetic.main.flash_card_layout_back.*
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -76,14 +77,17 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
         btnConfirmStolen.setOnClickListener(this)
         btnConfirmPublic.setOnClickListener(this)
         btnItemFound.setOnClickListener(this)
+        llItemHistory.setOnClickListener(this)
+        llItemHistoryDisable.setOnClickListener(this)
     }
 
     private fun getCollectionFromContract() {
         CommonUtils.toggleLoading(window.decorView.rootView, true)
-        ContractRequest.getTableRowObservable(Constant.CONTRACT_TABLE_SNEAKER,
-            userInfo?.id?.toLong()!!,
-            true,
-            object : ContractRequest.Companion.EOSCallBack {
+        ContractRequest.getTableRowObservable(ContractRequest.getQuerySecondaryIndex(
+            Constant.CONTRACT_TABLE_SNEAKER,
+            userInfo?.id?.toLong()!!
+        ),
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     val type: Type =
                         object : TypeToken<List<SneakerContractModel?>?>() {}.type
@@ -153,7 +157,7 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    fun binarySearch(
+    private fun binarySearch(
         array: ArrayList<SneakerContractModel>,
         left: Int,
         right: Int,
@@ -290,6 +294,10 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                 })
 
             btnBack -> onBackPressed()
+
+            llItemHistory, llItemHistoryDisable -> {
+
+            }
         }
     }
 
@@ -356,7 +364,7 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
             getString(R.string.format_eascrypt_password, passcode),
             userInfo?.encryptedPrivateKey,
             null,
-            object : ContractRequest.Companion.EOSCallBack {
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     CommonUtils.toggleLoading(window.decorView.rootView, false)
                     if (e == null) {
@@ -369,7 +377,12 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                             llReportSuccess.visibility = View.VISIBLE
                             blurView.visibility = View.VISIBLE
                             blurView.isClickable = true
-                            blurView.startAnimation(AnimationUtils.loadAnimation(this@CollectionActivity, R.anim.fade_in_view))
+                            blurView.startAnimation(
+                                AnimationUtils.loadAnimation(
+                                    this@CollectionActivity,
+                                    R.anim.fade_in_view
+                                )
+                            )
                         }
 
                     } else {
