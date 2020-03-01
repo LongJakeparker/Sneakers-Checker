@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".screens.activity.GrailHistoryActivity"></activity>
+        <activity android:name=".screens.activity.SettingActivity"></activity>
+        <activity android:name=".screens.activity.GrailHistoryActivity" />
         <activity android:name=".screens.activity.UserProfileActivity" />
         <activity android:name=".screens.activity.ObtainGrailActivity" />
         <activity

@@ -236,6 +236,7 @@
     <string name="label_get_owner_info">Get owner information</string>
     <string name="label_btn_grail_story">See your Grail story</string>
     <string name="label_grail_story">%s Story</string>
+    <string name="label_setting_change_password">Change password</string>
 
 
 </resources>

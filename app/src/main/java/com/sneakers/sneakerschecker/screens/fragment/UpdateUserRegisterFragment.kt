@@ -187,7 +187,6 @@ open class UpdateUserRegisterFragment : BaseFragment(), View.OnClickListener,
             object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
                         updateUser()
                     } else {
                         if (e.message == "pad block corrupted") {

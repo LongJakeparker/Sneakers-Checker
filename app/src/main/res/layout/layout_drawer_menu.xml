@@ -185,22 +185,6 @@
         />
 
         <TextView
-            android:id="@+id/tvCardManage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_button_card_manage"
-            android:gravity="center_vertical"
-            android:background="?attr/selectableItemBackground"
-            android:drawableLeft="@drawable/ic_payment_cards"
-            android:drawableTint="@color/colorWhite"
-            android:textSize="@dimen/text_size_large"
-            android:textColor="@color/colorWhite"
-            android:drawablePadding="@dimen/activity_margin_12dp"
-            android:paddingHorizontal="@dimen/activity_margin_24dp"
-            android:paddingVertical="@dimen/activity_margin_12dp"
-        />
-
-        <TextView
             android:id="@+id/tvSetting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -267,17 +251,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_collection"
-                android:layout_marginHorizontal="@dimen/dimen_radius_button_8dp"
-                android:paddingVertical="@dimen/activity_margin_12dp"
-                android:background="@drawable/drawable_btn_green_alpha_selector"
-                android:tint="@color/colorWhite"/>
-
-            <ImageView
-                android:id="@+id/ivCardManage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/ic_payment_cards"
                 android:layout_marginHorizontal="@dimen/dimen_radius_button_8dp"
                 android:paddingVertical="@dimen/activity_margin_12dp"
                 android:background="@drawable/drawable_btn_green_alpha_selector"

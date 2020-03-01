@@ -63,7 +63,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         checkUserLogin()
 
+        setListAdapter()
+
         getListSneakerBoard()
+
+        swipeRefreshLayout.setOnRefreshListener {
+            getListSneakerBoard()
+        }
 
         val isObtained = intent?.getBooleanExtra(Constant.EXTRA_IS_OBTAINED, false)
         if (isObtained != null && isObtained) {
@@ -79,8 +85,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         btnScanToken.setOnClickListener(this)
         tvCollection.setOnClickListener(this)
         ivCollection.setOnClickListener(this)
-        tvCardManage.setOnClickListener(this)
-        ivCardManage.setOnClickListener(this)
         tvSetting.setOnClickListener(this)
         ivSetting.setOnClickListener(this)
         tvProfile.setOnClickListener(this)
@@ -99,7 +103,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        checkUserLogin()
+        getBrainTreeClientToken()
     }
 
     private fun getBrainTreeClientToken() {
@@ -201,10 +205,17 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun getListSneakerBoard() {
+        if (!swipeRefreshLayout.isRefreshing) {
+            CommonUtils.toggleLoading(window.decorView.rootView, true)
+        }
         val call = service.create(MainApi::class.java)
             .getListSneakerAvailable()
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                CommonUtils.toggleLoading(window.decorView.rootView, false)
+                if (swipeRefreshLayout.isRefreshing) {
+                    swipeRefreshLayout.isRefreshing = false
+                }
                 val alertDialogFragment =
                     AlertDialogFragment.newInstance(t.message)
                 alertDialogFragment.show(
@@ -214,12 +225,17 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                CommonUtils.toggleLoading(window.decorView.rootView, false)
+                if (swipeRefreshLayout.isRefreshing) {
+                    swipeRefreshLayout.isRefreshing = false
+                }
                 if (response.isSuccessful) {
                     val jsonObject = JSONObject(response.body()?.string())
                     val jsonArrayList = jsonObject.getJSONArray("availableTrade")
                     var userListType = object : TypeToken<List<SneakerBoardModel>>() {}.type
-                    listSneaker = Gson().fromJson(jsonArrayList.toString(), userListType)
-                    setListAdapter()
+                    listSneaker.clear()
+                    listSneaker.addAll(Gson().fromJson(jsonArrayList.toString(), userListType))
+                    sneakerBoardAdapter?.notifyDataSetChanged()
                 }
             }
 
@@ -308,8 +324,18 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 tvCopied.visibility = View.VISIBLE
             }
 
+            tvProfile, ivProfile -> {
+                UserProfileActivity.start(this@MainActivity)
+                drawer_layout.closeDrawer(GravityCompat.END)
+            }
+
             tvCollection, ivCollection -> {
                 CollectionActivity.start(this@MainActivity)
+                drawer_layout.closeDrawer(GravityCompat.END)
+            }
+
+            tvSetting, ivSetting -> {
+                SettingActivity.start(this@MainActivity)
                 drawer_layout.closeDrawer(GravityCompat.END)
             }
 
@@ -336,16 +362,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
 
             btnScanToken -> CustomScanActivity.start(this, CustomScanActivity.ScanType.SCAN_GRAIL)
-
-            tvCardManage, ivCardManage -> {
-                ManageCardActivity.start(this)
-                drawer_layout.closeDrawer(GravityCompat.END)
-            }
-
-            tvProfile, ivProfile -> {
-                UserProfileActivity.start(this)
-                drawer_layout.closeDrawer(GravityCompat.END)
-            }
         }
     }
 
