@@ -70,5 +70,5 @@ interface MainApi {
     ): Call<ResponseBody>
 
     @POST("tracing/")
-    fun getTradeHistory(@Body param: SneakerHistoryContract): Call<SneakerHistory>
+    fun getTradeHistory(@Body param: SneakerHistoryContract): Call<ArrayList<SneakerHistory>>
 }

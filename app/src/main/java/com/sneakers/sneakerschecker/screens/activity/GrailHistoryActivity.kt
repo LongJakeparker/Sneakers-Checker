@@ -45,17 +45,9 @@ class GrailHistoryActivity : BaseActivity() {
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
-//        getHistoryFromContract()
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
-        sneakerHistory.add(null)
         setupRecyclerView()
+
+        getHistoryFromContract()
     }
 
     override fun getLayoutId(): Int {
@@ -94,8 +86,8 @@ class GrailHistoryActivity : BaseActivity() {
     private fun getHistoryFromDb(sneakerContractModel: SneakerHistoryContract) {
         val call = service.create(MainApi::class.java)
             .getTradeHistory(sneakerContractModel)
-        call.enqueue(object : Callback<SneakerHistory> {
-            override fun onFailure(call: Call<SneakerHistory>, t: Throwable) {
+        call.enqueue(object : Callback<ArrayList<SneakerHistory>> {
+            override fun onFailure(call: Call<ArrayList<SneakerHistory>>, t: Throwable) {
                 val alertDialogFragment =
                     AlertDialogFragment.newInstance(t.message)
                 alertDialogFragment.show(
@@ -105,12 +97,14 @@ class GrailHistoryActivity : BaseActivity() {
             }
 
             override fun onResponse(
-                call: Call<SneakerHistory>,
-                response: Response<SneakerHistory>
+                call: Call<ArrayList<SneakerHistory>>,
+                response: Response<ArrayList<SneakerHistory>>
             ) {
                 if (response.isSuccessful) {
                     if (response.body() != null) {
-                        val userInfo = response.body()!!.issue!!
+                        val grailHistory = response.body()!!
+                        sneakerHistory.addAll(grailHistory)
+                        sneakerHistoryAdapter?.notifyDataSetChanged()
                     }
                 } else {
                     val alertDialogFragment =

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/logo_adidas"
         android:layout_marginTop="@dimen/activity_margin_10dp"
-        android:layout_marginStart="46dp"/>
+        android:layout_marginStart="34dp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivItemColor"
@@ -93,7 +93,6 @@
                 android:id="@+id/tvItemOwnerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/format_owned_by"
                 android:textSize="@dimen/text_size_default"
                 android:textColor="@color/colorDark"
                 android:layout_marginStart="30dp"

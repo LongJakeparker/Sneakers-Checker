@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.model.SneakerHistory
@@ -26,6 +27,8 @@ class SneakerHistoryAdapter(val data: ArrayList<SneakerHistory?>) :
     }
 
     override fun onBindViewHolder(holder: SneakerHistoryViewHolder, position: Int) {
+        val item = data[position]
+
         if (position == 0) {
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -52,6 +55,26 @@ class SneakerHistoryAdapter(val data: ArrayList<SneakerHistory?>) :
             )
             holder.root.layoutParams = lp
         }
+
+        when (item?.type) {
+            SneakerHistory.TYPE_ISSUE -> {
+                setTypeHistory(holder, R.drawable.ic_history_released, R.color.colorPutty)
+                holder.tvContent.text = context?.getString(R.string.format_history_released, item.factoryName)
+            }
+
+            SneakerHistory.TYPE_RESELL -> {
+                setTypeHistory(holder, R.drawable.ic_history_resell, R.color.colorBlack)
+                holder.tvContent.text = context?.getString(R.string.format_history_resell, item.buyerName, item.sellerName)
+            }
+        }
+    }
+
+    private fun setTypeHistory(holder: SneakerHistoryViewHolder, icon: Int, color: Int) {
+        holder.ivIcon.setImageResource(icon)
+        holder.ivIcon.setColorFilter(ContextCompat.getColor(context!!, color), android.graphics.PorterDuff.Mode.MULTIPLY)
+        holder.tvTime.setTextColor(ContextCompat.getColor(context!!, color))
+        holder.ivLine.setColorFilter(ContextCompat.getColor(context!!, color), android.graphics.PorterDuff.Mode.MULTIPLY)
+        holder.tvContent.setTextColor(ContextCompat.getColor(context!!, color))
     }
 
     override fun getItemCount(): Int {

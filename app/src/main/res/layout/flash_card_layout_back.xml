@@ -302,6 +302,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvFurtherSpecDisable"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="@dimen/activity_margin_34dp"
