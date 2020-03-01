@@ -140,7 +140,7 @@ class ConfirmTransferFragment : BaseFragment(), View.OnClickListener {
             getString(R.string.format_eascrypt_password, password),
             currentUser?.encryptedPrivateKey,
             null,
-            object : ContractRequest.Companion.EOSCallBack {
+            object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
                         Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()

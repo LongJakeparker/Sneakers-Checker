@@ -1,8 +1,6 @@
 package com.sneakers.sneakerschecker.api
 
-import com.sneakers.sneakerschecker.model.CollectionModel
-import com.sneakers.sneakerschecker.model.CollectorModel
-import com.sneakers.sneakerschecker.model.ValidateModel
+import com.sneakers.sneakerschecker.model.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -70,4 +68,7 @@ interface MainApi {
         @Path("sneakerId") sneakerId: Long,
         @Body param: HashMap<String, Any?>
     ): Call<ResponseBody>
+
+    @POST("tracing/")
+    fun getTradeHistory(@Body param: SneakerHistoryContract): Call<SneakerHistory>
 }

@@ -182,7 +182,7 @@ object ContractRequest {
 
     fun getQuerySecondaryIndex(tableName: String, itemId: Long): String {
         return "{\n" +
-                "\"json\" : " + true + "\n" +
+                "\"json\" : " + true + ",\n" +
                 "\"code\": \"" + contractName + "\",\n" +
                 "\"scope\": \"" + contractName + "\",\n" +
                 "\"table\": \"" + tableName + "\",\n" +
@@ -197,7 +197,7 @@ object ContractRequest {
 
     fun getQueryTableRow(tableName: String, itemId: Long): String {
         return "{\n" +
-                "\"json\" : " + true + "\n" +
+                "\"json\" : " + true + ",\n" +
                 "\"code\": \"" + contractName + "\",\n" +
                 "\"scope\": \"" + contractName + "\",\n" +
                 "\"table\": \"" + tableName + "\",\n" +
@@ -210,14 +210,14 @@ object ContractRequest {
 
     fun getQueryTertiaryIndex(tableName: String, itemId: Long): String {
         return "{\n" +
-                "\"json\" : " + true + "\n" +
+                "\"json\" : " + true + ",\n" +
                 "\"code\": \"" + contractName + "\",\n" +
                 "\"scope\": \"" + contractName + "\",\n" +
                 "\"table\": \"" + tableName + "\",\n" +
                 "\"index_position\": \"" + "tertiary" + "\",\n" +
                 "\"key_type\": \"" + "i64" + "\",\n" +
-                "\"lower_bound\": " + itemId + ",\n" +
-                "\"upper_bound\": " + itemId + "\n" +
+                "\"lower_bound\": \"" + itemId + "\",\n" +
+                "\"upper_bound\": \"" + itemId + "\"\n" +
                 "}"
     }
 

@@ -19,7 +19,6 @@ import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
 import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_collection.*
-import kotlinx.android.synthetic.main.flash_card_layout_back.*
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -77,8 +76,6 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
         btnConfirmStolen.setOnClickListener(this)
         btnConfirmPublic.setOnClickListener(this)
         btnItemFound.setOnClickListener(this)
-        llItemHistory.setOnClickListener(this)
-        llItemHistoryDisable.setOnClickListener(this)
     }
 
     private fun getCollectionFromContract() {
@@ -121,6 +118,11 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                     listCollection.addAll(response.body()?.collection!!)
                     checkActivateSneaker()
                     adapter = CollectionAdapter(listCollection, this@CollectionActivity)
+                    adapter?.setClickHistoryListener(object : CollectionAdapter.OnClickHistoryListener {
+                        override fun onClickHistory(itemName: String, itemId: Long) {
+                            GrailHistoryActivity.start(this@CollectionActivity, itemName, itemId)
+                        }
+                    })
                     viewPagerCollection.adapter = adapter
                     viewPagerCollection.addOnPageChangeListener(viewChangeListener)
                     if (listCollection.size > 0) {
@@ -294,10 +296,6 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                 })
 
             btnBack -> onBackPressed()
-
-            llItemHistory, llItemHistoryDisable -> {
-
-            }
         }
     }
 
