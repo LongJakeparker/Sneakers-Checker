@@ -103,7 +103,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        getBrainTreeClientToken()
+        if (!CommonUtils.isNonLoginUser(this)) {
+            getBrainTreeClientToken()
+        }
     }
 
     private fun getBrainTreeClientToken() {
