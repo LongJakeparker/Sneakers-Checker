@@ -324,7 +324,6 @@ class CollectionActivity : BaseActivity(), View.OnClickListener {
                     listCollection[viewPagerCollection.currentItem].isVisible =
                         !(listCollection[viewPagerCollection.currentItem].isVisible != null &&
                                 listCollection[viewPagerCollection.currentItem].isVisible!!)
-                    adapter?.notifyDataSetChanged()
                     showButtonStolen(viewPagerCollection.currentItem)
                 } else {
                     Toast.makeText(this@CollectionActivity, response.message(), Toast.LENGTH_SHORT)
