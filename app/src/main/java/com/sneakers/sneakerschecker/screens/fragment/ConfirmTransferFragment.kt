@@ -65,6 +65,9 @@ class ConfirmTransferFragment : BaseFragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        fragmentView = super.onCreateView(inflater, container, savedInstanceState)
+
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
         sharedPref = context?.let { SharedPref(it) }!!
@@ -78,7 +81,7 @@ class ConfirmTransferFragment : BaseFragment(), View.OnClickListener {
         paymentMethodNonce = arguments?.getParcelable(Constant.EXTRA_PAYMENT_NONCE)
 
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return fragmentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -143,7 +146,6 @@ class ConfirmTransferFragment : BaseFragment(), View.OnClickListener {
             object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        Toast.makeText(context, "Transaction id: $result", Toast.LENGTH_LONG).show()
                         chargeTransactionFee()
                     } else {
                         CommonUtils.toggleLoading(fragmentView, false)

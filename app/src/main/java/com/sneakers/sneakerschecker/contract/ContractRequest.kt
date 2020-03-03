@@ -80,8 +80,6 @@ object ContractRequest {
             signatureProvider.isReturnLegacyFormatForK1 = true
 
             if (password != null) {
-                //                    val privateKey = AESCrypt.decrypt("KnyeLg5YZKe5cmRV+Yn/1BQmECdsrf7R1zEGJGhDF7Ck/RAinKxCPuvqhsg/xKgKNjOzdfEyS1xf\n" +
-                //                            "vg2hj2A4RQ==", password)
                 val privateKey = AESCrypt.decrypt(encryptedPrivateKey!!, password)
                 try {
                     signatureProvider.importKey(privateKey)

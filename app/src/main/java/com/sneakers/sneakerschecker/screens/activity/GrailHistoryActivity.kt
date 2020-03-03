@@ -16,6 +16,7 @@ import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SneakerHistory
 import com.sneakers.sneakerschecker.model.SneakerHistoryContract
 import com.sneakers.sneakerschecker.screens.fragment.dialog.AlertDialogFragment
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_grail_history.*
 import org.json.JSONArray
 import retrofit2.Call
@@ -63,6 +64,7 @@ class GrailHistoryActivity : BaseActivity() {
     }
 
     private fun getHistoryFromContract() {
+        CommonUtils.toggleLoading(window.decorView.rootView, true)
         ContractRequest.getTableRowObservable(ContractRequest.getQueryTertiaryIndex(Constant.CONTRACT_HISTORIES,
             itemId!!),
             object : ContractRequest.EOSCallBack {
@@ -72,6 +74,7 @@ class GrailHistoryActivity : BaseActivity() {
                             Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), SneakerHistoryContract::class.java)
                         getHistoryFromDb(sneakerContractModel)
                     } else {
+                        CommonUtils.toggleLoading(window.decorView.rootView, false)
                         val alertDialogFragment =
                             AlertDialogFragment.newInstance(e.localizedMessage)
                         alertDialogFragment.show(
@@ -88,6 +91,7 @@ class GrailHistoryActivity : BaseActivity() {
             .getTradeHistory(sneakerContractModel)
         call.enqueue(object : Callback<ArrayList<SneakerHistory>> {
             override fun onFailure(call: Call<ArrayList<SneakerHistory>>, t: Throwable) {
+                CommonUtils.toggleLoading(window.decorView.rootView, false)
                 val alertDialogFragment =
                     AlertDialogFragment.newInstance(t.message)
                 alertDialogFragment.show(
@@ -100,6 +104,7 @@ class GrailHistoryActivity : BaseActivity() {
                 call: Call<ArrayList<SneakerHistory>>,
                 response: Response<ArrayList<SneakerHistory>>
             ) {
+                CommonUtils.toggleLoading(window.decorView.rootView, false)
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         val grailHistory = response.body()!!

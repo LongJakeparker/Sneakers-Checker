@@ -50,12 +50,15 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        fragmentView = super.onCreateView(inflater, container, savedInstanceState)
+
         sharedPref = SharedPref(activity!!)
 
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return fragmentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

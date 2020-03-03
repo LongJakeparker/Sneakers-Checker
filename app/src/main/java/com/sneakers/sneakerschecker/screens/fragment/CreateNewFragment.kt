@@ -73,6 +73,8 @@ class CreateNewFragment : BaseFragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
+        fragmentView = super.onCreateView(inflater, container, savedInstanceState)
+
         fireAuth = FirebaseAuth.getInstance()
 
         sharedPref = context?.let { SharedPref(it) }!!
@@ -80,7 +82,7 @@ class CreateNewFragment : BaseFragment(), View.OnClickListener {
         //Get instant retrofit
         service = RetrofitClientInstance().getRetrofitInstance()!!
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return fragmentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -71,4 +71,11 @@ interface MainApi {
 
     @POST("tracing/")
     fun getTradeHistory(@Body param: SneakerHistoryContract): Call<ArrayList<SneakerHistory>>
+
+    @PATCH("user/password/{userId}/")
+    fun updatePassword(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: Int,
+        @Body param: HashMap<String, Any?>
+    ): Call<ResponseBody>
 }

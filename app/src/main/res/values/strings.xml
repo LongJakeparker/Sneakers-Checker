@@ -75,12 +75,14 @@
     <string name="text_holder_user_email">Your email (*)</string>
     <string name="text_holder_user_address">Your address (*)</string>
     <string name="text_holder_user_phone">Your phone</string>
-    <string name="text_holder_user_password">Your password (6 digits)</string>
+    <string name="text_holder_user_code">Your passcode (6 digits)</string>
+    <string name="text_holder_user_new_code">Your new passcode (6 digits)</string>
     <string name="text_holder_private_key">Paste your private key</string>
 
     <string name="label_button_register">Register</string>
     <string name="label_button_login">Login</string>
     <string name="label_button_next">Next</string>
+    <string name="label_button_change">Change</string>
     <string name="label_button_create_new_account">Create new account</string>
     <string name="label_button_profile">Profile</string>
     <string name="label_button_collection">My Grails</string>
@@ -239,6 +241,8 @@
     <string name="label_setting_change_password">Change password</string>
     <string name="format_history_released">This Grails was released by %s.</string>
     <string name="format_history_resell">Was traded to %s from %s.</string>
+    <string name="msg_short_passcode">Passcode needs contain 6 digits</string>
+    <string name="msg_new_passcode_not_match">Re-enter passcode not match</string>
 
 
 </resources>

@@ -136,6 +136,10 @@
         <include
             android:id="@+id/pb_loading"
             layout="@layout/loading_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/activity_margin_64dp"
             android:visibility="gone"/>
 
     </FrameLayout>

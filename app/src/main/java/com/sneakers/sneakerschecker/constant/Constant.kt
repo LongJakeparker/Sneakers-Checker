@@ -59,6 +59,7 @@ object Constant {
     const val API_FIELD_REGISTRATION_TOKEN = "registrationToken"
     const val API_FIELD_PUBLIC_KEY = "publicKey"
     const val API_FIELD_ENCRYPTED_PRIVATE_KEY = "encryptedPrivateKey"
+    const val API_FIELD_NEW_ENCRYPTED_PRIVATE_KEY = "newEncryptedPrivateKey"
     const val API_FIELD_USER_ROLE = "role"
     const val API_FIELD_USER_ADDRESS = "address"
     const val API_FIELD_EOS_NAME = "eosName"
@@ -70,6 +71,8 @@ object Constant {
     const val API_FIELD_PAYMENT_NONCE = "nonceFromTheClient"
     const val API_FIELD_DOB = "dob"
     const val API_FIELD_GENDER = "gender"
+    const val API_FIELD_OLD_PASSWORD = "oldPassword"
+    const val API_FIELD_NEW_PASSWORD = "newPassword"
 
     const val DIALOG_REQUEST_CODE = 1004
 
