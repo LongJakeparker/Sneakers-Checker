@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.model.SneakerHistory
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.item_sneaker_history.view.*
 
 
@@ -62,18 +63,33 @@ class SneakerHistoryAdapter(val data: ArrayList<SneakerHistory?>) :
                 holder.tvContent.text = context?.getString(R.string.format_history_released, item.factoryName)
             }
 
+            SneakerHistory.TYPE_CLAIM -> {
+                if (CommonUtils.getCurrentUser(context!!)?.user?.username == item.buyerName) {
+                    setTypeHistory(holder, R.drawable.ic_history_owned, R.color.colorBlueGreen)
+                    holder.tvContent.text = context?.getString(R.string.text_history_claim_owned)
+                } else {
+                    setTypeHistory(holder, R.drawable.ic_history_resell, R.color.colorBlack)
+                    holder.tvContent.text = context?.getString(R.string.text_history_claim, item.buyerName)
+                }
+            }
+
             SneakerHistory.TYPE_RESELL -> {
-                setTypeHistory(holder, R.drawable.ic_history_resell, R.color.colorBlack)
-                holder.tvContent.text = context?.getString(R.string.format_history_resell, item.buyerName, item.sellerName)
+                if (CommonUtils.getCurrentUser(context!!)?.user?.username == item.buyerName) {
+                    setTypeHistory(holder, R.drawable.ic_history_owned, R.color.colorBlueGreen)
+                    holder.tvContent.text = context?.getString(R.string.text_history_owned)
+                } else {
+                    setTypeHistory(holder, R.drawable.ic_history_resell, R.color.colorBlack)
+                    holder.tvContent.text = context?.getString(R.string.format_history_resell, item.buyerName, item.sellerName)
+                }
             }
         }
     }
 
     private fun setTypeHistory(holder: SneakerHistoryViewHolder, icon: Int, color: Int) {
         holder.ivIcon.setImageResource(icon)
-        holder.ivIcon.setColorFilter(ContextCompat.getColor(context!!, color), android.graphics.PorterDuff.Mode.MULTIPLY)
+        holder.ivIcon.setColorFilter(ContextCompat.getColor(context!!, color), android.graphics.PorterDuff.Mode.SRC_IN)
         holder.tvTime.setTextColor(ContextCompat.getColor(context!!, color))
-        holder.ivLine.setColorFilter(ContextCompat.getColor(context!!, color), android.graphics.PorterDuff.Mode.MULTIPLY)
+        holder.ivLine.setColorFilter(ContextCompat.getColor(context!!, color), android.graphics.PorterDuff.Mode.SRC_IN)
         holder.tvContent.setTextColor(ContextCompat.getColor(context!!, color))
     }
 

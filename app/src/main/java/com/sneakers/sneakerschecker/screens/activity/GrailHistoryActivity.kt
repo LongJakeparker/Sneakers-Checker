@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.sneakers.sneakerschecker.R
 import com.sneakers.sneakerschecker.adapter.ListCardAdapter
 import com.sneakers.sneakerschecker.adapter.SneakerHistoryAdapter
@@ -23,6 +24,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class GrailHistoryActivity : BaseActivity() {
     var itemId: Long? = 0
@@ -70,8 +74,8 @@ class GrailHistoryActivity : BaseActivity() {
             object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        val sneakerContractModel =
-                            Gson().fromJson((result as JSONArray).getJSONObject(0).toString(), SneakerHistoryContract::class.java)
+                        val arrayTutorialType = object : TypeToken<Array<SneakerHistoryContract>>() {}.type
+                        val sneakerContractModel: Array<SneakerHistoryContract> = Gson().fromJson(result.toString(), arrayTutorialType)
                         getHistoryFromDb(sneakerContractModel)
                     } else {
                         CommonUtils.toggleLoading(window.decorView.rootView, false)
@@ -86,9 +90,12 @@ class GrailHistoryActivity : BaseActivity() {
             })
     }
 
-    private fun getHistoryFromDb(sneakerContractModel: SneakerHistoryContract) {
+    private fun getHistoryFromDb(sneakerContractModel: Array<SneakerHistoryContract>) {
+        val param = HashMap<String, Any?>()
+        param["rows"] = sneakerContractModel
+
         val call = service.create(MainApi::class.java)
-            .getTradeHistory(sneakerContractModel)
+            .getTradeHistory(param)
         call.enqueue(object : Callback<ArrayList<SneakerHistory>> {
             override fun onFailure(call: Call<ArrayList<SneakerHistory>>, t: Throwable) {
                 CommonUtils.toggleLoading(window.decorView.rootView, false)
@@ -108,6 +115,7 @@ class GrailHistoryActivity : BaseActivity() {
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         val grailHistory = response.body()!!
+                        grailHistory.reverse()
                         sneakerHistory.addAll(grailHistory)
                         sneakerHistoryAdapter?.notifyDataSetChanged()
                     }

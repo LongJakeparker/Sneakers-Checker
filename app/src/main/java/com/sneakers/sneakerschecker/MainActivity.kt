@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_drawer_menu.*
 import okhttp3.ResponseBody
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
@@ -57,6 +59,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        EventBus.getDefault().register(this)
 
         sharedPref = SharedPref(this)
         service = RetrofitClientInstance().getRetrofitInstance()!!
@@ -520,5 +524,15 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    @Subscribe
+    fun onEvent(userLoginEvent: UserLoginEvent) {
+        getBrainTreeClientToken()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }

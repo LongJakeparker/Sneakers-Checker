@@ -16,10 +16,12 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.RetrofitClientInstance
 import com.sneakers.sneakerschecker.model.SharedPref
 import com.sneakers.sneakerschecker.model.SignIn
+import com.sneakers.sneakerschecker.model.UserLoginEvent
 import com.sneakers.sneakerschecker.screens.activity.CreateNewActivity
 import com.sneakers.sneakerschecker.screens.fragment.dialog.InputPasswordDialogFragment
 import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.fragment_login.*
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -118,6 +120,7 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
                 CommonUtils.toggleLoading(fragmentView, false)
                 if (response.isSuccessful) {
                     sharedPref.setUser(response.body()!!, Constant.LOGIN_USER)
+                    EventBus.getDefault().post(UserLoginEvent())
                     activity!!.setResult(Activity.RESULT_OK)
                     activity!!.finish()
 

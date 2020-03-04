@@ -243,6 +243,9 @@
     <string name="format_history_resell">Was traded to %s from %s.</string>
     <string name="msg_short_passcode">Passcode needs contain 6 digits</string>
     <string name="msg_new_passcode_not_match">Re-enter passcode not match</string>
+    <string name="text_history_owned">Congrats! It’s your Grails.</string>
+    <string name="text_history_claim">Was claimed by %s.</string>
+    <string name="text_history_claim_owned">Congrats! You are the first owner.</string>
 
 
 </resources>

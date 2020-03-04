@@ -9,6 +9,7 @@ data class SneakerHistory(
 ) {
     companion object {
         const val TYPE_ISSUE = "issue"
+        const val TYPE_CLAIM = "claim"
         const val TYPE_RESELL = "resell"
     }
 }

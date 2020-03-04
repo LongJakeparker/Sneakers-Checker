@@ -70,7 +70,7 @@ interface MainApi {
     ): Call<ResponseBody>
 
     @POST("tracing/")
-    fun getTradeHistory(@Body param: SneakerHistoryContract): Call<ArrayList<SneakerHistory>>
+    fun getTradeHistory(@Body param: HashMap<String, Any?>): Call<ArrayList<SneakerHistory>>
 
     @PATCH("user/password/{userId}/")
     fun updatePassword(
