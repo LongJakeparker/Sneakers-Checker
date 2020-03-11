@@ -2,6 +2,7 @@ package com.sneakers.sneakerschecker.model
 
 data class SneakerHistory(
     val id: Int = 0,
+    val createdAt: String = "",
     val sellerName: String? = null,
     val buyerName: String? = null,
     val factoryName: String? = null,

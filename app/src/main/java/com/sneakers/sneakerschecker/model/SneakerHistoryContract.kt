@@ -7,5 +7,6 @@ data class SneakerHistoryContract(
     val claim_account: String? = null,
     val buyer_id: Long? = null,
     val seller_id: Long? = null,
-    val transaction_type: String? = null
+    val transaction_type: String? = null,
+    val created_at: String? = null
 )

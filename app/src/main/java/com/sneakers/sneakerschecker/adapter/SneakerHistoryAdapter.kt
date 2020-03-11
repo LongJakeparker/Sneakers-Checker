@@ -64,11 +64,14 @@ class SneakerHistoryAdapter(val data: ArrayList<SneakerHistory?>) :
             }
 
             SneakerHistory.TYPE_CLAIM -> {
+                setTypeHistory(holder, R.drawable.ic_own_by, R.color.colorOrangish)
                 if (CommonUtils.getCurrentUser(context!!)?.user?.username == item.buyerName) {
-                    setTypeHistory(holder, R.drawable.ic_history_owned, R.color.colorBlueGreen)
-                    holder.tvContent.text = context?.getString(R.string.text_history_claim_owned)
+                    if (position == 0) {
+                        holder.tvContent.text = context?.getString(R.string.text_history_claim_owned)
+                    } else {
+                        holder.tvContent.text = context?.getString(R.string.text_history_claim_was_owned)
+                    }
                 } else {
-                    setTypeHistory(holder, R.drawable.ic_history_resell, R.color.colorBlack)
                     holder.tvContent.text = context?.getString(R.string.text_history_claim, item.buyerName)
                 }
             }
@@ -76,13 +79,21 @@ class SneakerHistoryAdapter(val data: ArrayList<SneakerHistory?>) :
             SneakerHistory.TYPE_RESELL -> {
                 if (CommonUtils.getCurrentUser(context!!)?.user?.username == item.buyerName) {
                     setTypeHistory(holder, R.drawable.ic_history_owned, R.color.colorBlueGreen)
-                    holder.tvContent.text = context?.getString(R.string.text_history_owned)
+                    if (position == 0) {
+                        holder.tvContent.text = context?.getString(R.string.text_history_owned)
+                    } else {
+                        holder.tvContent.text = context?.getString(R.string.text_history_was_owned)
+                    }
                 } else {
                     setTypeHistory(holder, R.drawable.ic_history_resell, R.color.colorBlack)
                     holder.tvContent.text = context?.getString(R.string.format_history_resell, item.buyerName, item.sellerName)
                 }
             }
         }
+
+        val traceDate = CommonUtils.formatStringToDate(item?.createdAt!!)
+        holder.tvTime.text = CommonUtils.formatDateToString("MMMM dd',' yyyy", traceDate)
+
     }
 
     private fun setTypeHistory(holder: SneakerHistoryViewHolder, icon: Int, color: Int) {

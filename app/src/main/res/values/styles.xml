@@ -34,11 +34,11 @@
     </style>
 
     <style name="TextAppearance.TrueGrails.Title.Expand" parent="TextAppearance.TrueGrails.Title">
-        <item name="android:textSize">32sp</item>
+        <item name="android:textSize">28sp</item>
     </style>
 
     <style name="TextAppearance.TrueGrails.Title.Collapse" parent="TextAppearance.TrueGrails.Title">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>

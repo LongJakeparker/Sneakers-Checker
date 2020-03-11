@@ -1,7 +1,6 @@
 package com.sneakers.sneakerschecker.utils
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -46,7 +45,8 @@ class CommonUtils {
         }
 
         fun copyToClipboard(activity: Activity?, text: String) {
-            val clipboard = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipboard =
+                activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip: ClipData = ClipData.newPlainText("simple text", text)
             clipboard.primaryClip = clip
             Toast.makeText(activity, "Copied to clipboard", Toast.LENGTH_SHORT).show()
@@ -60,9 +60,11 @@ class CommonUtils {
 
             val multiFormatWriter = MultiFormatWriter()
             try {
-                val bitMatrix = multiFormatWriter.encode(itemToken, BarcodeFormat.QR_CODE,
-                    (width * widthPer).toInt() ,
-                    (width * widthPer).toInt())
+                val bitMatrix = multiFormatWriter.encode(
+                    itemToken, BarcodeFormat.QR_CODE,
+                    (width * widthPer).toInt(),
+                    (width * widthPer).toInt()
+                )
                 val barcodeEncoder = BarcodeEncoder()
                 return barcodeEncoder.createBitmap(bitMatrix)
             } catch (e: WriterException) {
@@ -135,7 +137,18 @@ class CommonUtils {
         }
 
         fun formatDate(date: Date): String {
-            val format = SimpleDateFormat("dd/MM/yyyy")
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+            return format.format(date)
+        }
+
+        fun formatStringToDate(string: String): Date {
+            val format =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+            return format.parse(string)
+        }
+
+        fun formatDateToString(pattern: String, date: Date): String {
+            val format = SimpleDateFormat(pattern, Locale.US)
             return format.format(date)
         }
 
