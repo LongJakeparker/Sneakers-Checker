@@ -9,6 +9,7 @@ import com.sneakers.sneakerschecker.constant.Constant
 import com.sneakers.sneakerschecker.model.FinishTransferEvent
 import com.sneakers.sneakerschecker.model.SneakerModel
 import com.sneakers.sneakerschecker.model.ValidateModel
+import com.sneakers.sneakerschecker.utils.CommonUtils
 import kotlinx.android.synthetic.main.activity_obtain_grail.*
 import org.greenrobot.eventbus.EventBus
 
@@ -39,6 +40,7 @@ class ObtainGrailActivity : AppCompatActivity() {
             intent.putExtra(Constant.EXTRA_VALIDATE_SNEAKER, sneaker)
             intent.putExtra(Constant.EXTRA_IS_OBTAINED, isObtained)
             intent.putExtra(Constant.EXTRA_IS_SNEAKER_MODEL, true)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
     }
@@ -72,11 +74,13 @@ class ObtainGrailActivity : AppCompatActivity() {
 
     private fun bindData() {
         if (isSneakerModel) {
+            ivBrandLogo.setImageResource(CommonUtils.getBrandLogo(sneakerModel?.brand!!))
             tvItemName.text = sneakerModel?.model
             tvItemBrand.text = sneakerModel?.brand
             tvItemSize.text = sneakerModel?.size.toString()
             tvItemReleaseDate.text = sneakerModel?.releaseDate
         } else {
+            ivBrandLogo.setImageResource(CommonUtils.getBrandLogo(sneakerValidateModel?.detail?.brand!!))
             tvItemName.text = sneakerValidateModel?.detail?.model
             tvItemBrand.text = sneakerValidateModel?.detail?.brand
             tvItemSize.text = sneakerValidateModel?.detail?.size.toString()

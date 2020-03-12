@@ -261,6 +261,7 @@ open class UpdateUserRegisterFragment : BaseFragment(), View.OnClickListener,
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        btnUpdate.isEnabled = validateData()
         when (group?.checkedRadioButtonId) {
             R.id.rbtnMen -> {
                 tvGender.text = getString(R.string.text_gender_gentleman)

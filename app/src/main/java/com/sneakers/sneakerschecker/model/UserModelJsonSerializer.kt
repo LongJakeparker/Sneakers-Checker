@@ -16,8 +16,6 @@ class UserModelJsonSerializer: JsonSerializer<UserUpdateModel> {
         jsonObject.add("publicKey", context?.serialize(userUpdateModel?.publicKey))
         jsonObject.add("role", context?.serialize(userUpdateModel?.role))
         jsonObject.add("address", context?.serialize(userUpdateModel?.address))
-        jsonObject.add("gender", context?.serialize(userUpdateModel?.gender))
-        jsonObject.add("dob", context?.serialize(userUpdateModel?.dob))
 
         return jsonObject
     }

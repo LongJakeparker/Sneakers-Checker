@@ -83,7 +83,7 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             scanResult = result.text
-            beepManager!!.playBeepSoundAndVibrate()
+//            beepManager!!.playBeepSoundAndVibrate()
             lastText = result.text
 
             when (scanType) {

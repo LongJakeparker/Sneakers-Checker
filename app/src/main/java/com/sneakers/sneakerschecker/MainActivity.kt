@@ -529,6 +529,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     @Subscribe
     fun onEvent(userLoginEvent: UserLoginEvent) {
         getBrainTreeClientToken()
+        notifyUserLogin()
     }
 
     override fun onDestroy() {
