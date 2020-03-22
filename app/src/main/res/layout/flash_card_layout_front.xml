@@ -69,11 +69,12 @@
 
         <TextView
             android:id="@+id/tvItemNameFront"
-            android:layout_width="wrap_content"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:text="NMD R1 Trainer"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_xxxlarge"
+            android:gravity="center"
             android:textColor="@android:color/black"
             android:layout_below="@+id/tvItemBrand"
             android:layout_centerHorizontal="true"/>
@@ -156,11 +157,12 @@
 
         <TextView
             android:id="@+id/tvItemNameFrontDisabled"
-            android:layout_width="wrap_content"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:text="NMD R1 Trainer"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_xxxlarge"
+            android:gravity="center"
             android:textColor="@color/colorPutty"
             android:layout_below="@+id/tvItemBrandDisabled"
             android:layout_centerHorizontal="true"/>
