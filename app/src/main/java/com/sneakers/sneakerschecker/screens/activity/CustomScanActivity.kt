@@ -411,11 +411,6 @@ class CustomScanActivity : AppCompatActivity(), View.OnClickListener {
             object : ContractRequest.EOSCallBack {
                 override fun onDone(result: Any?, e: Throwable?) {
                     if (e == null) {
-                        Toast.makeText(
-                            this@CustomScanActivity,
-                            "Transaction id: $result",
-                            Toast.LENGTH_LONG
-                        ).show()
                         EventBus.getDefault().post(ReloadCollectionEvent())
                         ObtainGrailActivity.start(this@CustomScanActivity, validatedItem)
 
